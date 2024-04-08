@@ -1,0 +1,22 @@
+.header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	width: 100vw;
+	padding: 1rem 2rem;
+
+	> h1 {
+		color: white;
+	}
+
+	> div {
+		background-color: white;
+		width: 3rem;
+		aspect-ratio: 1;
+		border-radius: 100vh;
+	}
+
+	> span {
+		height: 1px;
+	}
+}

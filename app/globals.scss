@@ -1,0 +1,24 @@
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+*:disabled {
+	opacity: 50%;
+}
+
+:root {
+	--primary: #1a1a1a;
+
+	--inline-margin: 2rem;
+
+	--accent1: #d000cc;
+	--accent2: #b200e8;
+}
+
+body {
+	background-color: #1a1a1a;
+}
