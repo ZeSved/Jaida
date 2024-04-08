@@ -1,25 +1,31 @@
 import Image from 'next/image'
-import styles from './page.module.css'
+import styles from './page.module.scss'
 import Link from 'next/link'
+import MDocCard from './home_page/card'
 
 export default function Home() {
-	const ids = [
-		{ id: 'test' },
-		{ id: 'dweauiduw' },
-		{ id: 'wwwwwwwwwwwww' },
-		{ id: 'yeet' },
-		{ id: 'test783789' },
+	const docs = [
+		{
+			name: 'test',
+			id: crypto.randomUUID(),
+		},
+		{ name: 'test1', id: crypto.randomUUID() },
+		{ name: 'test2', id: crypto.randomUUID() },
+		{ name: 'test3', id: crypto.randomUUID() },
+		{ name: 'test4', id: crypto.randomUUID() },
+		{ name: 'test5', id: crypto.randomUUID() },
 	]
 
 	return (
-		<main className={styles.main}>
-			{ids.map((d) => (
-				<Link
-					style={{ paddingInline: 10 }}
-					href={`/m/${d.id}`}>
-					{d.id}
-				</Link>
-			))}
+		<main className={styles.container}>
+			<div className={styles.main}>
+				{docs.map((d) => (
+					<MDocCard
+						id={d.id}
+						name={d.name}
+					/>
+				))}
+			</div>
 		</main>
 	)
 }

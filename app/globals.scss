@@ -15,10 +15,21 @@
 
 	--inline-margin: 2rem;
 
-	--accent1: #d000cc;
-	--accent2: #b200e8;
+	--accent: #585858;
+
+	--cta-1: #6c00d0;
+	--cta-2: #a800eb;
 }
 
 body {
 	background-color: #1a1a1a;
+	height: 100vh;
+	height: 100dvh;
+	width: 100vw;
+}
+
+.main_content {
+	height: 100vh;
+	height: 100dvh;
+	width: 100vw;
 }

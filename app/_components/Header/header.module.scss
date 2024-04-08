@@ -3,7 +3,8 @@
 	align-items: center;
 	gap: 1rem;
 	width: 100vw;
-	padding: 1rem 2rem;
+	padding: 1rem 5vw;
+	box-shadow: 0 4px 15px 5px black;
 
 	> h1 {
 		color: white;
@@ -14,9 +15,6 @@
 		width: 3rem;
 		aspect-ratio: 1;
 		border-radius: 100vh;
-	}
-
-	> span {
-		height: 1px;
+		margin-left: auto;
 	}
 }

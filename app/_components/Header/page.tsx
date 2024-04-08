@@ -12,7 +12,6 @@ export default function Header() {
 				alt='Jaida Logo'
 			/>
 			<h1>Jaida</h1>
-			<span></span>
 			<div></div>
 		</header>
 	)
