@@ -1,0 +1,19 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem;
+	max-height: 88vh;
+	overflow: auto;
+
+	> textarea {
+		border: var(--border);
+		border-radius: 1rem;
+
+		width: 60vw;
+		aspect-ratio: 9/16;
+
+		background-color: transparent;
+		resize: none;
+	}
+}

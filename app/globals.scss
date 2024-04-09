@@ -14,6 +14,7 @@
 	--primary: #1a1a1a;
 
 	--inline-margin: 2rem;
+	--border: 1px solid var(--accent);
 
 	--accent: #585858;
 
@@ -32,4 +33,5 @@ body {
 	height: 100vh;
 	height: 100dvh;
 	width: 100vw;
+	overflow: hidden;
 }

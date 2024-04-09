@@ -1,14 +1,9 @@
-import Image from 'next/image'
 import styles from './page.module.scss'
-import Link from 'next/link'
 import MDocCard from './home_page/card'
 
 export default function Home() {
 	const docs = [
-		{
-			name: 'test',
-			id: crypto.randomUUID(),
-		},
+		{ name: 'test', id: crypto.randomUUID() },
 		{ name: 'test1', id: crypto.randomUUID() },
 		{ name: 'test2', id: crypto.randomUUID() },
 		{ name: 'test3', id: crypto.randomUUID() },
