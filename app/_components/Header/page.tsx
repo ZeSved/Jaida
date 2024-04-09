@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Jaida_logo from '@/public/Jaida Logo size 1.svg'
 import s from './header.module.scss'
+import Login from './login'
 
 export default function Header() {
 	return (
@@ -12,7 +13,7 @@ export default function Header() {
 				alt='Jaida Logo'
 			/>
 			<h1>Jaida</h1>
-			<div></div>
+			<Login />
 		</header>
 	)
 }
