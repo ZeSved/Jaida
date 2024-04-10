@@ -21,6 +21,7 @@ export default function Home() {
 						<MDocCard
 							id={d.id}
 							name={d.name}
+							key={d.id}
 						/>
 					))}
 				</div>
