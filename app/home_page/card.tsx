@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import Jaida_small_logo from '@/public/Jaida Logo size 2.svg'
+import Jaida_small_logo from '@/public/Jaida Logo.svg'
 import s from '@/app/page.module.scss'
 
 export default function MDocCard({ name, id }: { name: string; id: string }) {

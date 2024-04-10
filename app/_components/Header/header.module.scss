@@ -10,11 +10,16 @@
 		color: white;
 	}
 
-	> div {
+	> .login {
 		background-color: white;
 		width: 3rem;
 		aspect-ratio: 1;
 		border-radius: 100vh;
 		margin-left: auto;
+	}
+
+	> img {
+		width: 7vh;
+		height: 7vh;
 	}
 }
