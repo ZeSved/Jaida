@@ -4,7 +4,11 @@ import s from './m-d-editor.module.scss'
 export default function MarkdownEditor() {
 	return (
 		<main className={s.container}>
-			<div contentEditable></div>
+			<div className={s.editor}>
+				<div
+					id='editor'
+					contentEditable></div>
+			</div>
 		</main>
 	)
 }

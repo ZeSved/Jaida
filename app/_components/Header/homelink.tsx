@@ -1,19 +1,20 @@
 'use client'
-import Image from 'next/image'
-import Jaida_logo from '@/public/Jaida Logo.svg'
 import s from './header.module.scss'
+import JaidaLogo from '@/public/JaidaLogo'
 
 export default function HomeLink() {
 	return window.location.pathname.startsWith('/m/') ? (
-		<Image
-			src={Jaida_logo}
-			alt='Jaida Logo'
+		<JaidaLogo
+			width='29'
+			height='41'
+			viewBox='49 91'
 		/>
 	) : (
 		<>
-			<Image
-				src={Jaida_logo}
-				alt='Jaida Logo'
+			<JaidaLogo
+				width='59'
+				height='51'
+				viewBox='59 91'
 			/>
 			<h1>Jaida</h1>
 		</>

@@ -1,5 +1,6 @@
 import styles from './page.module.scss'
 import MDocCard from './home_page/card'
+import Header from './_components/Header/page'
 
 export default function Home() {
 	const docs = [
@@ -12,15 +13,18 @@ export default function Home() {
 	]
 
 	return (
-		<main className={styles.container}>
-			<div className={styles.main}>
-				{docs.map((d) => (
-					<MDocCard
-						id={d.id}
-						name={d.name}
-					/>
-				))}
-			</div>
-		</main>
+		<>
+			<Header />
+			<main className={styles.container}>
+				<div className={styles.main}>
+					{docs.map((d) => (
+						<MDocCard
+							id={d.id}
+							name={d.name}
+						/>
+					))}
+				</div>
+			</main>
+		</>
 	)
 }
