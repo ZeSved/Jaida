@@ -11,19 +11,12 @@ export default function Setting({
 	bg: CSSProperties
 }) {
 	const [show, setShow] = useState<boolean>(false)
-	const [isValid, setIsValid] = useState<boolean>(true)
 	const [colorType, setColorType] = useState<Colors>('hex')
 	const [col, setCol] = useState<string>('')
 
 	function colorChange(e: ChangeEvent<HTMLSelectElement>) {
 		setColorType(e.target.value as Colors)
 	}
-
-	useEffect(() => {
-		if (col.length === 6 || col.length === 3 || col.length === 0) {
-			setIsValid(true)
-		} else setTimeout(() => setIsValid(false), 1000)
-	}, [col])
 
 	return (
 		<>
@@ -46,7 +39,6 @@ export default function Setting({
 						<input
 							style={{
 								width: colorType === 'hex' ? '4.1rem' : '6rem',
-								border: isValid ? 'none' : '1px solid red',
 							}}
 							id='c-i'
 							type='text'
