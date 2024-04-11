@@ -12,14 +12,17 @@
 
 :root {
 	--primary: #1a1a1a;
+	--text: #d3d3d3;
 
 	--inline-margin: 2rem;
 	--border: 1px solid var(--accent);
 
+	--gradient: linear-gradient(-45deg, var(--cta-2) 0%, var(--cta-1) 100%);
+
 	--accent: #585858;
 
 	--cta-1: #6c00d0;
-	--cta-2: #a800eb;
+	--cta-2: #d000eb;
 }
 
 body {

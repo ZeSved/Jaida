@@ -7,11 +7,11 @@
 	box-shadow: 0 4px 15px 5px black;
 
 	> h1 {
-		color: white;
+		color: var(--text);
 	}
 
 	> .login {
-		background-color: white;
+		background-color: var(--text);
 		width: 3rem;
 		aspect-ratio: 1;
 		border-radius: 100vh;

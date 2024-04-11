@@ -4,7 +4,7 @@ import s from './m-d-editor.module.scss'
 import Settings from './settings/page'
 
 export default function MarkdownEditor() {
-	const [bg, setBg] = useState<CSSProperties>({ background: 'gray' })
+	const [bg, setBg] = useState<CSSProperties>({ background: '1a1a1a' })
 
 	function handleKeyboard(e: KeyboardEvent) {}
 
