@@ -1,28 +1,43 @@
-.container {
-	max-height: 92.8vh;
-	overflow-y: auto;
+.main {
+	height: 100vh;
+	max-height: 100vh;
 
-	.editor {
+	.header {
 		display: flex;
-		justify-content: center;
 		align-items: center;
-		height: fit-content;
-		padding: 1rem;
+		justify-content: center;
+		gap: 1rem;
+		width: 100vw;
+		height: 10vh;
+		box-shadow: 0 4px 15px 5px black;
+	}
 
-		> div {
-			border: var(--border);
-			border-radius: 1rem;
+	.container {
+		max-height: 90vh;
+		overflow-y: auto;
 
+		.editor {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: fit-content;
 			padding: 1rem;
-			color: white;
-			caret-color: white;
-			outline: none;
 
-			width: 60vw;
-			aspect-ratio: 9/16;
+			> div {
+				border: var(--border);
+				border-radius: 1rem;
 
-			background-color: transparent;
-			resize: none;
+				padding: 1rem;
+				color: white;
+				caret-color: white;
+				outline: none;
+
+				width: 60vw;
+				aspect-ratio: 9/16;
+
+				background-color: transparent;
+				resize: none;
+			}
 		}
 	}
 }
