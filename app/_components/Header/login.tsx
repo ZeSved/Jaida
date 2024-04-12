@@ -8,7 +8,7 @@ import {
 	User,
 } from 'firebase/auth'
 import s from './header.module.scss'
-import Image from 'next/image'
+import Image, { ImageLoader } from 'next/image'
 import { useState } from 'react'
 import acc from '@/public/account.svg'
 import { useRouter } from 'next/navigation'
@@ -18,7 +18,7 @@ export default function Login() {
 	const router = useRouter()
 
 	const loader = () => {
-		return `https://lh3.googleusercontent.com/a/ACg8ocLI1TK2uWFgg5btl0LszNfk3qFjy7o8wEEVk6ICiM5XG_D015TG=s96-c`
+		return `${user?.photoURL}?w=50&q=75`
 	}
 
 	getRedirectResult(auth)
