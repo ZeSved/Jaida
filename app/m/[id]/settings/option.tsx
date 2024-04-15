@@ -18,6 +18,13 @@ export default function Setting({
 		setColorType(e.target.value as Colors)
 	}
 
+	function handleSelection() {
+		const selObj = window.getSelection()! as Selection
+		const selRange = selObj.getRangeAt(0)
+
+		// const parent = selObj.
+	}
+
 	return (
 		<>
 			<button onClick={() => setShow(!show)}>Editor background</button>
@@ -62,6 +69,9 @@ export default function Setting({
 						</button>
 					</div>
 				</div>
+			</div>
+			<div>
+				<button onClick={handleSelection}>Set to random color</button>
 			</div>
 		</>
 	)

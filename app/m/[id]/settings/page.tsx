@@ -1,6 +1,6 @@
 'use client'
 
-import Login from '@/app/_components/Header/login'
+// import Login from '@/app/_components/Header/login'
 import JaidaLogo from '@/public/JaidaLogo'
 import s from '../m-d-editor.module.scss'
 import { CSSProperties, Dispatch, SetStateAction } from 'react'
@@ -24,7 +24,7 @@ export default function Settings({
 				setBg={setBg}
 				bg={bg}
 			/>
-			<Login />
+			{/* <Login /> */}
 		</header>
 	)
 }

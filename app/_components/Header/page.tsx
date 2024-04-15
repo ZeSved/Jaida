@@ -1,6 +1,6 @@
 import JaidaLogo from '@/public/JaidaLogo'
 import s from './header.module.scss'
-import Login from './login'
+// import Login from './login'
 
 export default function Header() {
 	return (
@@ -13,7 +13,7 @@ export default function Header() {
 				viewBox='59 91'
 			/>
 			<h1>Jaida</h1>
-			<Login />
+			{/* <Login /> */}
 		</header>
 	)
 }
