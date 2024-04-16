@@ -1,26 +1,25 @@
 'use client'
-import { CSSProperties, useEffect, useState } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import Settings from './settings/page'
 
 export default function MarkdownEditor() {
 	const [bg, setBg] = useState<CSSProperties>({ background: '1a1a1a' })
+	const ref = useRef<HTMLDivElement>(null)
 
-	const text = document.getElementById('editor')!
+	function handleKeyboard(e: Event & KeyboardEvent) {
+		if (e.key === ' ') {
+			const newString = ref.current!.textContent!.replace(/delta/gi, 'Δ')
+
+			ref.current!.textContent = newString
+		}
+	}
 
 	useEffect(() => {
-		if (text.textContent?.endsWith('(')) {
-			text.textContent = `${text.textContent})`
-		}
-	})
+		window.addEventListener('keydown', handleKeyboard)
 
-	function handleKeyboard(e: KeyboardEvent) {}
-
-	// useEffect(() => {
-	// 	window.addEventListener('keydown', handleKeyboard)
-
-	// 	return () => window.removeEventListener('keydown', handleKeyboard)
-	// }, [])
+		return () => window.removeEventListener('keydown', handleKeyboard)
+	}, [])
 
 	return (
 		<main className={s.main}>
@@ -31,9 +30,12 @@ export default function MarkdownEditor() {
 			<div className={s.container}>
 				<div className={s.editor}>
 					<div
+						ref={ref}
 						style={bg}
 						id='editor'
-						contentEditable></div>
+						contentEditable>
+						{ref.current?.textContent}
+					</div>
 				</div>
 			</div>
 		</main>
