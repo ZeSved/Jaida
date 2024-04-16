@@ -6,16 +6,21 @@ import Settings from './settings/page'
 export default function MarkdownEditor() {
 	const [bg, setBg] = useState<CSSProperties>({ background: '1a1a1a' })
 
-	function handleKeyboard(e: KeyboardEvent) {}
+	const text = document.getElementById('editor')!
 
 	useEffect(() => {
-		window.addEventListener('keydown', handleKeyboard)
+		if (text.textContent?.endsWith('(')) {
+			text.textContent = `${text.textContent})`
+		}
+	})
 
-		return () => window.removeEventListener('keydown', handleKeyboard)
-	}, [])
+	function handleKeyboard(e: KeyboardEvent) {}
 
-	console.log('render')
-	console.log(bg)
+	// useEffect(() => {
+	// 	window.addEventListener('keydown', handleKeyboard)
+
+	// 	return () => window.removeEventListener('keydown', handleKeyboard)
+	// }, [])
 
 	return (
 		<main className={s.main}>
