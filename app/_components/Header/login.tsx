@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 
 export default function Login() {
 	const [user, setUser] = useState<User | undefined>()
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 	const router = useRouter()
 
 	const loader = () => {
@@ -29,8 +30,8 @@ export default function Login() {
 
 			// The signed-in user info.
 			const user = result?.user
-			console.log(user?.email)
 			setUser(user)
+			setIsLoggedIn(true)
 			// IdP data available using getAdditionalUserInfo(result)
 			// ...
 		})
@@ -48,21 +49,30 @@ export default function Login() {
 	return (
 		<>
 			<button className={s.login}></button>
-			<Image
-				loader={loader}
-				src={user ? user!.photoURL : acc}
-				alt='profile picture'
-				height={50}
-				width={50}
-			/>
+			{user?.photoURL && isLoggedIn ? (
+				<Image
+					loader={loader}
+					src={user.photoURL}
+					alt='profile picture'
+					height={50}
+					width={50}
+				/>
+			) : (
+				<Image
+					src={acc}
+					alt='profile picture'
+					height={50}
+					width={50}
+				/>
+			)}
 			<div className={s.popup}>
 				<button
 					onClick={() =>
 						signOut(auth)
 							.then(() => {
 								setUser(undefined)
+								setIsLoggedIn(false)
 								router.push('/')
-								console.log(user)
 							})
 							.catch((err) => {
 								alert(`Could not log out due to the following error: ${err}`)
