@@ -242,7 +242,16 @@ export default function MarkdownEditor() {
 		}
 
 		if (e.key === 'z') {
-			dispatch({ type: 'set-chi' })
+			dispatch({
+				type: 'set-chi',
+				payload: {
+					active: rep.chi.active,
+					options: [
+						{ text: rep.chi.options[0].text, active: !rep.chi.options[0].active },
+						{ text: rep.chi.options[1].text, active: !rep.chi.options[1].active },
+					],
+				},
+			})
 		}
 	}
 
