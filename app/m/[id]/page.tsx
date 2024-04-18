@@ -202,12 +202,18 @@ const names = [
 ] as const
 
 function reducer(rep: typeof replacements, action: Action) {
-	return
+	return {
+		...rep,
+		['' as Replacements]: action.payload,
+	}
 }
 
 type Action = {
-	type: `set-${string & typeof names}`
-	payload: typeof replacements
+	type: `set-${Replacements}`
+	payload: {
+		active: boolean
+		options: [{ text: string; active: boolean }, { text: string; active: boolean }]
+	}
 }
 
 export default function MarkdownEditor() {
@@ -233,6 +239,10 @@ export default function MarkdownEditor() {
 			// 	const newString = ref.current!.textContent!.replace(new RegExp(r[0], 'gi'), r[1])
 			// 	ref.current!.textContent = newString
 			// })
+		}
+
+		if (e.key === 'z') {
+			dispatch({ type: 'set-chi' })
 		}
 	}
 
@@ -262,3 +272,29 @@ export default function MarkdownEditor() {
 		</main>
 	)
 }
+
+type Replacements =
+	| 'alpha'
+	| 'beta'
+	| 'gamma'
+	| 'delta'
+	| 'epsilon'
+	| 'zeta'
+	| 'eta'
+	| 'theta'
+	| 'iota'
+	| 'kappa'
+	| 'lambda'
+	| 'mu'
+	| 'nu'
+	| 'xi'
+	| 'omicron'
+	| 'pi'
+	| 'rho'
+	| 'sigma'
+	| 'tau'
+	| 'upsilon'
+	| 'phi'
+	| 'chi'
+	| 'psi'
+	| 'omega'
