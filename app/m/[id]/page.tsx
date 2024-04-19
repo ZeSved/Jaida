@@ -204,12 +204,12 @@ const names = [
 function reducer(rep: typeof replacements, action: Action) {
 	return {
 		...rep,
-		['' as Replacements]: action.payload,
+		[action.type as Replacements]: action.payload,
 	}
 }
 
 type Action = {
-	type: `set-${Replacements}`
+	type: `${Replacements}`
 	payload: {
 		active: boolean
 		options: [{ text: string; active: boolean }, { text: string; active: boolean }]
@@ -223,6 +223,7 @@ export default function MarkdownEditor() {
 
 	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (e.key === ' ') {
+			ref.current?.focus()
 			for (let i = 0; i < names.length; i++) {
 				const r = rep[`${names[i]}`]
 
@@ -239,19 +240,6 @@ export default function MarkdownEditor() {
 			// 	const newString = ref.current!.textContent!.replace(new RegExp(r[0], 'gi'), r[1])
 			// 	ref.current!.textContent = newString
 			// })
-		}
-
-		if (e.key === 'z') {
-			dispatch({
-				type: 'set-chi',
-				payload: {
-					active: rep.chi.active,
-					options: [
-						{ text: rep.chi.options[0].text, active: !rep.chi.options[0].active },
-						{ text: rep.chi.options[1].text, active: !rep.chi.options[1].active },
-					],
-				},
-			})
 		}
 	}
 
@@ -274,7 +262,7 @@ export default function MarkdownEditor() {
 						style={bg}
 						id='editor'
 						contentEditable>
-						{ref.current?.textContent}
+						{/* {ref.current?.textContent} */}
 					</div>
 				</div>
 			</div>

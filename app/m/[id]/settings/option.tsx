@@ -19,10 +19,24 @@ export default function Setting({
 	}
 
 	function handleSelection() {
-		const selObj = window.getSelection()! as Selection
+		const selObj = window.getSelection()!
 		const selRange = selObj.getRangeAt(0)
 
-		// const parent = selObj.
+		const parent = selObj.anchorNode?.parentElement
+		const text = parent?.innerHTML
+
+		const selectedText = text?.substring(selObj.focusOffset, selObj.anchorOffset)
+		console.log(selectedText, selObj.focusOffset, selObj.anchorOffset, selRange, selObj)
+
+		const span = document.createElement('span')
+		span.textContent = selectedText!
+		span.style.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+			Math.random() * 255
+		)}, ${Math.floor(Math.random() * 255)})`
+
+		parent!.innerHTML = `${text?.substring(0, selObj.focusOffset)}${
+			span.outerHTML
+		}${text?.substring(selObj.anchorOffset)}`
 	}
 
 	return (
