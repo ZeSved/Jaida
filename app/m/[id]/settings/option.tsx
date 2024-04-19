@@ -13,31 +13,31 @@ export default function Setting({
 	const [show, setShow] = useState<boolean>(false)
 	const [colorType, setColorType] = useState<Colors>('hex')
 	const [col, setCol] = useState<string>('')
+	const [format, setFormat] = useState<Format>(undefined)
 
 	function colorChange(e: ChangeEvent<HTMLSelectElement>) {
 		setColorType(e.target.value as Colors)
 	}
 
-	function handleSelection() {
+	useEffect(() => {
+		if (format === undefined) return
+
 		const selObj = window.getSelection()!
 		const selRange = selObj.getRangeAt(0)
 
 		const parent = selObj.anchorNode?.parentElement
-		const text = parent?.innerHTML
+		const text = parent?.textContent
 
 		const selectedText = text?.substring(selObj.focusOffset, selObj.anchorOffset)
 		console.log(selectedText, selObj.focusOffset, selObj.anchorOffset, selRange, selObj)
 
-		const span = document.createElement('span')
-		span.textContent = selectedText!
-		span.style.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-			Math.random() * 255
-		)}, ${Math.floor(Math.random() * 255)})`
+		parent!.innerHTML = `${text?.substring(0, selObj.focusOffset)}${createHTML(
+			format,
+			selectedText!
+		)}${text?.substring(selObj.anchorOffset)}`
 
-		parent!.innerHTML = `${text?.substring(0, selObj.focusOffset)}${
-			span.outerHTML
-		}${text?.substring(selObj.anchorOffset)}`
-	}
+		setFormat(undefined)
+	}, [format])
 
 	return (
 		<>
@@ -85,10 +85,46 @@ export default function Setting({
 				</div>
 			</div>
 			<div>
-				<button onClick={handleSelection}>Set to random color</button>
+				<button onClick={() => setFormat('span')}>Set to random color</button>
+			</div>
+			<div>
+				<button onClick={() => setFormat('a')}>Set link</button>
 			</div>
 		</>
 	)
 }
 
 type Colors = 'rgb' | 'hex'
+
+type Format =
+	| undefined
+	| 'a'
+	| 'span'
+	| 'h1'
+	| 'h2'
+	| 'h3'
+	| 'h4'
+	| 'h5'
+	| 'h6'
+	| 'italic'
+	| 'bold'
+	| 'important'
+	| 'image'
+	| 'code'
+
+function createHTML(value: Format, selectedText: string) {
+	const elem = document.createElement(value!)
+	elem.textContent = selectedText!
+
+	if (value === 'span') {
+		elem.style.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+			Math.random() * 255
+		)}, ${Math.floor(Math.random() * 255)})`
+	}
+
+	if (value === 'a') {
+		;(elem as HTMLAnchorElement).href = prompt('Enter link here')!
+	}
+
+	return elem.outerHTML
+}
