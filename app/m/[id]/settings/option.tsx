@@ -85,10 +85,10 @@ export default function Setting({
 				</div>
 			</div>
 			<div>
-				<button onClick={() => setFormat('span')}>Set to random color</button>
+				<button onClick={() => setFormat('color')}>Set to random color</button>
 			</div>
 			<div>
-				<button onClick={() => setFormat('a')}>Set link</button>
+				<button onClick={() => setFormat('h2')}>Set link</button>
 			</div>
 		</>
 	)
@@ -98,8 +98,8 @@ type Colors = 'rgb' | 'hex'
 
 type Format =
 	| undefined
-	| 'a'
-	| 'span'
+	| 'link'
+	| 'color'
 	| 'h1'
 	| 'h2'
 	| 'h3'
@@ -110,21 +110,59 @@ type Format =
 	| 'bold'
 	| 'important'
 	| 'image'
-	| 'code'
 
-function createHTML(value: Format, selectedText: string) {
-	const elem = document.createElement(value!)
-	elem.textContent = selectedText!
+function createHTML(requestedElement: Format, selectedText: string) {
+	const span = document.createElement('span')
+	const spanStyle = span.style
 
-	if (value === 'span') {
-		elem.style.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-			Math.random() * 255
-		)}, ${Math.floor(Math.random() * 255)})`
+	switch (requestedElement) {
+		case 'color':
+			spanStyle.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+				Math.random() * 255
+			)}, ${Math.floor(Math.random() * 255)})`
+			setText()
+			break
+		case 'link':
+			const link = document.createElement('a')
+			link.href = prompt('Enter link here')!
+			link.textContent = selectedText
+
+			span.appendChild(link)
+			break
+		case 'italic':
+			spanStyle.fontStyle = 'italic'
+			setText()
+			break
+		case 'bold':
+			spanStyle.fontWeight = 'bold'
+			setText()
+			break
+		case 'important':
+			spanStyle.fontStyle = 'italic'
+			spanStyle.fontWeight = 'bold'
+			setText()
+			break
+		case 'image':
+			const image = document.createElement('img')
+			image.src = prompt('Enter src here')!
+
+			span.appendChild(image)
+			break
+		case 'h1':
+		case 'h2':
+		case 'h3':
+		case 'h4':
+		case 'h5':
+		case 'h6':
+			const h = document.createElement(requestedElement)
+			h.textContent = selectedText
+
+			span.appendChild(h)
 	}
 
-	if (value === 'a') {
-		;(elem as HTMLAnchorElement).href = prompt('Enter link here')!
+	function setText() {
+		span.textContent = selectedText
 	}
 
-	return elem.outerHTML
+	return span.outerHTML
 }
