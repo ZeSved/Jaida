@@ -1,25 +1,50 @@
 'use client'
-import { auth } from '@/firebase/firebase'
+import { auth, db } from '@/firebase/firebase'
 import {
 	getRedirectResult,
 	GoogleAuthProvider,
 	signOut,
 	signInWithRedirect,
+	onAuthStateChanged,
 	User,
 } from 'firebase/auth'
 import s from './header.module.scss'
-import Image, { ImageLoader } from 'next/image'
-import { useState } from 'react'
+import Image from 'next/image'
 import acc from '@/public/account.svg'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { doc, setDoc } from 'firebase/firestore'
 
 export default function Login() {
-	const [user, setUser] = useState<User | undefined>()
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+	const [currentUser, setCurrentUser] = useState<User | undefined>()
 	const router = useRouter()
 
+	useEffect(() => {
+		if (currentUser) updateDB()
+
+		async function updateDB() {
+			try {
+				const docf = await setDoc(doc(db, 'users', currentUser!.uid), {
+					email: currentUser?.email,
+					displayName: currentUser?.displayName,
+					uid: currentUser?.uid,
+				})
+			} catch (e) {
+				console.log('an error has occured', e)
+			}
+		}
+	}, [currentUser])
+
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+			setCurrentUser(user)
+		} else {
+			setCurrentUser(undefined)
+		}
+	})
+
 	const loader = () => {
-		return `${user?.photoURL}?w=50&q=75`
+		return `${currentUser?.photoURL}?w=50&q=75`
 	}
 
 	getRedirectResult(auth)
@@ -30,8 +55,6 @@ export default function Login() {
 
 			// The signed-in user info.
 			const user = result?.user
-			setUser(user)
-			setIsLoggedIn(true)
 			// IdP data available using getAdditionalUserInfo(result)
 			// ...
 		})
@@ -49,10 +72,10 @@ export default function Login() {
 	return (
 		<>
 			<button className={s.login}></button>
-			{user?.photoURL && isLoggedIn ? (
+			{currentUser?.photoURL ? (
 				<Image
 					loader={loader}
-					src={user.photoURL}
+					src={currentUser.photoURL}
 					alt='profile picture'
 					height={50}
 					width={50}
@@ -70,8 +93,6 @@ export default function Login() {
 					onClick={() =>
 						signOut(auth)
 							.then(() => {
-								setUser(undefined)
-								setIsLoggedIn(false)
 								router.push('/')
 							})
 							.catch((err) => {
