@@ -8,12 +8,13 @@ import {
 	onAuthStateChanged,
 	User,
 } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
+import { doc, setDoc } from 'firebase/firestore'
+
 import s from './header.module.scss'
 import Image from 'next/image'
 import acc from '@/public/account.svg'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { doc, setDoc } from 'firebase/firestore'
 
 export default function Login() {
 	const [currentUser, setCurrentUser] = useState<User | undefined>()

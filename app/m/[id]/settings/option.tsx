@@ -2,6 +2,7 @@
 
 import { CSSProperties, ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import s from '../m-d-editor.module.scss'
+import Input from './Input'
 
 export default function Setting({
 	setBg,
@@ -14,6 +15,7 @@ export default function Setting({
 	const [colorType, setColorType] = useState<Colors>('hex')
 	const [col, setCol] = useState<string>('')
 	const [format, setFormat] = useState<Format>(undefined)
+	const [customInput, setCustomInput] = useState<CustomInput>(undefined)
 
 	function colorChange(e: ChangeEvent<HTMLSelectElement>) {
 		setColorType(e.target.value as Colors)
@@ -88,13 +90,25 @@ export default function Setting({
 				<button onClick={() => setFormat('color')}>Set to random color</button>
 			</div>
 			<div>
-				<button onClick={() => setFormat('h2')}>Set link</button>
+				<button
+					onClick={() => {
+						setFormat('link')
+						setCustomInput('link')
+					}}>
+					Set link
+					<Input
+						customInput={customInput}
+						setCustomInput={setCustomInput}
+					/>
+				</button>
 			</div>
 		</>
 	)
 }
 
 type Colors = 'rgb' | 'hex'
+
+export type CustomInput = 'link' | 'image' | undefined
 
 type Format =
 	| undefined
@@ -124,7 +138,6 @@ function createHTML(requestedElement: Format, selectedText: string) {
 			break
 		case 'link':
 			const link = document.createElement('a')
-			link.href = prompt('Enter link here')!
 			link.textContent = selectedText
 
 			span.appendChild(link)
@@ -144,7 +157,6 @@ function createHTML(requestedElement: Format, selectedText: string) {
 			break
 		case 'image':
 			const image = document.createElement('img')
-			image.src = prompt('Enter src here')!
 
 			span.appendChild(image)
 			break

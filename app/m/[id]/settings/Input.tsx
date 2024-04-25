@@ -1,9 +1,33 @@
 'use client'
 
-export default function Input({ mode }: { mode: 'link' | 'image' }) {
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { CustomInput } from './option'
+import s from '../m-d-editor.module.scss'
+
+export default function Input({
+	customInput,
+	setCustomInput,
+}: {
+	customInput: CustomInput
+	setCustomInput: Dispatch<SetStateAction<CustomInput>>
+}) {
+	const [mousePosition, setMousePosition] = useState<{ y: number; x: number }>({ y: 0, x: 0 })
+
+	useEffect(() => {
+		window.addEventListener('mousemove', handleMouseMovement)
+
+		function handleMouseMovement(e: MouseEvent) {
+			setMousePosition({ y: e.clientY, x: e.clientX })
+		}
+
+		return () => window.removeEventListener('mousemove', handleMouseMovement)
+	}, [])
+
 	return (
-		<div>
-			{mode === 'image' ? (
+		<div
+			style={{ top: mousePosition.y, left: mousePosition.x }}
+			className={customInput ? s.input : s.display}>
+			{customInput === 'image' ? (
 				<>
 					<InputField inputType='file' />
 					<p>or</p>
@@ -29,12 +53,16 @@ export default function Input({ mode }: { mode: 'link' | 'image' }) {
 }
 
 function InputField({ text, inputType }: { text?: string; inputType: 'url' | 'text' | 'file' }) {
+	const [isFocused, setIsFocused] = useState<boolean>(false)
+
 	return inputType !== 'file' ? (
 		<fieldset>
-			<legend>{text}</legend>
+			{isFocused && <legend>{text}</legend>}
 			<input
+				onFocus={() => setIsFocused(true)}
+				onBlur={() => setIsFocused(false)}
 				type={inputType}
-				placeholder={text}
+				placeholder={isFocused ? '' : text}
 				pattern={inputType === 'url' ? 'https://.*' : ''}
 			/>
 		</fieldset>
