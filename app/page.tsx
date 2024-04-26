@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import MDocCard from './home_page/card'
 import Header from './_components/Header/page'
+import newDoc from '@/public/Create new file.svg'
 
 export default function Home() {
 	const docs = [
@@ -24,6 +25,12 @@ export default function Home() {
 							key={d.id}
 						/>
 					))}
+					<button>
+						<img
+							src={newDoc}
+							alt=''
+						/>
+					</button>
 				</div>
 			</main>
 		</>

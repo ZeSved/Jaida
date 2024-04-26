@@ -21,6 +21,18 @@ export default function Setting({
 		setColorType(e.target.value as Colors)
 	}
 
+	const buttons = [
+		{ text: 'h1', fun: () => setFormat('h1') },
+		{ text: 'h2', fun: () => setFormat('h2') },
+		{ text: 'h3', fun: () => setFormat('h3') },
+		{ text: 'h4', fun: () => setFormat('h4') },
+		{ text: 'h5', fun: () => setFormat('h5') },
+		{ text: 'h6', fun: () => setFormat('h6') },
+		{ text: 'italic', fun: () => setFormat('italic') },
+		{ text: 'bold', fun: () => setFormat('bold') },
+		{ text: 'important', fun: () => setFormat('important') },
+	]
+
 	useEffect(() => {
 		if (format === undefined) return
 
@@ -31,7 +43,7 @@ export default function Setting({
 		const text = parent?.textContent
 
 		const selectedText = text?.substring(selObj.focusOffset, selObj.anchorOffset)
-		console.log(selectedText, selObj.focusOffset, selObj.anchorOffset, selRange, selObj)
+		console.log(selectedText, selRange, selObj)
 
 		parent!.innerHTML = `${text?.substring(0, selObj.focusOffset)}${createHTML(
 			format,
@@ -43,7 +55,14 @@ export default function Setting({
 
 	return (
 		<>
-			<button onClick={() => setShow(!show)}>Editor background</button>
+			{buttons.map((b) => (
+				<button
+					onClick={b.fun}
+					key={b.text}>
+					{b.text}
+				</button>
+			))}
+			{/* <button onClick={() => setShow(!show)}>Editor background</button>
 			<div className={show ? s.setColor : s.display}>
 				<div>
 					<div
@@ -101,7 +120,7 @@ export default function Setting({
 						setCustomInput={setCustomInput}
 					/>
 				</button>
-			</div>
+			</div> */}
 		</>
 	)
 }

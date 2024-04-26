@@ -9,7 +9,7 @@ import {
 	User,
 } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { doc, setDoc } from 'firebase/firestore'
+import { collection, doc, setDoc } from 'firebase/firestore'
 
 import s from './header.module.scss'
 import Image from 'next/image'
@@ -25,7 +25,9 @@ export default function Login() {
 
 		async function updateDB() {
 			try {
-				const docf = await setDoc(doc(db, 'users', currentUser!.uid), {
+				const userDocument = doc(db, 'users', currentUser!.uid)
+
+				await setDoc(userDocument, {
 					email: currentUser?.email,
 					displayName: currentUser?.displayName,
 					uid: currentUser?.uid,
