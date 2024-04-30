@@ -30,6 +30,7 @@ export default function Login() {
 				await setDoc(userDocument, {
 					email: currentUser?.email,
 					displayName: currentUser?.displayName,
+					numberOfDocuments: 0,
 					uid: currentUser?.uid,
 				})
 			} catch (e) {
