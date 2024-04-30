@@ -1,24 +1,18 @@
 'use client'
 import { auth, db } from '@/firebase/firebase'
-import {
-	getRedirectResult,
-	GoogleAuthProvider,
-	signOut,
-	signInWithRedirect,
-	onAuthStateChanged,
-	User,
-} from 'firebase/auth'
+import { GoogleAuthProvider, signOut, signInWithRedirect } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
 import s from './header.module.scss'
 import Image from 'next/image'
 import acc from '@/public/account.svg'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useUser } from '@/app/hooks/useUser'
 
 export default function Login() {
-	const [currentUser, setCurrentUser] = useState<User | undefined>()
 	const router = useRouter()
+	const currentUser = useUser()
 
 	useEffect(() => {
 		if (currentUser) updateDB()
@@ -39,39 +33,9 @@ export default function Login() {
 		}
 	}, [currentUser])
 
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
-			setCurrentUser(user)
-		} else {
-			setCurrentUser(undefined)
-		}
-	})
-
 	const loader = () => {
 		return `${currentUser?.photoURL}?w=50&q=75`
 	}
-
-	getRedirectResult(auth)
-		.then((result) => {
-			// This gives you a Google Access Token. You can use it to access Google APIs.
-			// const credential = GoogleAuthProvider.credentialFromResult(result);
-			// const token = credential.accessToken;
-
-			// The signed-in user info.
-			const user = result?.user
-			// IdP data available using getAdditionalUserInfo(result)
-			// ...
-		})
-		.catch((error) => {
-			// Handle Errors here.
-			const errorCode = error.code
-			const errorMessage = error.message
-			// The email of the user's account used.
-			const email = error.customData.email
-			// The AuthCredential type that was used.
-			const credential = GoogleAuthProvider.credentialFromError(error)
-			// ...
-		})
 
 	return (
 		<>
@@ -94,23 +58,22 @@ export default function Login() {
 			)}
 			<div className={s.popup}>
 				<button
-					onClick={() =>
-						signOut(auth)
-							.then(() => {
-								router.push('/')
-							})
-							.catch((err) => {
-								alert(`Could not log out due to the following error: ${err}`)
-							})
+					onClick={
+						currentUser
+							? () =>
+									signOut(auth)
+										.then(() => {
+											router.push('/')
+										})
+										.catch((err) => {
+											alert(`Could not log out due to the following error: ${err}`)
+										})
+							: () => {
+									const provider = new GoogleAuthProvider()
+									signInWithRedirect(auth, provider)
+							  }
 					}>
-					Log Out
-				</button>
-				<button
-					onClick={() => {
-						const provider = new GoogleAuthProvider()
-						signInWithRedirect(auth, provider)
-					}}>
-					Log In
+					{currentUser ? 'Log Out' : 'Log In'}
 				</button>
 			</div>
 		</>

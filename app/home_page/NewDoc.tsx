@@ -4,8 +4,10 @@ import { auth, db } from '@/firebase/firebase'
 import newDocSVG from '@/public/Create new file.svg'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { collection, doc, setDoc } from 'firebase/firestore'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import s from '@/app/page.module.scss'
+import Image from 'next/image'
 
 export default function NewDoc() {
 	const [currentUser, setCurrentUser] = useState<User | undefined>()
@@ -21,32 +23,39 @@ export default function NewDoc() {
 
 	return (
 		<button
-			onClick={async () => {
-				try {
-					const userDocument = doc(db, 'users', currentUser!.uid)
-					const userDocs = collection(userDocument, 'user-documents')
-					const new_doc = doc(userDocs, 'DOC-1')
+			onClick={() => {
+				if (currentUser) createDoc()
 
-					const docPages = collection(new_doc, 'pages')
-					const docContent = doc(docPages, 'PAGE-1')
+				async function createDoc() {
+					try {
+						const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', 'DOC-1')
+						// const userDocs = collection(userDocument, 'user-documents')
+						// const new_doc = doc(userDocs, 'DOC-1')
 
-					await setDoc(new_doc, {
-						name: 'DOC-1',
-						numberOfPages: 1,
-					})
+						// const docPages = collection(userDocument, 'pages')
+						const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
-					await setDoc(docContent, {
-						name: 'PAGE-1',
-						content: '',
-					})
+						await setDoc(userDocument, {
+							name: 'DOC-1',
+							numberOfPages: 1,
+						})
 
-					await router.push(`/m/DOC-1`)
-				} catch (e) {
-					throw new Error(`The following error has occured: ${e}`)
+						await setDoc(docContent, {
+							name: 'PAGE-1',
+							content: '',
+						})
+
+						router.push(`/m/DOC-1`)
+					} catch (e) {
+						throw new Error(`The following error has occured: ${e}`)
+					}
 				}
-			}}>
-			<img
+			}}
+			className={s.new}>
+			<Image
 				src={newDocSVG}
+				height={100}
+				width={100}
 				alt=''
 			/>
 		</button>

@@ -42,3 +42,12 @@
 		}
 	}
 }
+
+.new {
+	background-color: var(--primary);
+
+	border-radius: calc(1rem - 1px);
+	border: 1px solid var(--accent);
+
+	cursor: pointer;
+}
