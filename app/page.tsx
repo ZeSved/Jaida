@@ -63,7 +63,7 @@ export default function Home() {
 						</>
 					) : (
 						<>
-							<h4>Oops, looks like you don't have any documents...</h4>
+							<h4>Oops, looks like you don&apos;t have any documents...</h4>
 							<NewDoc currentUser={currentUser} />
 						</>
 					)}
