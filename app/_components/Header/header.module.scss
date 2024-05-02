@@ -12,10 +12,10 @@
 
 	.login {
 		background-color: transparent;
-		width: fit-content;
-		height: fit-content;
 		border-radius: 100vh;
 		margin-left: auto;
+
+		aspect-ratio: 1;
 	}
 }
 

@@ -45,8 +45,8 @@ export default function Login() {
 				loader={currentUser?.photoURL ? loader : undefined}
 				src={currentUser?.photoURL ? currentUser.photoURL : acc}
 				alt='profile picture'
-				height={60}
-				width={60}
+				width={'60'}
+				height={'60'}
 				onClick={() => setShowPopup(!showPopup)}
 				style={{ cursor: 'pointer' }}
 			/>

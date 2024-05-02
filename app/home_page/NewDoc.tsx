@@ -1,59 +1,43 @@
 'use client'
 
-import { auth, db } from '@/firebase/firebase'
-import newDocSVG from '@/public/Create new file.svg'
-import { User, onAuthStateChanged } from 'firebase/auth'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import { db } from '@/firebase/firebase'
+import { User } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import s from '@/app/page.module.scss'
 import Image from 'next/image'
+import new_image from '@/public/Create new file.svg'
 
-export default function NewDoc({ currentUser }: { currentUser: User | undefined }) {
+export default function NewDoc({ currentUser }: { currentUser: User }) {
 	const router = useRouter()
 
 	return (
 		<button
-			onClick={() => {
-				if (currentUser) createDoc()
+			onClick={async () => {
+				// const amountOfDocs =
+				// 	(await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))).size + 1
+				const id = crypto.randomUUID()
 
-				async function createDoc() {
-					try {
-						const amountOfDocs =
-							(await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))).size + 1
+				const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `DOC-${id}`)
+				const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
-						const userDocument = doc(
-							db,
-							'users',
-							currentUser!.uid,
-							'user-documents',
-							`DOC-${amountOfDocs}`
-						)
-						// const userDocs = collection(userDocument, 'user-documents')
-						// const new_doc = doc(userDocs, 'DOC-1')
+				await setDoc(userDocument, {
+					name: `DOC-${id}`,
+					displayName: 'untitled',
+					numberOfPages: 1,
+					dateOfCreation: new Date(),
+				})
 
-						// const docPages = collection(userDocument, 'pages')
-						const docContent = doc(userDocument, 'pages', 'PAGE-1')
+				await setDoc(docContent, {
+					name: 'PAGE-1',
+					content: '',
+				})
 
-						await setDoc(userDocument, {
-							name: `DOC-${amountOfDocs}`,
-							numberOfPages: 1,
-						})
-
-						await setDoc(docContent, {
-							name: 'PAGE-1',
-							content: '',
-						})
-
-						router.push(`/m/DOC-${amountOfDocs}`)
-					} catch (e) {
-						throw new Error(`The following error has occured: ${e}`)
-					}
-				}
+				router.push(`/m/DOC-${id}`)
 			}}
 			className={s.new}>
 			<Image
-				src={newDocSVG}
+				src={new_image}
 				height={100}
 				width={100}
 				alt=''

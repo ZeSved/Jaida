@@ -9,7 +9,7 @@
 
 	.main {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(5, 1fr);
 		gap: 1rem;
 
 		width: fit-content;
@@ -35,7 +35,7 @@
 			}
 		}
 
-		> a {
+		> div {
 			background-color: var(--primary);
 
 			border-radius: calc(1rem - 1px);
@@ -47,18 +47,35 @@
 			flex-direction: column;
 
 			gap: 1rem;
-			padding: 2rem 3rem;
+			padding: 1rem 2rem;
 
 			text-decoration: none;
 
 			> div {
-				height: 1px;
-				background-color: var(--accent);
-			}
-
-			> p {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 				width: 100%;
-				color: var(--text);
+
+				> p {
+					width: 100%;
+					color: var(--text);
+				}
+
+				> button {
+					background-color: transparent;
+					border: none;
+					outline: none;
+					cursor: pointer;
+
+					padding: 4px;
+
+					border-radius: 3px;
+
+					&:hover {
+						background-color: #2c2c2c;
+					}
+				}
 			}
 		}
 
