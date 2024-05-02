@@ -10,16 +10,20 @@
 		color: var(--text);
 	}
 
-	> .login {
-		background-color: var(--text);
-		width: 3rem;
-		aspect-ratio: 1;
+	.login {
+		background-color: transparent;
+		width: fit-content;
+		height: fit-content;
 		border-radius: 100vh;
 		margin-left: auto;
 	}
+}
 
-	> img {
-		width: 7vh;
-		height: 7vh;
-	}
+.display {
+	display: none;
+}
+
+.popup {
+	display: flex;
+	flex-direction: column;
 }

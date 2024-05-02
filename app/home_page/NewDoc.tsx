@@ -3,23 +3,14 @@
 import { auth, db } from '@/firebase/firebase'
 import newDocSVG from '@/public/Create new file.svg'
 import { User, onAuthStateChanged } from 'firebase/auth'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import s from '@/app/page.module.scss'
 import Image from 'next/image'
 
-export default function NewDoc() {
-	const [currentUser, setCurrentUser] = useState<User | undefined>()
+export default function NewDoc({ currentUser }: { currentUser: User | undefined }) {
 	const router = useRouter()
-
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
-			setCurrentUser(user)
-		} else {
-			setCurrentUser(undefined)
-		}
-	})
 
 	return (
 		<button
@@ -28,7 +19,16 @@ export default function NewDoc() {
 
 				async function createDoc() {
 					try {
-						const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', 'DOC-1')
+						const amountOfDocs =
+							(await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))).size + 1
+
+						const userDocument = doc(
+							db,
+							'users',
+							currentUser!.uid,
+							'user-documents',
+							`DOC-${amountOfDocs}`
+						)
 						// const userDocs = collection(userDocument, 'user-documents')
 						// const new_doc = doc(userDocs, 'DOC-1')
 
@@ -36,7 +36,7 @@ export default function NewDoc() {
 						const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
 						await setDoc(userDocument, {
-							name: 'DOC-1',
+							name: `DOC-${amountOfDocs}`,
 							numberOfPages: 1,
 						})
 
@@ -45,7 +45,7 @@ export default function NewDoc() {
 							content: '',
 						})
 
-						router.push(`/m/DOC-1`)
+						router.push(`/m/DOC-${amountOfDocs}`)
 					} catch (e) {
 						throw new Error(`The following error has occured: ${e}`)
 					}

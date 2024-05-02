@@ -14,6 +14,27 @@
 
 		width: fit-content;
 
+		&.noUser,
+		&.noDocs {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+
+		&.noDocs {
+			gap: var(--inline-margin);
+			padding-block: var(--inline-margin);
+
+			> h4 {
+				color: var(--text);
+			}
+
+			.new {
+				border: none;
+			}
+		}
+
 		> a {
 			background-color: var(--primary);
 
@@ -40,14 +61,14 @@
 				color: var(--text);
 			}
 		}
+
+		.new {
+			background-color: var(--primary);
+
+			border-radius: calc(1rem - 1px);
+			border: 1px solid var(--accent);
+
+			cursor: pointer;
+		}
 	}
-}
-
-.new {
-	background-color: var(--primary);
-
-	border-radius: calc(1rem - 1px);
-	border: 1px solid var(--accent);
-
-	cursor: pointer;
 }

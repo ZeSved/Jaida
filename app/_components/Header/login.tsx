@@ -7,12 +7,13 @@ import { doc, setDoc } from 'firebase/firestore'
 import s from './header.module.scss'
 import Image from 'next/image'
 import acc from '@/public/account.svg'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUser } from '@/app/hooks/useUser'
 
 export default function Login() {
 	const router = useRouter()
 	const currentUser = useUser()
+	const [showPopup, setShowPopup] = useState<boolean>(false)
 
 	useEffect(() => {
 		if (currentUser) updateDB()
@@ -34,29 +35,22 @@ export default function Login() {
 	}, [currentUser])
 
 	const loader = () => {
-		return `${currentUser?.photoURL}?w=50&q=75`
+		return `${currentUser?.photoURL}?w=60&q=75`
 	}
 
 	return (
 		<>
-			<button className={s.login}></button>
-			{currentUser?.photoURL ? (
-				<Image
-					loader={loader}
-					src={currentUser.photoURL}
-					alt='profile picture'
-					height={50}
-					width={50}
-				/>
-			) : (
-				<Image
-					src={acc}
-					alt='profile picture'
-					height={50}
-					width={50}
-				/>
-			)}
-			<div className={s.popup}>
+			<Image
+				className={s.login}
+				loader={currentUser?.photoURL ? loader : undefined}
+				src={currentUser?.photoURL ? currentUser.photoURL : acc}
+				alt='profile picture'
+				height={60}
+				width={60}
+				onClick={() => setShowPopup(!showPopup)}
+				style={{ cursor: 'pointer' }}
+			/>
+			<div className={showPopup ? s.popup : s.display}>
 				<button
 					onClick={
 						currentUser
