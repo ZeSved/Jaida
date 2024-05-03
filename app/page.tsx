@@ -5,7 +5,7 @@ import MDocCard from './home_page/card'
 import Header from './_components/Header/page'
 import NewDoc from './home_page/NewDoc'
 import { auth, db } from '@/firebase/firebase'
-import { DocumentData, QuerySnapshot, collection, getDocs } from 'firebase/firestore'
+import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot } from 'firebase/firestore'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import Login from './_components/Header/login'
@@ -23,15 +23,29 @@ export default function Home() {
 		}
 	})
 
-	useEffect(() => {
-		if (currentUser) getDocuments()
+	if (currentUser) {
+		const unsub = onSnapshot(
+			collection(db, 'users', currentUser.uid, 'user-documents'),
+			(queryResult) => {
+				queryResult.docChanges().forEach((change) => {
+					if (change.type === 'added') {
+						setTimeout(() => setUserDocs(queryResult), 2000)
+					}
+				})
 
-		async function getDocuments() {
-			const docs = await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))
+				setUserDocs(queryResult)
+			}
+		)
+	}
 
-			setUserDocs(docs)
-		}
-	}, [currentUser])
+	// useEffect(() => {
+	// 	if (currentUser) getDocuments()
+
+	// 	async function getDocuments() {
+	// 		const docs = await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))
+
+	// 	}
+	// }, [currentUser])
 
 	return (
 		<>
@@ -48,7 +62,7 @@ export default function Home() {
 							<h2>Sign in to continue</h2>
 							<Login />
 						</>
-					) : userDocs ? (
+					) : userDocs && userDocs.size >= 1 ? (
 						<>
 							{userDocs.docs.map((d) => (
 								<MDocCard
