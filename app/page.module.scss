@@ -8,11 +8,13 @@
 	gap: 1rem;
 
 	.main {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: left;
 		gap: 1rem;
 
 		width: fit-content;
+		max-width: 55vw;
 
 		&.noUser,
 		&.noDocs {
@@ -26,64 +28,115 @@
 			gap: var(--inline-margin);
 			padding-block: var(--inline-margin);
 
-			> h4 {
+			.h4 {
 				color: var(--text);
 			}
 
-			.new {
+			.newDocument {
 				border: none;
 			}
 		}
 
-		> div {
-			background-color: var(--primary);
+		.card {
+			display: flex;
 
 			border-radius: calc(1rem - 1px);
 			border: 1px solid var(--accent);
 
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
+			.cardContent {
+				background-color: var(--primary);
 
-			gap: 1rem;
-			padding: 1rem 2rem;
+				border-radius: calc(1rem - 1px);
 
-			text-decoration: none;
-
-			> div {
 				display: flex;
-				justify-content: space-between;
+				justify-content: center;
 				align-items: center;
-				width: 100%;
+				flex-direction: column;
 
-				> p {
+				gap: 1rem;
+				padding: 1rem 2rem;
+
+				text-decoration: none;
+
+				.cardMenu {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 					width: 100%;
-					color: var(--text);
+
+					.cardName {
+						width: 100%;
+						color: var(--text);
+					}
+
+					.cardOpenSettings {
+						background-color: transparent;
+						border: none;
+						outline: none;
+						cursor: pointer;
+
+						border-radius: 3px;
+					}
+				}
+			}
+
+			.cardSettings {
+				display: flex;
+				padding-block: 1rem;
+
+				.divider {
+					height: 100%;
+					width: 1px;
+					background-color: var(--accent);
 				}
 
-				> button {
-					background-color: transparent;
-					border: none;
-					outline: none;
-					cursor: pointer;
+				.cardButtons {
+					display: flex;
+					flex-direction: column;
+					gap: 0.5rem;
 
-					padding: 4px;
-
-					border-radius: 3px;
-
-					&:hover {
-						background-color: #2c2c2c;
+					.subDivider {
+						height: 2px;
+						width: 80%;
+						margin-inline: auto;
+						background-color: var(--accent);
 					}
+
+					.cardButton {
+						background-color: var(--primary);
+						color: var(--text);
+						font-weight: bold;
+						font-size: 1rem;
+
+						border: none;
+						outline: none;
+						cursor: pointer;
+
+						border-radius: 3px;
+
+						text-align: left;
+						margin-inline: 0.5rem;
+
+						&:hover {
+							background-color: #2c2c2c;
+						}
+					}
+				}
+
+				&.hide {
+					width: 0px;
+					overflow: hidden;
 				}
 			}
 		}
 
-		.new {
-			background-color: var(--primary);
+		.newDocument {
+			background-color: transparent;
+			border: none;
+			outline: none;
 
-			border-radius: calc(1rem - 1px);
-			border: 1px solid var(--accent);
+			aspect-ratio: 178 / 253;
+			padding: 2.8rem;
 
 			cursor: pointer;
 		}

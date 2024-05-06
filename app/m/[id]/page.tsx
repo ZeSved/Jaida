@@ -2,6 +2,17 @@
 import { CSSProperties, useEffect, useReducer, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import Settings from './settings/Settings'
+import { User, onAuthStateChanged } from 'firebase/auth'
+import { auth, db } from '@/firebase/firebase'
+import {
+	getDocs,
+	collection,
+	doc,
+	getDoc,
+	DocumentSnapshot,
+	DocumentData,
+	QuerySnapshot,
+} from 'firebase/firestore'
 
 const replacements = {
 	alpha: {
@@ -219,7 +230,39 @@ type Action = {
 export default function MarkdownEditor() {
 	const [rep, dispatch] = useReducer(reducer, replacements)
 	const [bg, setBg] = useState<CSSProperties>({ background: '1a1a1a' })
+	const [currentDoc, setCurrentDoc] = useState<DocumentSnapshot<DocumentData, DocumentData>>()
+	const [currentDocPages, setCurrentDocPages] =
+		useState<QuerySnapshot<DocumentData, DocumentData>>()
+	const [currentUser, setCurrentUser] = useState<User>()
 	const ref = useRef<HTMLDivElement>(null)
+
+	const currentDocumentReference = doc(
+		db,
+		'users',
+		currentUser!.uid,
+		'user-documents',
+		window.location.href.split('/m/')[1]
+	)
+
+	onAuthStateChanged(auth, (user) => {
+		setCurrentUser(user!)
+	})
+
+	useEffect(() => {
+		if (currentUser) getDocuments()
+
+		async function getDocuments() {
+			const docs = await getDoc(currentDocumentReference)
+			const pages = await getDocs(collection(currentDocumentReference, 'pages'))
+
+			setCurrentDoc(docs)
+			setCurrentDocPages(pages)
+		}
+	}, [])
+
+	useEffect(() => {
+		// ref.current!.textContent = currentDocPages?.docs
+	}, [currentDoc, currentDocPages])
 
 	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (e.key === ' ') {

@@ -5,7 +5,7 @@ import MDocCard from './card'
 import Header from '../_components/Header/page'
 import NewDoc from './NewDoc'
 import { auth, db } from '@/firebase/firebase'
-import { DocumentData, QuerySnapshot, collection, getDocs, onSnapshot } from 'firebase/firestore'
+import { DocumentData, QuerySnapshot, collection, onSnapshot } from 'firebase/firestore'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import Login from '../_components/Header/login'
@@ -23,20 +23,18 @@ export default function HomePage() {
 		}
 	})
 
-	if (currentUser) {
-		const unsub = onSnapshot(
-			collection(db, 'users', currentUser.uid, 'user-documents'),
-			(queryResult) => {
-				queryResult.docChanges().forEach((change) => {
-					if (change.type === 'added') {
-						setTimeout(() => setUserDocs(queryResult), 2000)
-					}
-				})
+	useEffect(() => {
+		if (currentUser) {
+			const unsub = onSnapshot(
+				collection(db, 'users', currentUser.uid, 'user-documents'),
+				(queryResult) => {
+					setUserDocs(queryResult)
+				}
+			)
 
-				setUserDocs(queryResult)
-			}
-		)
-	}
+			return () => unsub()
+		}
+	}, [currentUser])
 
 	// useEffect(() => {
 	// 	if (currentUser) getDocuments()
@@ -59,7 +57,7 @@ export default function HomePage() {
 					)}>
 					{!currentUser ? (
 						<>
-							<h2>Sign in to continue</h2>
+							<h2 className={styles.h2}>Sign in to continue</h2>
 							<Login />
 						</>
 					) : userDocs && userDocs.size >= 1 ? (
@@ -67,8 +65,7 @@ export default function HomePage() {
 							{userDocs.docs.map((d) => (
 								<MDocCard
 									id={d.data().name}
-									name={d.data().name}
-									key={d.data().id}
+									key={d.data().name}
 									displayName={d.data().displayName}
 									currentUser={currentUser}
 								/>
@@ -77,7 +74,7 @@ export default function HomePage() {
 						</>
 					) : (
 						<>
-							<h4>Oops, looks like you don&apos;t have any documents...</h4>
+							<h4 className={styles.h4}>Oops, looks like you don&apos;t have any documents...</h4>
 							<NewDoc currentUser={currentUser} />
 						</>
 					)}
