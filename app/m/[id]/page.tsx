@@ -1,7 +1,7 @@
 'use client'
 import { CSSProperties, useEffect, useReducer, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
-import Settings from './settings/page'
+import Settings from './settings/Settings'
 
 const replacements = {
 	alpha: {
