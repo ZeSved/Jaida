@@ -1,6 +1,12 @@
 'use client'
 import { auth, db } from '@/firebase/firebase'
-import { GoogleAuthProvider, signOut, signInWithRedirect } from 'firebase/auth'
+import {
+	GoogleAuthProvider,
+	signOut,
+	signInWithRedirect,
+	User,
+	onAuthStateChanged,
+} from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { doc, setDoc } from 'firebase/firestore'
 
@@ -12,8 +18,18 @@ import { useUser } from '@/app/hooks/useUser'
 
 export default function Login() {
 	const router = useRouter()
-	const currentUser = useUser()
 	const [showPopup, setShowPopup] = useState<boolean>(false)
+	const [currentUser, setCurrentUser] = useState<User | undefined>()
+
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				setCurrentUser(user)
+			} else {
+				setCurrentUser(undefined)
+			}
+		})
+	}, [])
 
 	useEffect(() => {
 		if (currentUser) updateDB()

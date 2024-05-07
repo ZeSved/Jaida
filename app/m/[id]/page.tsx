@@ -12,6 +12,8 @@ import {
 	DocumentSnapshot,
 	DocumentData,
 	QuerySnapshot,
+	updateDoc,
+	DocumentReference,
 } from 'firebase/firestore'
 
 const replacements = {
@@ -230,41 +232,59 @@ type Action = {
 export default function MarkdownEditor() {
 	const [rep, dispatch] = useReducer(reducer, replacements)
 	const [bg, setBg] = useState<CSSProperties>({ background: '1a1a1a' })
-	const [currentDoc, setCurrentDoc] = useState<DocumentSnapshot<DocumentData, DocumentData>>()
-	const [currentDocPages, setCurrentDocPages] =
-		useState<QuerySnapshot<DocumentData, DocumentData>>()
-	const [currentUser, setCurrentUser] = useState<User>()
+	const [currentDoc, setCurrentDoc] = useState<
+		DocumentSnapshot<DocumentData, DocumentData> | undefined
+	>()
+	const [currentDocPages, setCurrentDocPages] = useState<
+		DocumentSnapshot<DocumentData, DocumentData> | undefined
+	>()
+	const [currentUser, setCurrentUser] = useState<User | undefined>()
+	const [currentDocumentReference, setCurrentDocumentReference] =
+		useState<DocumentReference<DocumentData, DocumentData>>()
 	const ref = useRef<HTMLDivElement>(null)
 
-	const currentDocumentReference = doc(
-		db,
-		'users',
-		currentUser!.uid,
-		'user-documents',
-		window.location.href.split('/m/')[1]
-	)
+	useEffect(() => {
+		const unsub = onAuthStateChanged(auth, (user) => {
+			if (user) {
+				setCurrentUser(user)
+			} else {
+				setCurrentUser(undefined)
+			}
+		})
 
-	onAuthStateChanged(auth, (user) => {
-		setCurrentUser(user!)
-	})
+		return () => unsub()
+	}, [])
 
 	useEffect(() => {
 		if (currentUser) getDocuments()
 
 		async function getDocuments() {
-			const docs = await getDoc(currentDocumentReference)
-			const pages = await getDocs(collection(currentDocumentReference, 'pages'))
+			const currentDocRef = doc(
+				db,
+				'users',
+				currentUser!.uid,
+				'user-documents',
+				window.location.href.split('/m/')[1]
+			)
+			setCurrentDocumentReference(currentDocRef)
 
-			setCurrentDoc(docs)
-			setCurrentDocPages(pages)
+			await getDoc(currentDocRef).then((docs) => {
+				setCurrentDoc(docs)
+			})
+
+			await getDoc(doc(currentDocRef, 'pages', 'PAGE-1')).then((pages) => {
+				setCurrentDocPages(pages)
+			})
 		}
-	}, [])
+	}, [currentUser])
 
-	useEffect(() => {
-		// ref.current!.textContent = currentDocPages?.docs
-	}, [currentDoc, currentDocPages])
+	async function handleKeyboard(e: Event & KeyboardEvent) {
+		if (currentDocumentReference) {
+			await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
+				content: ref.current?.innerHTML,
+			})
+		}
 
-	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (e.key === ' ') {
 			ref.current?.focus()
 			for (let i = 0; i < names.length; i++) {
@@ -277,20 +297,18 @@ export default function MarkdownEditor() {
 				)
 				ref.current!.textContent = newString
 			}
-
-			// replacements.forEach((r) => {
-			// 	if (!r.active)
-			// 	const newString = ref.current!.textContent!.replace(new RegExp(r[0], 'gi'), r[1])
-			// 	ref.current!.textContent = newString
-			// })
 		}
 	}
 
 	useEffect(() => {
+		if (currentDocPages) {
+			ref.current!.innerHTML = currentDocPages.data()!.content
+		}
+
 		window.addEventListener('keydown', handleKeyboard)
 
 		return () => window.removeEventListener('keydown', handleKeyboard)
-	}, [])
+	}, [currentDocPages])
 
 	return (
 		<main className={s.main}>
@@ -304,9 +322,7 @@ export default function MarkdownEditor() {
 						ref={ref}
 						style={bg}
 						id='editor'
-						contentEditable>
-						{/* {ref.current?.textContent} */}
-					</div>
+						contentEditable></div>
 				</div>
 			</div>
 		</main>
