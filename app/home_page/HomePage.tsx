@@ -1,6 +1,6 @@
 'use client'
 
-import styles from '@/app/page.module.scss'
+import styles from '@/app/@children/page.module.scss'
 import MDocCard from './card'
 import Header from '../_components/Header/page'
 import NewDoc from './NewDoc'
@@ -15,13 +15,17 @@ export default function HomePage() {
 	const [currentUser, setCurrentUser] = useState<User | undefined>()
 	const [userDocs, setUserDocs] = useState<QuerySnapshot<DocumentData, DocumentData>>()
 
-	onAuthStateChanged(auth, async (user) => {
-		if (user) {
-			setCurrentUser(user)
-		} else {
-			setCurrentUser(undefined)
-		}
-	})
+	useEffect(() => {
+		const unsub = onAuthStateChanged(auth, async (user) => {
+			if (user) {
+				setCurrentUser(user)
+			} else {
+				setCurrentUser(undefined)
+			}
+		})
+
+		return () => unsub()
+	}, [])
 
 	useEffect(() => {
 		if (currentUser) {

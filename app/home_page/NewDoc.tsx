@@ -4,7 +4,7 @@ import { db } from '@/firebase/firebase'
 import { User } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
-import s from '@/app/page.module.scss'
+import s from '@/app/@children/page.module.scss'
 import Image from 'next/image'
 import new_image from '@/public/Create new file.svg'
 

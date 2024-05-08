@@ -15,8 +15,8 @@ import {
 	updateDoc,
 	DocumentReference,
 } from 'firebase/firestore'
-import { useRouter } from 'next/router'
-import ErrorPage from 'next/error'
+import { Metadata } from 'next'
+import { title } from 'process'
 
 const replacements = {
 	alpha: {
@@ -237,18 +237,13 @@ export default function MarkdownEditor() {
 	const [currentDoc, setCurrentDoc] = useState<
 		DocumentSnapshot<DocumentData, DocumentData> | undefined
 	>()
-	const router = useRouter()
 	const [currentDocPages, setCurrentDocPages] = useState<
 		DocumentSnapshot<DocumentData, DocumentData> | undefined
 	>()
-	const [currentUser, setCurrentUser] = useState<User | undefined>()
 	const [currentDocumentReference, setCurrentDocumentReference] =
 		useState<DocumentReference<DocumentData, DocumentData>>()
+	const [currentUser, setCurrentUser] = useState<User | undefined>()
 	const ref = useRef<HTMLDivElement>(null)
-
-	if (!router.isFallback && !currentDoc && !currentDocPages && !currentDocumentReference) {
-		return <ErrorPage statusCode={404} />
-	}
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
@@ -285,17 +280,21 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
-	async function handleKeyboard(e: Event & KeyboardEvent) {
+	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (currentDocumentReference) {
-			await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
-				content: ref.current?.innerHTML,
-			})
+			setTimeout(async () => {
+				await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
+					content: ref.current?.innerHTML,
+				})
+			}, 10)
 		}
 
 		if (e.key === ' ') {
-			ref.current?.focus()
+			let replaced = false
 			for (let i = 0; i < names.length; i++) {
 				const r = rep[`${names[i]}`]
+
+				if (ref.current!.textContent?.includes(names[i])) replaced = true
 
 				if (!r.active) continue
 				const newString = ref.current!.textContent!.replace(
@@ -303,6 +302,17 @@ export default function MarkdownEditor() {
 					r.options.find((t) => t.active === true)!.text
 				)
 				ref.current!.textContent = newString
+			}
+
+			if (replaced) {
+				const range = document.createRange()
+				const selection = window.getSelection()
+				range.setStart(ref.current!.childNodes[0], ref.current!.textContent!.length)
+				range.collapse(true)
+
+				selection?.removeAllRanges()
+				selection?.addRange(range)
+				ref.current!.focus()
 			}
 		}
 	}
@@ -318,21 +328,23 @@ export default function MarkdownEditor() {
 	}, [currentDocPages])
 
 	return (
-		<main className={s.main}>
-			<Settings
-				setBg={setBg}
-				bg={bg}
-			/>
-			<div className={s.container}>
-				<div className={s.editor}>
-					<div
-						ref={ref}
-						style={bg}
-						id='editor'
-						contentEditable></div>
+		<>
+			<main className={s.main}>
+				<Settings
+					setBg={setBg}
+					bg={bg}
+				/>
+				<div className={s.container}>
+					<div className={s.editor}>
+						<div
+							ref={ref}
+							style={bg}
+							id='editor'
+							contentEditable></div>
+					</div>
 				</div>
-			</div>
-		</main>
+			</main>
+		</>
 	)
 }
 

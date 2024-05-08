@@ -1,5 +1,4 @@
 'use client'
-import s from './header.module.scss'
 import JaidaLogo from '@/public/JaidaLogo'
 
 export default function HomeLink() {

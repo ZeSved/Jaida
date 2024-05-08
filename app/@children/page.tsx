@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import HomePage from './home_page/HomePage'
+import HomePage from '../home_page/HomePage'
 import Loading from './loading'
 
 export default async function Home() {

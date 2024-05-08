@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Jaida_small_logo from '@/public/Jaida Logo.svg'
-import s from '@/app/page.module.scss'
+import s from '@/app/@children/page.module.scss'
 import options from '@/public/options.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/firebase/firebase'
