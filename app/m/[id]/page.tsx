@@ -15,6 +15,8 @@ import {
 	updateDoc,
 	DocumentReference,
 } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import ErrorPage from 'next/error'
 
 const replacements = {
 	alpha: {
@@ -235,6 +237,7 @@ export default function MarkdownEditor() {
 	const [currentDoc, setCurrentDoc] = useState<
 		DocumentSnapshot<DocumentData, DocumentData> | undefined
 	>()
+	const router = useRouter()
 	const [currentDocPages, setCurrentDocPages] = useState<
 		DocumentSnapshot<DocumentData, DocumentData> | undefined
 	>()
@@ -242,6 +245,10 @@ export default function MarkdownEditor() {
 	const [currentDocumentReference, setCurrentDocumentReference] =
 		useState<DocumentReference<DocumentData, DocumentData>>()
 	const ref = useRef<HTMLDivElement>(null)
+
+	if (!router.isFallback && !currentDoc && !currentDocPages && !currentDocumentReference) {
+		return <ErrorPage statusCode={404} />
+	}
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
