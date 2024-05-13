@@ -72,6 +72,7 @@ export default function HomePage() {
 									key={d.data().name}
 									displayName={d.data().displayName}
 									currentUser={currentUser}
+									imageSquareLocation={d.data().imageSquareLocation}
 								/>
 							))}
 							<NewDoc currentUser={currentUser} />

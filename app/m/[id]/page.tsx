@@ -78,6 +78,17 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
+	function setNewRange() {
+		const range = document.createRange()
+		const selection = window.getSelection()
+		range.setStart(ref.current!, ref.current!.innerHTML!.length)
+		range.collapse(true)
+
+		selection?.removeAllRanges()
+		selection?.addRange(range)
+		ref.current!.focus()
+	}
+
 	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (currentDocumentReference) {
 			setTimeout(async () => {
@@ -88,36 +99,29 @@ export default function MarkdownEditor() {
 		}
 
 		if (e.key === ' ') {
-			let replaced = false
 			for (let i = 0; i < replacements.length; i++) {
 				const rep = replacements[i]
 
-				if (ref.current!.textContent?.includes(rep.replaceWith)) replaced = true
-
 				if (!rep.active) continue
-				const newString = ref.current!.textContent!.replace(
+				const newString = ref.current!.innerHTML!.replace(
 					new RegExp(rep.replaceWith, 'gi'),
 					rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
 				)
-				ref.current!.textContent = newString
+				ref.current!.innerHTML = newString
 			}
 
-			if (replaced) {
-				const range = document.createRange()
-				const selection = window.getSelection()
-				range.setStart(ref.current!.childNodes[0], ref.current!.textContent!.length)
-				range.collapse(true)
+			setNewRange()
+		}
 
-				selection?.removeAllRanges()
-				selection?.addRange(range)
-				ref.current!.focus()
-			}
+		if (e.key === 'Enter') {
+			// ref.current!.innerHTML += '&#9094;'
+			setNewRange()
 		}
 	}
 
 	useEffect(() => {
 		if (currentDocPages) {
-			ref.current!.innerHTML = currentDocPages.data()!.content
+			ref.current!.innerHTML = currentDocPages.data()?.content ?? ''
 		}
 
 		window.addEventListener('keydown', handleKeyboard)

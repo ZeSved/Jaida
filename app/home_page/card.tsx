@@ -15,10 +15,12 @@ export default function MDocCard({
 	id,
 	currentUser,
 	displayName,
+	imageSquareLocation,
 }: {
 	id: string
 	currentUser: User
 	displayName: string
+	imageSquareLocation: number[]
 }) {
 	const [open, setOpen] = useState<boolean>(false)
 
@@ -63,10 +65,17 @@ export default function MDocCard({
 				<Link
 					className={s.cardLink}
 					href={`/m/${id}`}>
-					<Image
-						src={Jaida_small_logo}
-						alt='Jadia small logo'
-					/>
+					{imageSquareLocation.map((squareLoc) => (
+						<div
+							style={{
+								backgroundColor:
+									squareLoc === 0
+										? 'transparent'
+										: Math.floor(Math.random() * (1 - 0 + 1) + 0) === 1
+										? 'var(--cta-2)'
+										: 'var(--cta-1)',
+							}}></div>
+					))}
 				</Link>
 				<div className={s.cardMenu}>
 					<p className={s.cardName}>{displayName}</p>

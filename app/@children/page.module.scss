@@ -49,7 +49,7 @@
 				border-radius: calc(1rem - 1px);
 
 				display: flex;
-				justify-content: center;
+				justify-content: space-between;
 				align-items: center;
 				flex-direction: column;
 
@@ -57,6 +57,13 @@
 				padding: 1rem 2rem;
 
 				text-decoration: none;
+
+				.cardLink {
+					display: grid;
+					grid-template-columns: repeat(3, 3rem);
+					grid-template-rows: repeat(3, 3rem);
+					gap: 0.5rem;
+				}
 
 				.cardMenu {
 					display: flex;
