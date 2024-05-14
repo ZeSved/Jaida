@@ -8,9 +8,8 @@
 	gap: 1rem;
 
 	.main {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: left;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
 		gap: 1rem;
 
 		width: fit-content;
@@ -42,6 +41,7 @@
 
 			border-radius: calc(1rem - 1px);
 			border: 1px solid var(--accent);
+			height: fit-content;
 
 			.cardContent {
 				background-color: var(--primary);
@@ -60,8 +60,8 @@
 
 				.cardLink {
 					display: grid;
-					grid-template-columns: repeat(3, 3rem);
-					grid-template-rows: repeat(3, 3rem);
+					grid-template-columns: repeat(3, 7vh);
+					grid-template-rows: repeat(3, 7vh);
 					gap: 0.5rem;
 				}
 
@@ -142,8 +142,8 @@
 			border: none;
 			outline: none;
 
-			aspect-ratio: 178 / 253;
-			padding: 2.8rem;
+			// aspect-ratio: 178 / 253;
+			// padding: 2.8rem;
 
 			cursor: pointer;
 		}

@@ -13,6 +13,7 @@ import {
 	DocumentReference,
 } from 'firebase/firestore'
 import { replacements } from './replacements'
+import { parser } from './parser'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {
@@ -81,7 +82,7 @@ export default function MarkdownEditor() {
 	function setNewRange() {
 		const range = document.createRange()
 		const selection = window.getSelection()
-		range.setStart(ref.current!, ref.current!.innerHTML!.length)
+		range.setStart(selection!.focusNode!, 1)
 		range.collapse(true)
 
 		selection?.removeAllRanges()
@@ -97,6 +98,8 @@ export default function MarkdownEditor() {
 				})
 			}, 10)
 		}
+
+		console.log(parser('MD-HTML', ref.current?.textContent!))
 
 		if (e.key === ' ') {
 			for (let i = 0; i < replacements.length; i++) {
@@ -114,7 +117,8 @@ export default function MarkdownEditor() {
 		}
 
 		if (e.key === 'Enter') {
-			// ref.current!.innerHTML += '&#9094;'
+			// e.preventDefault()
+			// ref.current!.innerHTML += '<br>'
 			setNewRange()
 		}
 	}

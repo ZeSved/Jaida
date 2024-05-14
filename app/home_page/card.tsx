@@ -74,6 +74,13 @@ export default function MDocCard({
 										: Math.floor(Math.random() * (1 - 0 + 1) + 0) === 1
 										? 'var(--cta-2)'
 										: 'var(--cta-1)',
+								border: `1px solid ${
+									squareLoc === 1
+										? 'transparent'
+										: Math.floor(Math.random() * (1 - 0 + 1) + 0) === 1
+										? 'var(--cta-2)'
+										: 'var(--cta-1)'
+								}`,
 							}}></div>
 					))}
 				</Link>

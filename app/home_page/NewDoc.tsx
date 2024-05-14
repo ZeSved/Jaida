@@ -17,14 +17,14 @@ export default function NewDoc({ currentUser }: { currentUser: User }) {
 		const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `DOC-${id}`)
 		const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
-		const imageArr: number[] = []
-		for (let i = 0; i < 10; i++) {
-			imageArr.push(Math.floor(Math.random() * (1 - 0 + 1) + 0))
+		const imgSquareLocation: number[] = []
+		for (let i = 0; i < 9; i++) {
+			imgSquareLocation.push(Math.floor(Math.random() * (1 - 0 + 1) + 0))
 		}
 
 		router.push(`/m/DOC-${id}`)
 
-		createNewDoc(userDocument, id, imageArr, docContent)
+		createNewDoc(userDocument, id, imgSquareLocation, docContent)
 	}
 
 	async function createNewDoc(

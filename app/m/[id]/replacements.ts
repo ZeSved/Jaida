@@ -199,7 +199,7 @@ export const replacements = [
   {
     active: true,
     option: '⁰',
-    replaceWith: '^0'
+    replaceWith: '!0'
   },
   {
     active: true,
@@ -209,7 +209,7 @@ export const replacements = [
   {
     active: true,
     option: '¹',
-    replaceWith: '^1'
+    replaceWith: '!1'
   },
   {
     active: true,
@@ -219,7 +219,7 @@ export const replacements = [
   {
     active: true,
     option: '²',
-    replaceWith: '^2'
+    replaceWith: '!2'
   },
   {
     active: true,
@@ -229,7 +229,7 @@ export const replacements = [
   {
     active: true,
     option: '³',
-    replaceWith: '^3'
+    replaceWith: '!3'
   },
   {
     active: true,
@@ -239,7 +239,7 @@ export const replacements = [
   {
     active: true,
     option: '⁴',
-    replaceWith: '^4'
+    replaceWith: '!4'
   },
   {
     active: true,
@@ -249,7 +249,7 @@ export const replacements = [
   {
     active: true,
     option: '⁵',
-    replaceWith: '^5'
+    replaceWith: '!5'
   },
   {
     active: true,
@@ -269,7 +269,7 @@ export const replacements = [
   {
     active: true,
     option: '⁷',
-    replaceWith: '^7'
+    replaceWith: '!7'
   },
   {
     active: true,
@@ -279,7 +279,7 @@ export const replacements = [
   {
     active: true,
     option: '⁸',
-    replaceWith: '^8'
+    replaceWith: '!8'
   },
   {
     active: true,
@@ -289,6 +289,6 @@ export const replacements = [
   {
     active: true,
     option: '⁹',
-    replaceWith: '^9'
+    replaceWith: '!9'
   },
 ]
