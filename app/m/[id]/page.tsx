@@ -82,11 +82,12 @@ export default function MarkdownEditor() {
 	function setNewRange() {
 		const range = document.createRange()
 		const selection = window.getSelection()
-		range.setStart(selection!.focusNode!, 1)
+		const elem = selection!.focusNode!.childNodes[0]
+		range.setStart(elem, elem.textContent ? elem.textContent.length : 0)
 		range.collapse(true)
 
-		selection?.removeAllRanges()
-		selection?.addRange(range)
+		selection!.removeAllRanges()
+		selection!.addRange(range)
 		ref.current!.focus()
 	}
 
@@ -99,7 +100,7 @@ export default function MarkdownEditor() {
 			}, 10)
 		}
 
-		console.log(parser('MD-HTML', ref.current?.textContent!))
+		console.log(parser(ref.current?.textContent!, 'GET-DB'))
 
 		if (e.key === ' ') {
 			for (let i = 0; i < replacements.length; i++) {
