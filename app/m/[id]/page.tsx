@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import { replacements } from './replacements'
 import { parser } from './parser'
+import { LoadingSq } from '@/components/loadingSquare'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {
@@ -80,15 +81,22 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
-	function setNewRange(arg?: 'initial' | 'enter') {
+	function newRange(arg?: 'initial' | 'enter') {
 		if (window.getSelection()) {
 			const range = document.createRange()
 			const selection = window.getSelection()!
-			const elem =
-				selection.focusNode!.childNodes[
-					arg === 'initial' ? 0 : arg === 'enter' ? currentRow + 1 : currentRow
-				]
-			console.log(currentRow)
+
+			const newRow = ref.current!.childNodes.length - 1
+
+			if (arg === 'enter') {
+				setCurrentRow(newRow)
+			}
+
+			const elem = selection.focusNode!.childNodes[newRow]
+			// selection.focusNode!.childNodes[
+			// 	arg === 'initial' ? 0 : arg === 'enter' ? newRow + 1 : newRow
+			// ]
+			console.log(newRow)
 			console.log('🚀 ~ setNewRange ~ elem:', elem)
 			range.setStart(elem, 1)
 			range.collapse(true)
@@ -97,12 +105,6 @@ export default function MarkdownEditor() {
 			selection!.addRange(range)
 			ref.current!.focus()
 		}
-
-		console.log(window.getSelection()!.focusNode!.childNodes[currentRow])
-		console.log(window.getSelection()!.focusNode!.childNodes[0])
-		console.log(window.getSelection()!.focusNode!.childNodes[1])
-		console.log(window.getSelection()!.focusNode!.childNodes)
-		console.log(window.getSelection()!.focusNode)
 	}
 
 	function handleKeyboard(e: Event & KeyboardEvent) {
@@ -119,7 +121,7 @@ export default function MarkdownEditor() {
 			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${e.key}</div>`
 
 			if (ref.current!.childNodes.length === 0) {
-				setNewRange('initial')
+				newRange('initial')
 			}
 		}
 
@@ -135,14 +137,13 @@ export default function MarkdownEditor() {
 				ref.current!.innerHTML = newString
 			}
 
-			setNewRange()
+			newRange()
 		}
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
 			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${' '}</div>`
-			setCurrentRow(currentRow + 1)
-			setNewRange('enter')
+			newRange('enter')
 		}
 	}
 
@@ -156,6 +157,9 @@ export default function MarkdownEditor() {
 		return () => window.removeEventListener('keydown', handleKeyboard)
 	}, [currentDocPages])
 
+	const loadingSquaresIds =
+		'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
+
 	return (
 		<>
 			<title>{currentDoc ? `Jaida - ${currentDoc.data()?.displayName}` : 'Jaida'}</title>
@@ -164,16 +168,24 @@ export default function MarkdownEditor() {
 					setBg={setBg}
 					bg={bg}
 				/>
-				<div className={s.container}>
-					<div className={s.editor}>
-						<div
-							ref={ref}
-							style={bg}
-							id='editor'
-							className={s.docEdit}
-							contentEditable></div>
+				{currentDoc ? (
+					<div className={s.container}>
+						<div className={s.editor}>
+							<div
+								ref={ref}
+								style={bg}
+								id='editor'
+								className={s.docEdit}
+								contentEditable></div>
+						</div>
 					</div>
-				</div>
+				) : (
+					<div className={s.loadingContainer}>
+						{loadingSquaresIds.split('').map((i) => (
+							<LoadingSq key={i} />
+						))}
+					</div>
+				)}
 			</main>
 		</>
 	)

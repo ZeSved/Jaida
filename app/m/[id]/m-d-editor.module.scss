@@ -1,6 +1,7 @@
 .main {
 	height: 100vh;
 	max-height: 100vh;
+	width: 100vw;
 
 	.header {
 		display: flex;
@@ -127,6 +128,30 @@
 
 				> div {
 					height: 12pt;
+				}
+			}
+		}
+	}
+
+	.loadingContainer {
+		display: grid;
+		grid-template-columns: repeat(8, 5.5rem);
+		gap: 8px;
+		width: 100%;
+		justify-content: center;
+
+		.loadingSq {
+			height: 5rem;
+			width: 5rem;
+
+			animation: wave 2s infinite linear alternate;
+
+			@keyframes wave {
+				from {
+					opacity: 0.1;
+				}
+				to {
+					opacity: 0.9;
 				}
 			}
 		}
