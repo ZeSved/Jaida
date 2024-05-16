@@ -1,5 +1,5 @@
 'use client'
-import { CSSProperties, useEffect, useReducer, useRef, useState } from 'react'
+import { CSSProperties, createElement, useEffect, useReducer, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import Settings from './settings/Settings'
 import { User, onAuthStateChanged } from 'firebase/auth'
@@ -42,6 +42,7 @@ export default function MarkdownEditor() {
 	const [currentDocumentReference, setCurrentDocumentReference] =
 		useState<DocumentReference<DocumentData, DocumentData>>()
 	const [currentUser, setCurrentUser] = useState<User | undefined>()
+	const [currentRow, setCurrentRow] = useState<number>(0)
 	const ref = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -79,16 +80,29 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
-	function setNewRange() {
-		const range = document.createRange()
-		const selection = window.getSelection()
-		const elem = selection!.focusNode!.childNodes[0]
-		range.setStart(elem, elem.textContent ? elem.textContent.length : 0)
-		range.collapse(true)
+	function setNewRange(arg?: 'initial' | 'enter') {
+		if (window.getSelection()) {
+			const range = document.createRange()
+			const selection = window.getSelection()!
+			const elem =
+				selection.focusNode!.childNodes[
+					arg === 'initial' ? 0 : arg === 'enter' ? currentRow + 1 : currentRow
+				]
+			console.log(currentRow)
+			console.log('🚀 ~ setNewRange ~ elem:', elem)
+			range.setStart(elem, 1)
+			range.collapse(true)
 
-		selection!.removeAllRanges()
-		selection!.addRange(range)
-		ref.current!.focus()
+			selection!.removeAllRanges()
+			selection!.addRange(range)
+			ref.current!.focus()
+		}
+
+		console.log(window.getSelection()!.focusNode!.childNodes[currentRow])
+		console.log(window.getSelection()!.focusNode!.childNodes[0])
+		console.log(window.getSelection()!.focusNode!.childNodes[1])
+		console.log(window.getSelection()!.focusNode!.childNodes)
+		console.log(window.getSelection()!.focusNode)
 	}
 
 	function handleKeyboard(e: Event & KeyboardEvent) {
@@ -100,7 +114,14 @@ export default function MarkdownEditor() {
 			}, 10)
 		}
 
-		console.log(parser(ref.current?.textContent!, 'GET-DB'))
+		if (/^[a-zA-Z]$/.test(e.key) && !ref.current!.hasChildNodes()) {
+			e.preventDefault()
+			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${e.key}</div>`
+
+			if (ref.current!.childNodes.length === 0) {
+				setNewRange('initial')
+			}
+		}
 
 		if (e.key === ' ') {
 			for (let i = 0; i < replacements.length; i++) {
@@ -118,9 +139,10 @@ export default function MarkdownEditor() {
 		}
 
 		if (e.key === 'Enter') {
-			// e.preventDefault()
-			// ref.current!.innerHTML += '<br>'
-			setNewRange()
+			e.preventDefault()
+			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${' '}</div>`
+			setCurrentRow(currentRow + 1)
+			setNewRange('enter')
 		}
 	}
 
@@ -148,6 +170,7 @@ export default function MarkdownEditor() {
 							ref={ref}
 							style={bg}
 							id='editor'
+							className={s.docEdit}
 							contentEditable></div>
 					</div>
 				</div>
