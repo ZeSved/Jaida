@@ -96,8 +96,6 @@ export default function MarkdownEditor() {
 			// selection.focusNode!.childNodes[
 			// 	arg === 'initial' ? 0 : arg === 'enter' ? newRow + 1 : newRow
 			// ]
-			console.log(newRow)
-			console.log('🚀 ~ setNewRange ~ elem:', elem)
 			range.setStart(elem, 1)
 			range.collapse(true)
 
@@ -111,7 +109,7 @@ export default function MarkdownEditor() {
 		if (currentDocumentReference) {
 			setTimeout(async () => {
 				await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
-					content: ref.current?.innerHTML,
+					content: parser({ action: 'POST-DB', content: ref.current!.innerHTML }),
 				})
 			}, 10)
 		}
@@ -142,23 +140,43 @@ export default function MarkdownEditor() {
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${' '}</div>`
+			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${'\n'}</div>`
 			newRange('enter')
+		}
+
+		if (
+			e.key === 'Backspace' &&
+			ref.current!.childNodes[1] === undefined &&
+			ref.current!.childNodes[0].textContent?.length === 0
+		) {
+			e.preventDefault()
+		}
+
+		if (e.key === 'ArrowUp') {
+			if (currentRow > 0) {
+				const newRow = currentRow - 1
+				setCurrentRow(newRow)
+			}
 		}
 	}
 
 	useEffect(() => {
 		if (currentDocPages) {
-			ref.current!.innerHTML = currentDocPages.data()?.content ?? ''
+			const loadedDocContent = parser({
+				content: currentDocPages.data()?.content,
+				action: 'GET-DB',
+			}) as string
+			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
+			ref.current!.innerHTML =
+				loadedDocContent.length === 0
+					? `<div id='row-${ref.current!.childNodes.length}'></div>`
+					: loadedDocContent
 		}
 
 		window.addEventListener('keydown', handleKeyboard)
 
 		return () => window.removeEventListener('keydown', handleKeyboard)
 	}, [currentDocPages])
-
-	const loadingSquaresIds =
-		'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
 
 	return (
 		<>
@@ -168,24 +186,20 @@ export default function MarkdownEditor() {
 					setBg={setBg}
 					bg={bg}
 				/>
-				{currentDoc ? (
-					<div className={s.container}>
-						<div className={s.editor}>
+				<div className={s.container}>
+					<div className={s.editor}>
+						{currentDoc ? (
 							<div
 								ref={ref}
 								style={bg}
 								id='editor'
 								className={s.docEdit}
 								contentEditable></div>
-						</div>
+						) : (
+							<LoadingSq />
+						)}
 					</div>
-				) : (
-					<div className={s.loadingContainer}>
-						{loadingSquaresIds.split('').map((i) => (
-							<LoadingSq key={i} />
-						))}
-					</div>
-				)}
+				</div>
 			</main>
 		</>
 	)

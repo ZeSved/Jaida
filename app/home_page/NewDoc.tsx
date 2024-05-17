@@ -49,7 +49,7 @@ export default function NewDoc({ currentUser }: { currentUser: User }) {
 
 		await setDoc(docContent, {
 			name: 'PAGE-1',
-			content: '',
+			content: [''],
 		})
 
 		await updateDoc(doc(db, 'users', currentUser.uid), {
