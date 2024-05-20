@@ -81,21 +81,30 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
-	function newRange(arg?: 'initial' | 'enter') {
+	function newRange(arg?: 'initial' | 'enter', updatedRow?: number) {
 		if (window.getSelection()) {
 			const range = document.createRange()
 			const selection = window.getSelection()!
 
-			const newRow = ref.current!.childNodes.length - 1
+			const newRow = updatedRow ?? ref.current!.childNodes.length - 1
 
-			if (arg === 'enter') {
+			if (updatedRow || arg === 'enter') {
 				setCurrentRow(newRow)
 			}
 
-			const elem = selection.focusNode!.childNodes[newRow]
+			const elem = updatedRow
+				? selection.focusNode!.parentNode!.parentNode!.childNodes[newRow]
+				: selection.focusNode!.childNodes[newRow]
 			// selection.focusNode!.childNodes[
 			// 	arg === 'initial' ? 0 : arg === 'enter' ? newRow + 1 : newRow
 			// ]
+			console.log('---start---')
+			console.log('🚀 ~ newRange ~ elem:', elem)
+			console.log(
+				'🚀 ~ newRange ~ selection.focusNode.parentNode.parentNode:',
+				selection.focusNode!.parentNode!.parentNode!.childNodes
+			)
+			console.log('---end---')
 			range.setStart(elem, 1)
 			range.collapse(true)
 
@@ -153,9 +162,12 @@ export default function MarkdownEditor() {
 		}
 
 		if (e.key === 'ArrowUp') {
-			if (currentRow > 0) {
-				const newRow = currentRow - 1
-				setCurrentRow(newRow)
+			console.log('works')
+			if (currentRow >= 0) {
+				console.log('works')
+				newRange(undefined, currentRow - 1)
+				// const newRow = currentRow - 1
+				// setCurrentRow(newRow)
 			}
 		}
 	}
