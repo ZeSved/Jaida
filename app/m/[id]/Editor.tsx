@@ -1,7 +1,7 @@
 'use client'
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
-import { Action, handleKeyboard } from './utils/handleKeyboard'
+// import { handleKeyboard } from './utils/handleKeyboard'
 import {
 	updateDoc,
 	doc,
@@ -10,10 +10,12 @@ import {
 	DocumentReference,
 } from 'firebase/firestore'
 import { parser } from './utils/parser'
+import { replacements } from './utils/replacements'
+import { divId } from './utils/divId'
 
 export default function Editor({ currentDocPages, currentDocumentReference }: EditorProps) {
 	const [currentRow, setCurrentRow] = useState<number>(0)
-	const [action, setAction] = useState<Action>()
+	const [action, setAction] = useState<Action>(undefined)
 	const ref = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -24,9 +26,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 			}) as string
 			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
 			ref.current!.innerHTML =
-				loadedDocContent.length === 0
-					? `<div id='row-${ref.current!.childNodes.length}'></div>`
-					: loadedDocContent
+				loadedDocContent.length === 0 ? `<div id='${divId()}'></div>` : loadedDocContent
 		}
 
 		function handleKeyboardInit(e: Event & KeyboardEvent) {
@@ -38,11 +38,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 				}, 10)
 			}
 
-			handleKeyboard(e, ref, currentRow, setCurrentRow)
-
-			if (e.key === 'Enter') {
-				setCurrentRow((c) => c + 1)
-			}
+			handleKeyboard(e)
 		}
 
 		window.addEventListener('keydown', handleKeyboardInit)
@@ -50,13 +46,83 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		return () => window.removeEventListener('keydown', handleKeyboardInit)
 	}, [currentDocPages, ref])
 
-	// useEffect(() => {
-	// 	switch (action) {
-	// 		case 'enter':
-	// 			setCurrentRow((c) => c + 1)
-	// 			break
-	// 	}
-	// }, [action])
+	function handleKeyboard(e: Event & KeyboardEvent) {
+		if (!ref) return
+
+		if (/^[a-zA-Z]$/.test(e.key) && !ref.current!.hasChildNodes()) {
+			e.preventDefault()
+			ref.current!.innerHTML += `<div id='${divId()}'>${e.key}</div>`
+
+			if (ref.current!.childNodes.length === 0) {
+				setAction('initial')
+			}
+		}
+
+		if (e.key === ' ') {
+			for (let i = 0; i < replacements.length; i++) {
+				const rep = replacements[i]
+
+				if (!rep.active) continue
+				const newString = ref.current!.innerHTML!.replace(
+					new RegExp(rep.replaceWith, 'gi'),
+					rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
+				)
+				ref.current!.innerHTML = newString
+			}
+
+			setAction('space')
+		}
+
+		if (e.key === 'Enter') {
+			e.preventDefault()
+			ref.current!.innerHTML += `<div id='${divId()}'>${'\n'}</div>`
+			setAction('enter')
+		}
+
+		if (
+			e.key === 'Backspace' &&
+			ref.current!.childNodes[1] === undefined &&
+			ref.current!.childNodes[0].textContent?.length === 0
+		) {
+			e.preventDefault()
+		}
+
+		if (e.key === 'ArrowUp') {
+			e.preventDefault()
+			setAction('up')
+		}
+	}
+
+	useEffect(() => {
+		if (action === undefined) return
+
+		const range = document.createRange()
+		const selection = window.getSelection()!
+		const newRow =
+			action === 'up'
+				? currentRow - 1
+				: action === 'enter'
+				? ref.current!.childNodes.length - 1
+				: currentRow
+		const elem = ref.current!.childNodes[newRow] as Node
+
+		range.setStart(elem, 1)
+		range.collapse(true)
+
+		selection!.removeAllRanges()
+		selection!.addRange(range)
+		ref.current!.focus()
+
+		if (action === 'enter') {
+			setCurrentRow(currentRow + 1)
+		}
+
+		if (action === 'up') {
+			setCurrentRow(currentRow - 1)
+		}
+
+		setAction(undefined)
+	}, [action])
 
 	return (
 		<div
@@ -71,3 +137,5 @@ type EditorProps = {
 	currentDocPages: DocumentSnapshot<DocumentData, DocumentData> | undefined
 	currentDocumentReference: DocumentReference<DocumentData, DocumentData> | undefined
 }
+
+type Action = 'initial' | 'enter' | 'up' | 'down' | 'space' | undefined

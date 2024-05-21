@@ -1,3 +1,5 @@
+import { divId } from "./divId"
+
 export function parser({ action, content }: Parser) {
   const divStartRegex = new RegExp(/<div id="row-\d+">/, 'g')
   const divEndRegex = new RegExp(/<\/div>/, 'g')
@@ -21,8 +23,8 @@ export function parser({ action, content }: Parser) {
 
     for (let i = 0; i < content.length; i++) {
       if (content[i] === '\n') {
-        content[i] = `<div id='row-${i}'> </div>`
-      } else content[i] = `<div id='row-${i}'>${content[i]}</div>`
+        content[i] = `<div id='${divId()}'> </div>`
+      } else content[i] = `<div id='${divId()}'>${content[i]}</div>`
     }
 
     return newContent.join('')
