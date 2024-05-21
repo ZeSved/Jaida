@@ -12,9 +12,11 @@ import {
 	updateDoc,
 	DocumentReference,
 } from 'firebase/firestore'
-import { replacements } from './replacements'
-import { parser } from './parser'
+import { replacements } from './utils/replacements'
+import { parser } from './utils/parser'
 import { LoadingSq } from '@/components/loadingSquare'
+import { Action, handleKeyboard } from './utils/handleKeyboard'
+import Editor from './Editor'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {
@@ -43,8 +45,6 @@ export default function MarkdownEditor() {
 	const [currentDocumentReference, setCurrentDocumentReference] =
 		useState<DocumentReference<DocumentData, DocumentData>>()
 	const [currentUser, setCurrentUser] = useState<User | undefined>()
-	const [currentRow, setCurrentRow] = useState<number>(0)
-	const ref = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
@@ -81,115 +81,6 @@ export default function MarkdownEditor() {
 		}
 	}, [currentUser])
 
-	function newRange(arg?: 'initial' | 'enter', updatedRow?: number) {
-		if (window.getSelection()) {
-			const range = document.createRange()
-			const selection = window.getSelection()!
-
-			const newRow = updatedRow ?? ref.current!.childNodes.length - 1
-
-			if (updatedRow || arg === 'enter') {
-				setCurrentRow(newRow)
-			}
-
-			const elem = updatedRow
-				? selection.focusNode!.parentNode!.parentNode!.childNodes[newRow]
-				: selection.focusNode!.childNodes[newRow]
-			// selection.focusNode!.childNodes[
-			// 	arg === 'initial' ? 0 : arg === 'enter' ? newRow + 1 : newRow
-			// ]
-			console.log('---start---')
-			console.log('🚀 ~ newRange ~ elem:', elem)
-			console.log(
-				'🚀 ~ newRange ~ selection.focusNode.parentNode.parentNode:',
-				selection.focusNode!.parentNode!.parentNode!.childNodes
-			)
-			console.log('---end---')
-			range.setStart(elem, 1)
-			range.collapse(true)
-
-			selection!.removeAllRanges()
-			selection!.addRange(range)
-			ref.current!.focus()
-		}
-	}
-
-	function handleKeyboard(e: Event & KeyboardEvent) {
-		if (currentDocumentReference) {
-			setTimeout(async () => {
-				await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
-					content: parser({ action: 'POST-DB', content: ref.current!.innerHTML }),
-				})
-			}, 10)
-		}
-
-		if (/^[a-zA-Z]$/.test(e.key) && !ref.current!.hasChildNodes()) {
-			e.preventDefault()
-			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${e.key}</div>`
-
-			if (ref.current!.childNodes.length === 0) {
-				newRange('initial')
-			}
-		}
-
-		if (e.key === ' ') {
-			for (let i = 0; i < replacements.length; i++) {
-				const rep = replacements[i]
-
-				if (!rep.active) continue
-				const newString = ref.current!.innerHTML!.replace(
-					new RegExp(rep.replaceWith, 'gi'),
-					rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
-				)
-				ref.current!.innerHTML = newString
-			}
-
-			newRange()
-		}
-
-		if (e.key === 'Enter') {
-			e.preventDefault()
-			ref.current!.innerHTML += `<div id='row-${ref.current!.childNodes.length}'>${'\n'}</div>`
-			newRange('enter')
-		}
-
-		if (
-			e.key === 'Backspace' &&
-			ref.current!.childNodes[1] === undefined &&
-			ref.current!.childNodes[0].textContent?.length === 0
-		) {
-			e.preventDefault()
-		}
-
-		if (e.key === 'ArrowUp') {
-			console.log('works')
-			if (currentRow >= 0) {
-				console.log('works')
-				newRange(undefined, currentRow - 1)
-				// const newRow = currentRow - 1
-				// setCurrentRow(newRow)
-			}
-		}
-	}
-
-	useEffect(() => {
-		if (currentDocPages) {
-			const loadedDocContent = parser({
-				content: currentDocPages.data()?.content,
-				action: 'GET-DB',
-			}) as string
-			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
-			ref.current!.innerHTML =
-				loadedDocContent.length === 0
-					? `<div id='row-${ref.current!.childNodes.length}'></div>`
-					: loadedDocContent
-		}
-
-		window.addEventListener('keydown', handleKeyboard)
-
-		return () => window.removeEventListener('keydown', handleKeyboard)
-	}, [currentDocPages])
-
 	return (
 		<>
 			<title>{currentDoc ? `Jaida - ${currentDoc.data()?.displayName}` : 'Jaida'}</title>
@@ -201,12 +92,10 @@ export default function MarkdownEditor() {
 				<div className={s.container}>
 					<div className={s.editor}>
 						{currentDoc ? (
-							<div
-								ref={ref}
-								style={bg}
-								id='editor'
-								className={s.docEdit}
-								contentEditable></div>
+							<Editor
+								currentDocPages={currentDocPages}
+								currentDocumentReference={currentDocumentReference}
+							/>
 						) : (
 							<LoadingSq />
 						)}
