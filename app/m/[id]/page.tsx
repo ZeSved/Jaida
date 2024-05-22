@@ -1,21 +1,11 @@
 'use client'
-import { CSSProperties, createElement, useEffect, useReducer, useRef, useState } from 'react'
+import { CSSProperties, useEffect, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import Settings from './settings/Settings'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '@/firebase/firebase'
-import {
-	doc,
-	getDoc,
-	DocumentSnapshot,
-	DocumentData,
-	updateDoc,
-	DocumentReference,
-} from 'firebase/firestore'
-import { replacements } from './utils/replacements'
-import { parser } from './utils/parser'
-import { LoadingSq } from '@/components/loadingSquare'
-import { Action, handleKeyboard } from './utils/handleKeyboard'
+import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
+import { LoadingSq } from '@/components/loading/loadingSquare'
 import Editor from './Editor'
 
 // function reducer(rep: typeof replacements, action: Action) {

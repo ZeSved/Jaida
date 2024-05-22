@@ -1,7 +1,7 @@
 'use client'
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
+
+import { useEffect, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
-// import { handleKeyboard } from './utils/handleKeyboard'
 import {
 	updateDoc,
 	doc,
@@ -91,6 +91,11 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 			e.preventDefault()
 			setAction('up')
 		}
+
+		if (e.key === 'ArrowDown') {
+			e.preventDefault()
+			setAction('down')
+		}
 	}
 
 	useEffect(() => {
@@ -98,13 +103,22 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 
 		const range = document.createRange()
 		const selection = window.getSelection()!
-		const newRow =
-			action === 'up'
-				? currentRow - 1
-				: action === 'enter'
-				? ref.current!.childNodes.length - 1
-				: currentRow
-		const elem = ref.current!.childNodes[newRow] as Node
+
+		let newRow = currentRow
+
+		switch (action) {
+			case 'up':
+				newRow = currentRow === 0 ? currentRow : currentRow - 1
+				break
+			case 'down':
+				newRow = currentRow === ref.current!.childNodes.length - 1 ? currentRow : currentRow + 1
+				break
+			case 'enter':
+				newRow = ref.current!.childNodes.length - 1
+				break
+		}
+
+		const elem = ref.current!.childNodes[newRow!] as Node
 
 		range.setStart(elem, 1)
 		range.collapse(true)
@@ -113,14 +127,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		selection!.addRange(range)
 		ref.current!.focus()
 
-		if (action === 'enter') {
-			setCurrentRow(currentRow + 1)
-		}
-
-		if (action === 'up') {
-			setCurrentRow(currentRow - 1)
-		}
-
+		setCurrentRow(newRow)
 		setAction(undefined)
 	}, [action])
 
@@ -138,4 +145,4 @@ type EditorProps = {
 	currentDocumentReference: DocumentReference<DocumentData, DocumentData> | undefined
 }
 
-type Action = 'initial' | 'enter' | 'up' | 'down' | 'space' | undefined
+type Action = 'initial' | 'enter' | 'up' | 'down' | 'space' | 'backspace' | undefined

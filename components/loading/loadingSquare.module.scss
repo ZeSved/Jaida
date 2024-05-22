@@ -1,0 +1,43 @@
+.loadingSqWrapper {
+	display: grid;
+	grid-template-columns: 5.5rem 5.5rem;
+	grid-template-rows: 5.5rem 5.5rem;
+	gap: 8px;
+	width: fit-content;
+	height: fit-content;
+
+	.sq {
+		height: 5rem;
+		width: 5rem;
+
+		animation: wave 1.6s infinite linear;
+
+		&.sq1 {
+			animation-delay: 0s;
+		}
+		&.sq2 {
+			animation-delay: 0.4s;
+		}
+		&.sq4 {
+			animation-delay: 0.8s;
+		}
+		&.sq3 {
+			animation-delay: 1.2s;
+		}
+
+		@keyframes wave {
+			0% {
+				background-color: var(--cta-2);
+				border: 1px solid transparent;
+			}
+			50% {
+				background-color: transparent;
+				border: 1px solid var(--cta-2);
+			}
+			100% {
+				background-color: transparent;
+				border: 1px solid transparent;
+			}
+		}
+	}
+}

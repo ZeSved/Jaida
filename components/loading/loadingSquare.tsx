@@ -1,4 +1,4 @@
-import s from '@/app/m/[id]/m-d-editor.module.scss'
+import s from './loadingSquare.module.scss'
 
 export function LoadingSq() {
 	return (
