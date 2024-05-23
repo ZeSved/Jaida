@@ -23,8 +23,15 @@ export function parser({ action, content }: Parser) {
 
     for (let i = 0; i < content.length; i++) {
       if (content[i] === '\n') {
-        content[i] = `<div id='${divId()}'> </div>`
-      } else content[i] = `<div id='${divId()}'>${content[i]}</div>`
+        content[i] = `<div id='${divId()}'><span> </span></div>`
+      } else {
+        const subContent = content[i].split(' ')
+        for (let j = 0; j < subContent.length; j++) {
+          subContent[j] = `<span>${content[j]}</span>`
+        }
+
+        content[i] = `<div id='${divId()}'><span>${subContent}</span></div>`
+      }
     }
 
     return newContent.join('')
