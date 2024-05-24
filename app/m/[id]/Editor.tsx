@@ -26,9 +26,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 			}) as string
 			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
 			ref.current!.innerHTML =
-				loadedDocContent.length === 0
-					? `<div id='${divId()}'><span></span></div>`
-					: loadedDocContent
+				loadedDocContent.length === 0 ? `<div><span></span></div>` : loadedDocContent
 		}
 
 		function handleKeyboardInit(e: Event & KeyboardEvent) {
@@ -53,7 +51,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 
 		if (/^[a-zA-Z]$/.test(e.key) && !ref.current!.hasChildNodes()) {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div id='${divId()}'><span>${e.key}</span></div>`
+			ref.current!.innerHTML += `<div><span>${e.key}</span></div>`
 
 			if (ref.current!.childNodes.length === 0) {
 				setAction('initial')
@@ -79,7 +77,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div id='${divId()}'><span>${'\n'}</span></div>`
+			ref.current!.innerHTML += `<div><span>${'\n'}</span></div>`
 			setAction('enter')
 		}
 
@@ -122,6 +120,9 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 				break
 		}
 
+		console.log(ref.current!.childNodes[newRow!])
+		console.log(ref.current!.childNodes[newRow!].childNodes[0])
+		// console.log(ref.current!.childNodes[newRow!])
 		const elem =
 			ref.current!.childNodes[newRow!].childNodes[0].childNodes[
 				ref.current!.childNodes[newRow!].childNodes[0].childNodes.length - 1
