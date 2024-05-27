@@ -50,17 +50,15 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		if (!ref) return
 
 		if (/^[a-zA-Z]$/.test(e.key)) {
-			if (!ref.current!.hasChildNodes()) {
+			if (ref.current!.childNodes.length === 1) {
 				e.preventDefault()
 				ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
-
-				if (ref.current!.childNodes.length === 0) {
-					setAction('initial')
-					return
-				}
+				setAction('initial')
+				return
 			}
+			// if (!ref.current!.hasChildNodes()) {
 
-			// ref.current!.innerHTML += `<div><span><span>${'\n'}</span></span></div>`
+			// }
 		}
 
 		if (e.key === ' ') {
@@ -80,7 +78,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div><span><span>${'\n'}</span></span></div>`
+			ref.current!.innerHTML += `<div><span><span><br></span></span></div>`
 			setAction('enter')
 		}
 
@@ -109,26 +107,24 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		const range = document.createRange()
 		const selection = window.getSelection()!
 
-		let newRow = currentLocation
+		let newRow = currentLocation[0]
 
 		switch (action) {
 			case 'up':
-				newRow =
-					currentLocation[0] === 0 ? currentLocation : [currentLocation[0] - 1, currentLocation[1]]
+				newRow = currentLocation[0] === 0 ? currentLocation[0] : currentLocation[0] - 1
 				break
 			case 'down':
 				newRow =
 					currentLocation[0] === ref.current!.childNodes.length - 1
-						? currentLocation
-						: [currentLocation[0] + 1, currentLocation[1]]
+						? currentLocation[0]
+						: currentLocation[0] + 1
 				break
 			case 'enter':
-				newRow = [ref.current!.childNodes.length - 1, 0]
+				newRow = ref.current!.childNodes.length - 1
 				break
 		}
 
-		const elem =
-			ref.current!.childNodes[newRow[0]].childNodes[0].childNodes[newRow[1]].childNodes[0]
+		const elem = ref.current!.childNodes[newRow].childNodes[0].childNodes[0] as Node
 
 		range.setStart(elem, 1)
 		range.collapse(true)
@@ -137,7 +133,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		selection!.addRange(range)
 		ref.current!.focus()
 
-		setCurrentLocation(newRow)
+		setCurrentLocation([newRow, currentLocation[1]])
 		setAction(undefined)
 	}, [action])
 
