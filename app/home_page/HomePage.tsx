@@ -72,10 +72,10 @@ export default function HomePage() {
 
 				{userDocs && userDocs.size >= 1 && (
 					<div className={styles.main}>
-						{userDocs.docs.map((d) => (
+						{userDocs.docs.map((d, i) => (
 							<MDocCard
 								id={d.data().name}
-								key={d.data().name}
+								key={i}
 								displayName={d.data().displayName}
 								currentUser={currentUser!}
 								imageSquareLocation={d.data().imageSquareLocation}

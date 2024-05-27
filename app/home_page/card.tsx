@@ -65,8 +65,9 @@ export default function MDocCard({
 				<Link
 					className={s.cardLink}
 					href={`/m/${id}`}>
-					{imageSquareLocation.map((squareLoc) => (
-						<div key={squareLoc}
+					{imageSquareLocation.map((squareLoc, i) => (
+						<div
+							key={i}
 							style={{
 								backgroundColor:
 									squareLoc === 0

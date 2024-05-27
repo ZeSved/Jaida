@@ -14,7 +14,7 @@ import { replacements } from './utils/replacements'
 import { divId } from './utils/divId'
 
 export default function Editor({ currentDocPages, currentDocumentReference }: EditorProps) {
-	const [currentRow, setCurrentRow] = useState<number>(0)
+	const [currentLocation, setCurrentLocation] = useState<number[]>([0, 0])
 	const [action, setAction] = useState<Action>(undefined)
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -49,13 +49,18 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (!ref) return
 
-		if (/^[a-zA-Z]$/.test(e.key) && !ref.current!.hasChildNodes()) {
-			e.preventDefault()
-			ref.current!.innerHTML += `<div><span>${e.key}</span></div>`
+		if (/^[a-zA-Z]$/.test(e.key)) {
+			if (!ref.current!.hasChildNodes()) {
+				e.preventDefault()
+				ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
 
-			if (ref.current!.childNodes.length === 0) {
-				setAction('initial')
+				if (ref.current!.childNodes.length === 0) {
+					setAction('initial')
+					return
+				}
 			}
+
+			// ref.current!.innerHTML += `<div><span><span>${'\n'}</span></span></div>`
 		}
 
 		if (e.key === ' ') {
@@ -70,14 +75,12 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 				ref.current!.innerHTML = newString
 			}
 
-			ref.current!.innerHTML += '<span></span>'
-
 			setAction('space')
 		}
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div><span>${'\n'}</span></div>`
+			ref.current!.innerHTML += `<div><span><span>${'\n'}</span></span></div>`
 			setAction('enter')
 		}
 
@@ -106,27 +109,26 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		const range = document.createRange()
 		const selection = window.getSelection()!
 
-		let newRow = currentRow
+		let newRow = currentLocation
 
 		switch (action) {
 			case 'up':
-				newRow = currentRow === 0 ? currentRow : currentRow - 1
+				newRow =
+					currentLocation[0] === 0 ? currentLocation : [currentLocation[0] - 1, currentLocation[1]]
 				break
 			case 'down':
-				newRow = currentRow === ref.current!.childNodes.length - 1 ? currentRow : currentRow + 1
+				newRow =
+					currentLocation[0] === ref.current!.childNodes.length - 1
+						? currentLocation
+						: [currentLocation[0] + 1, currentLocation[1]]
 				break
 			case 'enter':
-				newRow = ref.current!.childNodes.length - 1
+				newRow = [ref.current!.childNodes.length - 1, 0]
 				break
 		}
 
-		console.log(ref.current!.childNodes[newRow!])
-		console.log(ref.current!.childNodes[newRow!].childNodes[0])
-		// console.log(ref.current!.childNodes[newRow!])
 		const elem =
-			ref.current!.childNodes[newRow!].childNodes[0].childNodes[
-				ref.current!.childNodes[newRow!].childNodes[0].childNodes.length - 1
-			]
+			ref.current!.childNodes[newRow[0]].childNodes[0].childNodes[newRow[1]].childNodes[0]
 
 		range.setStart(elem, 1)
 		range.collapse(true)
@@ -135,7 +137,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		selection!.addRange(range)
 		ref.current!.focus()
 
-		setCurrentRow(newRow)
+		setCurrentLocation(newRow)
 		setAction(undefined)
 	}, [action])
 
