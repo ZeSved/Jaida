@@ -12,9 +12,10 @@ import {
 import { parser } from './utils/parser'
 import { replacements } from './utils/replacements'
 import { divId } from './utils/divId'
+import { Caret } from './utils/handleKeyboard'
 
 export default function Editor({ currentDocPages, currentDocumentReference }: EditorProps) {
-	const [currentLocation, setCurrentLocation] = useState<number[]>([0, 0])
+	const [currentRow, setCurrentRow] = useState<number>(0)
 	const [action, setAction] = useState<Action>(undefined)
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -25,15 +26,14 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 				action: 'GET-DB',
 			}) as string
 			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
-			ref.current!.innerHTML =
-				loadedDocContent.length === 0 ? `<div><span></span></div>` : loadedDocContent
+			ref.current!.innerHTML = loadedDocContent
 		}
 
 		function handleKeyboardInit(e: Event & KeyboardEvent) {
 			if (currentDocumentReference) {
 				setTimeout(async () => {
 					await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
-						content: parser({ action: 'POST-DB', content: ref.current!.innerHTML }),
+						content: parser({ action: 'POST-DB', content: ref.current!.children }),
 					})
 				}, 10)
 			}
@@ -49,17 +49,17 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 	function handleKeyboard(e: Event & KeyboardEvent) {
 		if (!ref) return
 
-		if (/^[a-zA-Z]$/.test(e.key)) {
-			if (ref.current!.childNodes.length === 1) {
-				e.preventDefault()
-				ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
-				setAction('initial')
-				return
-			}
-			// if (!ref.current!.hasChildNodes()) {
+		// if (/^[a-zA-Z]$/.test(e.key)) {
+		// 	if (ref.current!.childNodes.length === 1) {
+		// 		e.preventDefault()
+		// 		ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
+		// 		setAction('initial')
+		// 		return
+		// 	}
+		// 	// if (!ref.current!.hasChildNodes()) {
 
-			// }
-		}
+		// 	// }
+		// }
 
 		if (e.key === ' ') {
 			for (let i = 0; i < replacements.length; i++) {
@@ -78,8 +78,7 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			ref.current!.innerHTML += `<div><span><span><br></span></span></div>`
-			setAction('enter')
+			setCurrentRow(Caret.enter(ref, currentRow)!)
 		}
 
 		if (
@@ -101,41 +100,40 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		}
 	}
 
-	useEffect(() => {
-		if (action === undefined) return
+	// useEffect(() => {
+	// 	if (action === undefined) return
 
-		const range = document.createRange()
-		const selection = window.getSelection()!
+	// 	const range = document.createRange()
+	// 	const selection = window.getSelection()!
 
-		let newRow = currentLocation[0]
+	// 	// let newRow = currentLocation[0]
 
-		switch (action) {
-			case 'up':
-				newRow = currentLocation[0] === 0 ? currentLocation[0] : currentLocation[0] - 1
-				break
-			case 'down':
-				newRow =
-					currentLocation[0] === ref.current!.childNodes.length - 1
-						? currentLocation[0]
-						: currentLocation[0] + 1
-				break
-			case 'enter':
-				newRow = ref.current!.childNodes.length - 1
-				break
-		}
+	// 	// switch (action) {
+	// 	// 	case 'up':
+	// 	// 		newRow = currentLocation[0] === 0 ? currentLocation[0] : currentLocation[0] - 1
+	// 	// 		break
+	// 	// 	case 'down':
+	// 	// 		newRow =
+	// 	// 			currentLocation[0] === ref.current!.childNodes.length - 1
+	// 	// 				? currentLocation[0]
+	// 	// 				: currentLocation[0] + 1
+	// 	// 		break
+	// 	// 	case 'enter':
+	// 	// 		newRow = ref.current!.childNodes.length - 1
+	// 	// 		break
+	// 	// }
 
-		const elem = ref.current!.childNodes[newRow].childNodes[0].childNodes[0] as Node
+	// 	// const elem = ref.current!.childNodes[newRow].childNodes[0].childNodes[0] as Node
 
-		range.setStart(elem, 1)
-		range.collapse(true)
+	// 	range.setStart(elem, 1)
+	// 	range.collapse(true)
 
-		selection!.removeAllRanges()
-		selection!.addRange(range)
-		ref.current!.focus()
+	// 	selection!.removeAllRanges()
+	// 	selection!.addRange(range)
+	// 	ref.current!.focus()
 
-		setCurrentLocation([newRow, currentLocation[1]])
-		setAction(undefined)
-	}, [action])
+	// 	setAction(undefined)
+	// }, [action])
 
 	return (
 		<div

@@ -1,20 +1,23 @@
 export function parser({ action, content }: Parser) {
   if (action === 'POST-DB') {
-    const newContent = content
-      .replaceAll('<\/div><div>', '|')
-      .replaceAll('<\/span><span>', '')
-      .replaceAll('<span>', '')
-      .replaceAll('<\/span>', '')
-      .replaceAll('<div>', '')
-      .replaceAll('<\/div>', '')
-      .split('|')
+    const newContent: string[] = []
+
+    Array.from(content).forEach(con => {
+      let text = ''
+
+      con.childNodes[0].childNodes.forEach(c => {
+        text += ` ${c.textContent}`
+      })
+
+      newContent.push(text.trim())
+    })
 
     return newContent
   }
 
   if (action === 'GET-DB') {
     // for (let i = 0; i < content.length; i++) {
-    //   const innerContent = content[i].replaceAll('&nbsp;', ' &nbsp;').split(' ')
+    //   const innerContent = content[i].replaceAll('&nbsp;', 'g'), ' &nbsp;').split(' ')
 
     //   for (let j = 0; j < innerContent.length; j++) {
     //     innerContent[j] = `<span>${innerContent[j]}</span>`
@@ -25,17 +28,22 @@ export function parser({ action, content }: Parser) {
 
     // return content.join(' ')
 
-    return content.map((con) => {
-      return `<div><span>${con.split(' ').map((c) => {
-        return `<span>${c}</span>`
-      }).join(' ')}</span></div>`
-    }).join('')
+    if (content[0] === '') {
+      return `<div id='r0'><span><span id='r0_0'><br /></span></span></div>`
+    } else {
+      return content.map((con, i) => {
+        return `<div id='r${i}'><span>${con.split(' ').map((c, j) => {
+          return `<span id='r${i}_${j}>${c}</span>`
+        }).join(' ')}</span></div>`
+      }).join('')
+    }
+
   }
 }
 
 type Parser = {
   action: 'POST-DB'
-  content: string
+  content: HTMLCollection
 } | {
   action: 'GET-DB'
   content: string[]
