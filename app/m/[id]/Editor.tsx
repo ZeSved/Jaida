@@ -81,12 +81,8 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 			setCurrentRow(Caret.enter(ref, currentRow)!)
 		}
 
-		if (
-			e.key === 'Backspace' &&
-			ref.current!.childNodes[1] === undefined &&
-			ref.current!.childNodes[0].textContent?.length === 0
-		) {
-			e.preventDefault()
+		if (e.key === 'Backspace') {
+			setTimeout(() => Caret.backspace(ref), 0)
 		}
 
 		if (e.key === 'ArrowUp') {

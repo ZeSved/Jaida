@@ -9,7 +9,22 @@ export class Caret {
 
   }
 
-  static backspace() {
+  static backspace(ref: RefObject<HTMLDivElement>) {
+    if (!ref.current) return
+
+    const firstRow = document.getElementById('r0')
+
+    if (!firstRow) {
+      ref.current.innerHTML += '<div><span><span><br /></span></span></div>'
+      this.updateIds(ref.current)
+      return
+    }
+
+    if (firstRow.innerHTML === '<br>') {
+      firstRow.innerHTML = "<span><span id='r0_0'><br /></span></span>"
+
+      this.moveCaret(firstRow, ref)
+    }
 
   }
 
