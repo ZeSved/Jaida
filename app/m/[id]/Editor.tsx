@@ -25,8 +25,10 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 				content: currentDocPages.data()?.content,
 				action: 'GET-DB',
 			}) as string
-			// ref.current!.innerHTML = (parser(currentDocPages.data()?.content, 'GET-DB')) ?? ''
-			ref.current!.innerHTML = loadedDocContent
+
+			ref.current!.innerHTML =
+				(parser({ action: 'GET-DB', content: currentDocPages.data()?.content }) as string) ?? ''
+			// ref.current!.append(loadedDocContent)
 		}
 
 		function handleKeyboardInit(e: Event & KeyboardEvent) {
@@ -62,18 +64,20 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 		// }
 
 		if (e.key === ' ') {
-			for (let i = 0; i < replacements.length; i++) {
-				const rep = replacements[i]
+			// for (let i = 0; i < replacements.length; i++) {
+			// 	const rep = replacements[i]
 
-				if (!rep.active) continue
-				const newString = ref.current!.innerHTML!.replace(
-					new RegExp(rep.replaceWith, 'gi'),
-					rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
-				)
-				ref.current!.innerHTML = newString
-			}
+			// 	if (!rep.active) continue
+			// 	const newString = ref.current!.innerHTML!.replace(
+			// 		new RegExp(rep.replaceWith, 'gi'),
+			// 		rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
+			// 	)
+			// 	ref.current!.innerHTML = newString
+			// }
 
-			setAction('space')
+			// setAction('space')
+			e.preventDefault()
+			Caret.space(ref, currentRow)
 		}
 
 		if (e.key === 'Enter') {
