@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import Login from '../_components/Header/login'
 import classNames from 'classnames'
 import { LoadingSq } from '@/components/loading/loadingSquare'
+import Sidebar from './Sidebar'
 
 export default function HomePage() {
 	const [currentUser, setCurrentUser] = useState<User | undefined | null>(null)
@@ -72,16 +73,17 @@ export default function HomePage() {
 
 				{userDocs && userDocs.size >= 1 && (
 					<div className={styles.main}>
+						<Sidebar />
 						{userDocs.docs.map((d, i) => (
 							<MDocCard
 								id={d.data().name}
 								key={i}
 								displayName={d.data().displayName}
 								currentUser={currentUser!}
-								imageSquareLocation={d.data().imageSquareLocation}
+								// imageSquareLocation={d.data().imageSquareLocation}
 							/>
 						))}
-						<NewDoc currentUser={currentUser!} />
+						{/* <NewDoc currentUser={currentUser!} /> */}
 					</div>
 				)}
 			</main>

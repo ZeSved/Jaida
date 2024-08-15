@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import Jaida_small_logo from '@/public/Jaida Logo.svg'
 import s from '@/app/@children/page.module.scss'
-import options from '@/public/options.svg'
+import options from '@/public/Options.svg'
+import doc_img from '@/public/Doc 4.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/firebase/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
@@ -15,12 +15,10 @@ export default function MDocCard({
 	id,
 	currentUser,
 	displayName,
-	imageSquareLocation,
 }: {
 	id: string
 	currentUser: User
 	displayName: string
-	imageSquareLocation: number[]
 }) {
 	const [open, setOpen] = useState<boolean>(false)
 
@@ -61,58 +59,25 @@ export default function MDocCard({
 		<div
 			className={s.card}
 			id={id}>
-			<div className={s.cardContent}>
-				<Link
-					className={s.cardLink}
-					href={`/m/${id}`}>
-					{imageSquareLocation.map((squareLoc, i) => (
-						<div
-							key={i}
-							style={{
-								backgroundColor:
-									squareLoc === 0
-										? 'transparent'
-										: Math.floor(Math.random() * (1 - 0 + 1) + 0) === 1
-										? 'var(--cta-2)'
-										: 'var(--cta-1)',
-								border: `1px solid ${
-									squareLoc === 1
-										? 'transparent'
-										: Math.floor(Math.random() * (1 - 0 + 1) + 0) === 1
-										? 'var(--cta-2)'
-										: 'var(--cta-1)'
-								}`,
-							}}></div>
-					))}
-				</Link>
-				<div className={s.cardMenu}>
-					<p className={s.cardName}>{displayName}</p>
-					<button
-						className={s.cardOpenSettings}
-						onClick={() => setOpen(!open)}>
+			<Link
+				className={s.cardLink}
+				href={`/m/${id}`}>
+				<div className={s.img}>
+					<Image
+						alt=''
+						src={doc_img}
+					/>
+				</div>
+				<div className={s.info}>
+					<p>{displayName}</p>
+					<button>
 						<Image
-							alt='options'
+							alt=''
 							src={options}
 						/>
 					</button>
 				</div>
-			</div>
-			<div className={classNames(s.cardSettings, !open && s.hide)}>
-				<div className={s.divider} />
-				<div className={s.cardButtons}>
-					{buttons.map((b, i) => (
-						<>
-							{i !== 0 && <div className={s.subDivider} />}
-							<button
-								className={s.cardButton}
-								key={i}
-								onClick={b.func}>
-								{b.display}
-							</button>
-						</>
-					))}
-				</div>
-			</div>
+			</Link>
 		</div>
 	)
 }

@@ -36,103 +36,39 @@
 			}
 		}
 
-		.card {
+		.card .cardLink {
 			display: flex;
+			flex-direction: column;
 
-			border-radius: calc(1rem - 1px);
-			border: 1px solid var(--accent);
-			height: fit-content;
+			background-color: var(--secondary);
 
-			.cardContent {
-				background-color: var(--primary);
+			padding: 1rem;
+			// gap: 1rem;
+			border-radius: 2rem;
+			text-decoration: none;
 
-				border-radius: calc(1rem - 1px);
+			.img {
+				padding: 2rem;
+			}
 
+			.info {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				flex-direction: column;
 
-				gap: 1rem;
-				padding: 1rem 2rem;
-
-				text-decoration: none;
-
-				.cardLink {
-					display: grid;
-					grid-template-columns: repeat(3, 7vh);
-					grid-template-rows: repeat(3, 7vh);
-					gap: 0.5rem;
+				> button {
+					padding: 1rem;
+					border-radius: 100vh;
+					background: transparent;
+					outline: none;
+					border: none;
+					cursor: pointer;
+					position: relative;
+					z-index: 100;
 				}
 
-				.cardMenu {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					width: 100%;
-
-					.cardName {
-						width: 100%;
-						color: var(--text);
-					}
-
-					.cardOpenSettings {
-						background-color: transparent;
-						border: none;
-						outline: none;
-						cursor: pointer;
-
-						border-radius: 3px;
-					}
-				}
-			}
-
-			.cardSettings {
-				display: flex;
-				padding-block: 1rem;
-
-				.divider {
-					height: 100%;
-					width: 1px;
-					background-color: var(--accent);
-				}
-
-				.cardButtons {
-					display: flex;
-					flex-direction: column;
-					gap: 0.5rem;
-
-					.subDivider {
-						height: 2px;
-						width: 80%;
-						margin-inline: auto;
-						background-color: var(--accent);
-					}
-
-					.cardButton {
-						background-color: var(--primary);
-						color: var(--text);
-						font-weight: bold;
-						font-size: 1rem;
-
-						border: none;
-						outline: none;
-						cursor: pointer;
-
-						border-radius: 3px;
-
-						text-align: left;
-						margin-inline: 0.5rem;
-
-						&:hover {
-							background-color: #2c2c2c;
-						}
-					}
-				}
-
-				&.hide {
-					width: 0px;
-					overflow: hidden;
+				> p {
+					color: var(--text);
 				}
 			}
 		}

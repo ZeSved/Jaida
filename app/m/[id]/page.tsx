@@ -7,6 +7,7 @@ import { auth, db } from '@/firebase/firebase'
 import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import Editor from './Editor'
+import Results from './Results'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {
@@ -82,10 +83,16 @@ export default function MarkdownEditor() {
 				<div className={s.container}>
 					<div className={s.editor}>
 						{currentDoc ? (
-							<Editor
-								currentDocPages={currentDocPages}
-								currentDocumentReference={currentDocumentReference}
-							/>
+							<div>
+								<Editor
+									currentDocPages={currentDocPages}
+									currentDocumentReference={currentDocumentReference}
+									user={currentUser}
+									doc={currentDoc}
+								/>
+								<div className={s.div} />
+								<Results />
+							</div>
 						) : (
 							<LoadingSq />
 						)}

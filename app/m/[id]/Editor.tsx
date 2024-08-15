@@ -9,96 +9,104 @@ import {
 	DocumentData,
 	DocumentReference,
 } from 'firebase/firestore'
-import { parser } from './utils/parser'
+// import { parser } from './utils/parser'
 import { replacements } from './utils/replacements'
 import { divId } from './utils/divId'
-import { Caret } from './utils/handleKeyboard'
+import { upload } from './utils/uploadFile'
+import { User } from 'firebase/auth'
+import { getBlob } from 'firebase/storage'
+// import { Caret } from './utils/handleKeyboard'
 
-export default function Editor({ currentDocPages, currentDocumentReference }: EditorProps) {
+export default function Editor({
+	currentDocPages,
+	currentDocumentReference,
+	user,
+	doc,
+}: EditorProps) {
 	const [currentRow, setCurrentRow] = useState<number>(0)
 	const [action, setAction] = useState<Action>(undefined)
 	const ref = useRef<HTMLDivElement>(null)
 
-	useEffect(() => {
-		if (currentDocPages && ref) {
-			const loadedDocContent = parser({
-				content: currentDocPages.data()?.content,
-				action: 'GET-DB',
-			}) as string
+	// useEffect(() => {
+	// 	if (currentDocPages && ref) {
+	// 		const loadedDocContent = parser({
+	// 			content: currentDocPages.data()?.content,
+	// 			action: 'GET-DB',
+	// 		}) as string
 
-			ref.current!.innerHTML =
-				(parser({ action: 'GET-DB', content: currentDocPages.data()?.content }) as string) ?? ''
-			// ref.current!.append(loadedDocContent)
-		}
+	// 		ref.current!.innerHTML =
+	// 			(parser({ action: 'GET-DB', content: currentDocPages.data()?.content }) as string) ?? ''
+	// 		// ref.current!.append(loadedDocContent)
+	// 	}
 
-		function handleKeyboardInit(e: Event & KeyboardEvent) {
-			if (currentDocumentReference) {
-				setTimeout(async () => {
-					await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
-						content: parser({ action: 'POST-DB', content: ref.current!.children }),
-					})
-				}, 10)
-			}
+	// 	function handleKeyboardInit(e: Event & KeyboardEvent) {
+	// 		if (currentDocumentReference) {
+	// 			setTimeout(async () => {
+	// 				await updateDoc(doc(currentDocumentReference, 'pages', 'PAGE-1'), {
+	// 					content: parser({ action: 'POST-DB', content: ref.current!.children }),
+	// 				})
+	// 			}, 10)
+	// 		}
 
-			handleKeyboard(e)
-		}
+	// 		handleKeyboard(e)
+	// 	}
 
-		window.addEventListener('keydown', handleKeyboardInit)
+	// 	window.addEventListener('keydown', handleKeyboardInit)
 
-		return () => window.removeEventListener('keydown', handleKeyboardInit)
-	}, [currentDocPages, ref])
+	// 	return () => window.removeEventListener('keydown', handleKeyboardInit)
+	// }, [currentDocPages, ref])
 
-	function handleKeyboard(e: Event & KeyboardEvent) {
-		if (!ref) return
+	// function handleKeyboard(e: Event & KeyboardEvent) {
+	// 	// if (!ref) return
 
-		// if (/^[a-zA-Z]$/.test(e.key)) {
-		// 	if (ref.current!.childNodes.length === 1) {
-		// 		e.preventDefault()
-		// 		ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
-		// 		setAction('initial')
-		// 		return
-		// 	}
-		// 	// if (!ref.current!.hasChildNodes()) {
+	// 	// if (/^[a-zA-Z]$/.test(e.key)) {
+	// 	// 	if (ref.current!.childNodes.length === 1) {
+	// 	// 		e.preventDefault()
+	// 	// 		ref.current!.innerHTML += `<div><span><span>${e.key}</span></span></div>`
+	// 	// 		setAction('initial')
+	// 	// 		return
+	// 	// 	}
+	// 	// 	// if (!ref.current!.hasChildNodes()) {
 
-		// 	// }
-		// }
+	// 	// 	// }
+	// 	// }
 
-		if (e.key === ' ') {
-			// for (let i = 0; i < replacements.length; i++) {
-			// 	const rep = replacements[i]
+	// 	if (e.key === ' ') {
+	// 		// for (let i = 0; i < replacements.length; i++) {
+	// 		// 	const rep = replacements[i]
 
-			// 	if (!rep.active) continue
-			// 	const newString = ref.current!.innerHTML!.replace(
-			// 		new RegExp(rep.replaceWith, 'gi'),
-			// 		rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
-			// 	)
-			// 	ref.current!.innerHTML = newString
-			// }
+	// 		// 	if (!rep.active) continue
+	// 		// 	const newString = ref.current!.innerHTML!.replace(
+	// 		// 		new RegExp(rep.replaceWith, 'gi'),
+	// 		// 		rep.options ? rep.options.find((t) => t.active === true)!.text : rep.option
+	// 		// 	)
+	// 		// 	ref.current!.innerHTML = newString
+	// 		// }
 
-			// setAction('space')
-			e.preventDefault()
-			Caret.space(ref, currentRow)
-		}
+	// 		// setAction('space')
+	// 		e.preventDefault()
+	// 		// Caret.space(ref, currentRow)
+	// 	}
 
-		if (e.key === 'Enter') {
-			e.preventDefault()
-			setCurrentRow(Caret.enter(ref, currentRow)!)
-		}
+	// 	if (e.key === 'Enter') {
+	// 		e.preventDefault()
+	// 		// setCurrentRow(Caret.enter(ref, currentRow)!)
+	// 	}
 
-		if (e.key === 'Backspace') {
-			setTimeout(() => Caret.backspace(ref), 0)
-		}
+	// 	if (e.key === 'Backspace') {
+	// 		// setTimeout(() => Caret.backspace(ref), 0)
+	// 	}
 
-		if (e.key === 'ArrowUp') {
-			e.preventDefault()
-			setAction('up')
-		}
+	// 	if (e.key === 'ArrowUp') {
+	// 		e.preventDefault()
+	// 		setAction('up')
+	// 	}
 
-		if (e.key === 'ArrowDown') {
-			e.preventDefault()
-			setAction('down')
-		}
-	}
+	// 	if (e.key === 'ArrowDown') {
+	// 		e.preventDefault()
+	// 		setAction('down')
+	// 	}
+	// }
 
 	// useEffect(() => {
 	// 	if (action === undefined) return
@@ -136,17 +144,27 @@ export default function Editor({ currentDocPages, currentDocumentReference }: Ed
 	// }, [action])
 
 	return (
-		<div
-			ref={ref}
-			id='editor'
-			className={s.docEdit}
-			contentEditable></div>
+		<>
+			<button
+				onClick={() => {
+					upload(user!.uid, ref.current!.textContent!, doc)
+				}}>
+				click
+			</button>
+			<div
+				ref={ref}
+				id='editor'
+				className={s.docEdit}
+				contentEditable></div>
+		</>
 	)
 }
 
 type EditorProps = {
 	currentDocPages: DocumentSnapshot<DocumentData, DocumentData> | undefined
 	currentDocumentReference: DocumentReference<DocumentData, DocumentData> | undefined
+	user: User | undefined
+	doc: DocumentSnapshot<DocumentData, DocumentData> | undefined
 }
 
 type Action = 'initial' | 'enter' | 'up' | 'down' | 'space' | 'backspace' | undefined

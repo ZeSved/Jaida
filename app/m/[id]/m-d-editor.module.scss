@@ -107,34 +107,50 @@
 			height: fit-content;
 			padding: 1rem;
 
-			.docEdit {
-				display: flex;
-				flex-direction: column;
-				justify-content: left;
-
+			> div {
 				border: var(--border);
 				border-radius: 1rem;
+				display: flex;
 
-				padding: 4rem;
-				color: var(--text);
-				caret-color: var(--text);
-				outline: none;
+				width: 100%;
+				aspect-ratio: 1;
 
-				width: 60vw;
-				aspect-ratio: 9/16;
+				.div {
+					width: 1px;
+					height: 95%;
+					background-color: var(--accent);
+					margin-block: auto;
+				}
 
-				background-color: transparent;
-				resize: none;
+				.docEdit,
+				.results {
+					display: flex;
+					flex-direction: column;
+					justify-content: left;
 
-				> div {
-					height: 16px;
+					border-radius: 1rem;
 
-					> span {
+					padding: 4rem;
+					color: var(--text);
+					caret-color: var(--text);
+					outline: none;
+
+					width: 50%;
+					height: 100%;
+
+					background-color: transparent;
+					resize: none;
+
+					> div {
 						height: 16px;
 
 						> span {
 							height: 16px;
-							font-size: 16px;
+
+							> span {
+								height: 16px;
+								font-size: 16px;
+							}
 						}
 					}
 				}

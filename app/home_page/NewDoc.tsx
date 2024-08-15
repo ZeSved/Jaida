@@ -6,7 +6,7 @@ import { DocumentData, DocumentReference, doc, getDoc, setDoc, updateDoc } from 
 import { useRouter } from 'next/navigation'
 import s from '@/app/@children/page.module.scss'
 import Image from 'next/image'
-import new_image from '@/public/Create new file.svg'
+// import new_image from '@/public/Create new file.svg'
 
 export default function NewDoc({ currentUser }: { currentUser: User }) {
 	const router = useRouter()
@@ -45,30 +45,31 @@ export default function NewDoc({ currentUser }: { currentUser: User }) {
 			numberOfPages: 1,
 			dateOfCreation: new Date(),
 			imageSquareLocation: imageArr,
+			fileId: Date.now(),
 		})
 
-		await setDoc(docContent, {
-			name: 'PAGE-1',
-			content: [''],
-		})
+		// await setDoc(docContent, {
+		// 	name: 'PAGE-1',
+		// 	content: [''],
+		// })
 
-		await updateDoc(doc(db, 'users', currentUser.uid), {
-			numberOfDocuments: ((
-				await getDoc(doc(db, 'users', currentUser.uid))
-			).data()!.numberOfDocuments += 1),
-		})
+		// await updateDoc(doc(db, 'users', currentUser.uid), {
+		// 	numberOfDocuments: ((
+		// 		await getDoc(doc(db, 'users', currentUser.uid))
+		// 	).data()!.numberOfDocuments += 1),
+		// })
 	}
 
 	return (
 		<button
 			onClick={createNewDocMetadata}
 			className={s.newDocument}>
-			<Image
+			{/* <Image
 				src={new_image}
 				height={100}
 				width={100}
 				alt=''
-			/>
+			/> */}
 		</button>
 	)
 }
