@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 *,
 *::after,
 *::before {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+	font-family: 'Mulish', sans-serif;
 }
 
 *:disabled {
@@ -38,6 +41,12 @@ body {
 	height: 100dvh;
 	width: 100vw;
 	overflow-x: hidden;
+}
+
+button {
+	border: none;
+	outline: none;
+	cursor: pointer;
 }
 
 /* ===== Scrollbar CSS ===== */

@@ -36,6 +36,7 @@ export default function MarkdownEditor() {
 	const [currentDocumentReference, setCurrentDocumentReference] =
 		useState<DocumentReference<DocumentData, DocumentData>>()
 	const [currentUser, setCurrentUser] = useState<User | undefined>()
+	const [currentText, setCurrentText] = useState<string>('')
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
@@ -88,10 +89,12 @@ export default function MarkdownEditor() {
 									currentDocPages={currentDocPages}
 									currentDocumentReference={currentDocumentReference}
 									user={currentUser}
-									doc={currentDoc}
+									currentDoc={currentDoc}
+									currentText={currentText}
+									setCurrentText={setCurrentText}
 								/>
 								<div className={s.div} />
-								<Results />
+								<Results currentText={currentText} />
 							</div>
 						) : (
 							<LoadingSq />

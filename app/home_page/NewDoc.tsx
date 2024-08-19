@@ -17,47 +17,39 @@ export default function NewDoc({ currentUser }: { currentUser: User }) {
 		const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `DOC-${id}`)
 		const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
-		const imgSquareLocation: number[] = []
-		for (let i = 0; i < 9; i++) {
-			imgSquareLocation.push(Math.floor(Math.random() * (1 - 0 + 1) + 0))
-		}
-
 		router.push(`/m/DOC-${id}`)
 
-		createNewDoc(userDocument, id, imgSquareLocation, docContent)
+		createNewDoc(userDocument, id, docContent)
 	}
 
 	async function createNewDoc(
 		userDocument: DocumentReference<DocumentData, DocumentData>,
 		id: string,
-		imageArr: number[],
 		docContent: DocumentReference<DocumentData, DocumentData>
 	) {
 		// const amountOfDocs =
 		// 	(await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))).size + 1
 
 		if (!window.location.pathname.includes(`m`))
-			setTimeout(() => createNewDoc(userDocument, id, imageArr, docContent), 100)
+			setTimeout(() => createNewDoc(userDocument, id, docContent), 100)
 
 		await setDoc(userDocument, {
 			name: `DOC-${id}`,
 			displayName: 'untitled',
 			numberOfPages: 1,
 			dateOfCreation: new Date(),
-			imageSquareLocation: imageArr,
-			fileId: Date.now(),
 		})
 
-		// await setDoc(docContent, {
-		// 	name: 'PAGE-1',
-		// 	content: [''],
-		// })
+		await setDoc(docContent, {
+			name: 'PAGE-1',
+			content: [''],
+		})
 
-		// await updateDoc(doc(db, 'users', currentUser.uid), {
-		// 	numberOfDocuments: ((
-		// 		await getDoc(doc(db, 'users', currentUser.uid))
-		// 	).data()!.numberOfDocuments += 1),
-		// })
+		await updateDoc(doc(db, 'users', currentUser.uid), {
+			numberOfDocuments: ((
+				await getDoc(doc(db, 'users', currentUser.uid))
+			).data()!.numberOfDocuments += 1),
+		})
 	}
 
 	return (

@@ -36,7 +36,7 @@
 			}
 		}
 
-		.card .cardLink {
+		.card {
 			display: flex;
 			flex-direction: column;
 
@@ -46,8 +46,29 @@
 			// gap: 1rem;
 			border-radius: 2rem;
 			text-decoration: none;
+			position: relative;
 
-			.img {
+			&::before {
+				content: '';
+				position: absolute;
+				z-index: -1;
+				height: 95%;
+				width: 95%;
+				background: var(--gradient);
+				transition: all 0.2s;
+				filter: blur(0);
+				border-radius: calc(2rem - 2.5%);
+
+				top: 52.5%;
+				left: 52.5%;
+				translate: -52.5% -52.5%;
+			}
+
+			&:hover::before {
+				filter: blur(10px);
+			}
+
+			> a .img {
 				padding: 2rem;
 			}
 
@@ -57,18 +78,58 @@
 				align-items: center;
 
 				> button {
+					display: flex;
+					align-items: center;
 					padding: 1rem;
 					border-radius: 100vh;
-					background: transparent;
+					background-color: transparent;
 					outline: none;
 					border: none;
 					cursor: pointer;
+
+					height: fit-content;
+
 					position: relative;
-					z-index: 100;
+					z-index: 0;
+
+					&:hover::after {
+						content: '';
+						position: absolute;
+						z-index: -1;
+						background-color: var(--primary);
+						width: 100%;
+						aspect-ratio: 1;
+						top: 50%;
+						left: 50%;
+						translate: -50% -50%;
+
+						border-radius: 100vh;
+					}
+
+					> img {
+						background-color: transparent;
+					}
 				}
 
-				> p {
-					color: var(--text);
+				> dialog[open] {
+					background-color: var(--secondary);
+					border-radius: 1rem;
+					display: flex;
+					flex-direction: column;
+					padding: 1rem;
+					gap: 1rem;
+				}
+
+				> a {
+					display: flex;
+					align-items: center;
+					text-decoration: none;
+					height: 100%;
+					width: 100%;
+
+					> p {
+						color: var(--text);
+					}
 				}
 			}
 		}

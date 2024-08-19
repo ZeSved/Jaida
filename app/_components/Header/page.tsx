@@ -1,18 +1,17 @@
-import JaidaLogo from '@/public/JaidaLogo'
+import JaidaLogo from '@/public/Jaida logo 8.svg'
 import s from './header.module.scss'
 import Login from './login'
+import Image from 'next/image'
 
 export default function Header() {
 	return (
 		<header
 			id='header'
 			className={s.header}>
-			<JaidaLogo
-				width='59'
-				height='51'
-				viewBox='59 91'
+			<Image
+				alt=''
+				src={JaidaLogo}
 			/>
-			<h1>Jaida</h1>
 			<Login />
 		</header>
 	)

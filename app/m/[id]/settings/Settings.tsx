@@ -1,8 +1,10 @@
 import Login from '@/app/_components/Header/login'
-import JaidaLogo from '@/public/JaidaLogo'
+import Doc from '@/public/Doc 4.svg'
 import s from '../m-d-editor.module.scss'
 import { CSSProperties, Dispatch, SetStateAction } from 'react'
-import Setting from './option'
+import Options from './option'
+import Link from 'next/link'
+import Image from 'next/Image'
 
 export default function Settings({
 	setBg,
@@ -13,15 +15,22 @@ export default function Settings({
 }) {
 	return (
 		<header className={s.header}>
-			<JaidaLogo
-				width='29'
-				height='41'
-				viewBox='49 91'
-			/>
-			<Setting
-				setBg={setBg}
-				bg={bg}
-			/>
+			<section>
+				<Link href={'/'}>
+					<Image
+						height={70}
+						width={70}
+						alt=''
+						src={Doc}
+					/>
+				</Link>
+			</section>
+			<section>
+				<Options
+					setBg={setBg}
+					bg={bg}
+				/>
+			</section>
 			<Login />
 		</header>
 	)

@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import Login from '../_components/Header/login'
 import classNames from 'classnames'
 import { LoadingSq } from '@/components/loading/loadingSquare'
-import Sidebar from './Sidebar'
+import Sidebar from '../_components/Sidebar/Sidebar'
 
 export default function HomePage() {
 	const [currentUser, setCurrentUser] = useState<User | undefined | null>(null)
@@ -55,6 +55,7 @@ export default function HomePage() {
 		<>
 			<Header />
 			<main className={styles.container}>
+				<Sidebar currentUser={currentUser!} />
 				{currentUser === null && <LoadingSq />}
 
 				{currentUser === undefined && (
@@ -67,13 +68,12 @@ export default function HomePage() {
 				{userDocs && userDocs.size < 1 && (
 					<div className={classNames(styles.main, styles.noDocs)}>
 						<h4 className={styles.h4}>Oops, looks like you don&apos;t have any documents...</h4>
-						<NewDoc currentUser={currentUser!} />
+						{/* <NewDoc currentUser={currentUser!} /> */}
 					</div>
 				)}
 
 				{userDocs && userDocs.size >= 1 && (
 					<div className={styles.main}>
-						<Sidebar />
 						{userDocs.docs.map((d, i) => (
 							<MDocCard
 								id={d.data().name}
@@ -84,6 +84,90 @@ export default function HomePage() {
 							/>
 						))}
 						{/* <NewDoc currentUser={currentUser!} /> */}
+						{/* <MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/>
+						<MDocCard
+							id={'test_card'}
+							displayName={'Test'}
+							currentUser={currentUser!}
+							// imageSquareLocation={d.data().imageSquareLocation}
+						/> */}
 					</div>
 				)}
 			</main>

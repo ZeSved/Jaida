@@ -6,91 +6,33 @@
 	.header {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		gap: 1rem;
+		padding-inline: 1rem;
 		width: 100vw;
 		height: 10vh;
 		box-shadow: 0 4px 15px 5px black;
 
-		.setColor {
-			position: absolute;
-			top: 5rem;
+		> img {
+			border-radius: 100vh;
+		}
 
-			background: var(--gradient);
-			padding: 2px;
+		> section {
+			background-color: var(--secondary);
 			border-radius: 1rem;
+			padding: 0.5rem;
 
-			> div {
-				display: flex;
-				flex-direction: column;
-				gap: 1rem;
+			.buttonGrid {
+				display: grid;
+				grid-template-columns: repeat(5, auto);
+				grid-template-rows: repeat(2, auto);
+				background-color: transparent;
 
-				background-color: var(--primary);
-
-				border-radius: calc(1rem - 1px);
-
-				padding: 1rem;
-
-				.currentColor {
-					width: 100%;
-					height: 2rem;
-
-					border: var(--border);
-				}
-
-				> div {
-					display: flex;
-
-					> select {
-						background-color: var(--primary);
-						border: none;
-						outline: none;
-						color: var(--text);
-						margin-right: 3px;
-					}
-
-					> span {
-						width: fit-content;
-						color: var(--text);
-						text-align: center;
-					}
-
-					> input {
-						padding-inline: 2px;
-						margin-left: 3px;
-						background-color: var(--primary);
-						color: var(--text);
-						outline: none;
-						border: none;
-					}
-
-					> button,
-					> div > button {
-						padding: 0.7rem;
-						border: none;
-						outline: none;
-						cursor: pointer;
-						font-weight: bold;
-
-						&.apply {
-							background: var(--gradient);
-							color: black;
-							margin-left: auto;
-							border-radius: 1rem;
-						}
-					}
-
-					.cancel {
-						background: var(--gradient);
-						padding: 2px;
-						border-radius: 1rem;
-
-						> button {
-							background-color: var(--primary);
-							color: var(--text);
-							border-radius: calc(1rem - 1px);
-						}
-					}
+				> button {
+					font-size: 1rem;
+					color: var(--text);
+					background: transparent;
+					padding: 0.5rem;
 				}
 			}
 		}
@@ -125,7 +67,7 @@
 				.docEdit,
 				.results {
 					display: flex;
-					flex-direction: column;
+					// flex-direction: column;
 					justify-content: left;
 
 					border-radius: 1rem;
@@ -141,17 +83,21 @@
 					background-color: transparent;
 					resize: none;
 
-					> div {
-						height: 16px;
+					&:empty::before {
+						content: attr(data-placeholder);
+						color: #ffffff50;
+					}
 
-						> span {
-							height: 16px;
+					> *:not(.space) {
+						font-size: 1rem;
+						display: inline;
+						width: fit-content;
+					}
 
-							> span {
-								height: 16px;
-								font-size: 16px;
-							}
-						}
+					.space {
+						display: inline;
+						height: 1rem;
+						width: 5px;
 					}
 				}
 			}
