@@ -3,45 +3,59 @@ import { Dispatch, SetStateAction } from "react"
 
 const conversions = [
   {
-    condition: (text: string) => {
-      if (text.startsWith('**') && text.endsWith('**') && text !== '**') return true
-      else return false
-    },
+    condition: (text: string) => { return /^\*\*\S+\*\*$/.test(text) },
     function: (text: string) => {
       const span = document.createElement('span')
       span.style.fontWeight = 'bold'
-      span.appendChild(document.createTextNode(text.replaceAll('**', '')))
+      span.appendChild(document.createTextNode(text.replace(/^\*\*/, '').replace(/\*\*$/, '')))
 
       return span.outerHTML
     }
   },
   {
-    condition: (text: string) => {
-      if (text.startsWith('*') && text.endsWith('*') && text !== '*') return true
-      else return false
-    },
+    condition: (text: string) => { return /^\*\S+\*$/.test(text) },
     function: (text: string) => {
       const span = document.createElement('span')
       span.style.fontStyle = 'italic'
-      span.appendChild(document.createTextNode(text.replaceAll('*', '')))
+      span.appendChild(document.createTextNode(text.replace(/^\*/, '').replace(/\*$/, '')))
 
       return span.outerHTML
     }
   },
   {
-    condition: (text: string) => {
-      if (/\S+/.test(text[0])) return true
-      else return false
-    },
-    function: (text: string) => { return text }
+    condition: (text: string) => { return /^\~\~\S+\~\~$/.test(text) },
+    function: (text: string) => {
+      const span = document.createElement('span')
+      span.style.textDecoration = 'line-through'
+      span.appendChild(document.createTextNode(text.replace(/^\~\~/, '').replace(/\~\~$/, '')))
+
+      return span.outerHTML
+    }
+  },
+  {
+    condition: (text: string) => { return /^\#/.test(text) },
+    function: (text: string) => {
+      const h1 = document.createElement('h1')
+      h1.appendChild(document.createTextNode(text.replace('#', '')))
+
+      return h1.outerHTML
+    }
+  },
+  {
+    // condition: (text: string) => { return /^[^*#>]*$/.test(text) },
+    condition: (text: string) => { return true },
+    function: (text: string) => {
+      const span = document.createElement('span')
+      span.appendChild(document.createTextNode(text))
+
+      return span.outerHTML
+    }
   },
 ]
 
 export function converter(text: string, setCurrentText: Dispatch<SetStateAction<string>>) {
   // const textArray = text.match(/\w+|\s+/g)
   const textArray = text.match(/\S+|\s+/g)
-  console.log(textArray)
-  console.log(text)
   const newArray: string[] = []
 
   textArray?.forEach(t => {
@@ -55,32 +69,25 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
       })
     }
 
-    // for (const convert of conversions) {
-    //   console.log(1)
-    //   if (convert.condition(t)) {
-    //     console.log(2)
-    //     newArray.push(convert.function(t))
-    //   }
-    // }
-    if (text.startsWith('**') && text.endsWith('**') && text !== '**') {
-      const span = document.createElement('span')
-      span.style.fontWeight = 'bold'
-      span.appendChild(document.createTextNode(t.replaceAll('**', '')))
-      newArray.push(span.outerHTML)
+    for (const convert of conversions) {
+      if (convert.condition(t)) {
+        newArray.push(convert.function(t))
+
+        break
+      }
     }
-
-    if (t.startsWith('*') && t.endsWith('*') && t !== '*') {
-      // console.log('workds')
-      const span = document.createElement('span')
-      span.style.fontStyle = 'italic'
-      span.appendChild(document.createTextNode(t.replaceAll('*', '')))
-      newArray.push(span.outerHTML)
-    } else newArray.push(t)
-
-
   })
-
-  console.log(newArray)
 
   setCurrentText(newArray.join(''))
 }
+
+// function createNewSpan(uniqueSymbol: string, text: string) {
+//   const span = document.createElement('span')
+//   const textNode = document.createTextNode(
+//     text
+//     .replace(new RegExp('/^' + uniqueSymbol + '/'), '')
+//     .replace(new RegExp('/' + uniqueSymbol + '$/'), ''))
+//   span.appendChild(textNode)
+
+//   return span
+// }
