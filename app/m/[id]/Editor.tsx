@@ -53,7 +53,7 @@ export default function Editor({
 				}, 10)
 			}
 
-			setTimeout(() => converter(ref.current!.textContent!, setCurrentText), 0)
+			setTimeout(() => converter(ref.current?.textContent!, setCurrentText), 0)
 			// if (/[^#*_\~`>\-\+=\|[\](){},!\\@:]+/.test(e.key)) {
 			// }
 

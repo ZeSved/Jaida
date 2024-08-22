@@ -56,12 +56,14 @@ const conversions = [
 export function converter(text: string, setCurrentText: Dispatch<SetStateAction<string>>) {
   // const textArray = text.match(/\w+|\s+/g)
   const textArray = text.match(/\S+|\s+/g)
+  const e = text.split(/\r\n|\r|\n/)
+  console.log(e)
+  console.log(text)
   const newArray: string[] = []
 
   textArray?.forEach(t => {
     if (t.startsWith(' ')) {
       const tArr = t.split('')
-
       tArr.forEach(s => {
         const span = document.createElement('span')
         span.className = style.space
@@ -78,7 +80,7 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
     }
   })
 
-  setCurrentText(newArray.join(''))
+  setCurrentText(newArray.map(item => `<div>${item}</div>`).join(''))
 }
 
 // function createNewSpan(uniqueSymbol: string, text: string) {
