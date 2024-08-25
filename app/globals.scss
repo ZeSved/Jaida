@@ -17,9 +17,12 @@
 	--primary: #0e1218;
 	--secondary: #0e1f39;
 	--text: #d3d3d3;
+	--secondary-text: #62a0ff;
 
 	--inline-margin: 2rem;
 	--border: 1px solid var(--accent);
+
+	--max-width: calc(100vw * 0.67);
 
 	--gradient: linear-gradient(-45deg, var(--cta-2) 0%, var(--cta-1) 100%);
 

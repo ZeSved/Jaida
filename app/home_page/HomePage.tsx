@@ -12,78 +12,52 @@ import Login from '../_components/Header/login'
 import classNames from 'classnames'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import Sidebar from '../_components/Sidebar/Sidebar'
+import { useAuthState } from '../hooks/useAuthState'
+import ItemList from './ItemList'
 
 export default function HomePage() {
-	const [currentUser, setCurrentUser] = useState<User | undefined | null>(null)
-	const [userDocs, setUserDocs] = useState<QuerySnapshot<DocumentData, DocumentData>>()
+	const user = useAuthState()
+	const [userDocs, setUserDocs] = useState<QuerySnapshot<DocumentData, DocumentData> | undefined>(
+		undefined
+	)
 
 	useEffect(() => {
-		const unsub = onAuthStateChanged(auth, async (user) => {
-			if (user) {
-				setCurrentUser(user)
-			} else {
-				setCurrentUser(undefined)
-			}
-		})
-
-		return () => unsub()
-	}, [])
-
-	useEffect(() => {
-		if (currentUser) {
+		if (user) {
 			const unsub = onSnapshot(
-				collection(db, 'users', currentUser.uid, 'user-documents'),
+				collection(db, 'users', user.uid, 'user-documents'),
 				(queryResult) => {
 					setUserDocs(queryResult)
 				}
 			)
 
 			return () => unsub()
+		} else {
+			setUserDocs(undefined)
 		}
-	}, [currentUser])
-
-	// useEffect(() => {
-	// 	if (currentUser) getDocuments()
-
-	// 	async function getDocuments() {
-	// 		const docs = await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))
-
-	// 	}
-	// }, [currentUser])
+	}, [user])
 
 	return (
 		<>
 			<Header />
 			<main className={styles.container}>
-				<Sidebar currentUser={currentUser!} />
-				{currentUser === null && <LoadingSq />}
-
-				{currentUser === undefined && (
+				{user === undefined && (
 					<div className={classNames(styles.main, styles.noUser)}>
 						<h2 className={styles.h2}>Sign in to continue</h2>
 						<Login />
 					</div>
 				)}
 
-				{userDocs && userDocs.size < 1 && (
+				{/* {userDocs && userDocs.size < 1 && (
 					<div className={classNames(styles.main, styles.noDocs)}>
 						<h4 className={styles.h4}>Oops, looks like you don&apos;t have any documents...</h4>
-						{/* <NewDoc currentUser={currentUser!} /> */}
+						<NewDoc currentUser={currentUser!} />
 					</div>
-				)}
+				)} */}
 
-				{userDocs && userDocs.size >= 1 && (
+				{userDocs && (
 					<div className={styles.main}>
-						{userDocs.docs.map((d, i) => (
-							<MDocCard
-								id={d.data().name}
-								key={i}
-								displayName={d.data().displayName}
-								currentUser={currentUser!}
-								// imageSquareLocation={d.data().imageSquareLocation}
-							/>
-						))}
-						{/* <NewDoc currentUser={currentUser!} /> */}
+						<ItemList items={userDocs} />
+						{/* <NewDoc currentUser={user!} /> */}
 						{/* <MDocCard
 							id={'test_card'}
 							displayName={'Test'}

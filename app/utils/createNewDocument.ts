@@ -6,6 +6,7 @@ import { NextRouter } from "next/router"
 
 export function createNewDocument(currentUser: User, router: AppRouterInstance) {
   const id = crypto.randomUUID()
+  const date = new Date()
 
   const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `DOC-${id}`)
   const docContent = doc(userDocument, 'pages', 'PAGE-1')
@@ -25,11 +26,12 @@ export function createNewDocument(currentUser: User, router: AppRouterInstance) 
     if (!window.location.pathname.includes(`m`))
       setTimeout(() => createNewDoc(userDocument, id, docContent), 100)
 
+
     await setDoc(userDocument, {
       name: `DOC-${id}`,
       displayName: 'New document',
       numberOfPages: 1,
-      dateOfCreation: new Date(),
+      dateModified: `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`,
     })
 
     await setDoc(docContent, {

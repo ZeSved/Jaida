@@ -10,19 +10,23 @@ import { db } from '@/firebase/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import folder from '@/public/Rectangle 54.svg'
 
 export default function MDocCard({
 	id,
 	currentUser,
 	displayName,
+	numberOfPages,
+	dateModified,
 }: {
 	id: string
 	currentUser: User
 	displayName: string
+	numberOfPages: number
+	dateModified: string
 }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const [location, setLocation] = useState<number[]>([])
-	const dialogRef = useRef<HTMLDialogElement>(null)
 
 	const buttons = [
 		{
@@ -61,53 +65,31 @@ export default function MDocCard({
 		},
 	]
 
-	useEffect(() => {
-		if (open) {
-			dialogRef.current!.show()
-		} else dialogRef.current!.close()
-	}, [open])
+	// useEffect(() => {
+	// 	function clickedOutside(e: MouseEvent) {
+	// 		if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
+	// 			setOpen(false)
+	// 		}
+	// 	}
 
-	useEffect(() => {
-		function clickedOutside(e: MouseEvent) {
-			if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
-				setOpen(false)
-			}
-		}
+	// 	document.addEventListener('mousedown', clickedOutside)
 
-		document.addEventListener('mousedown', clickedOutside)
-
-		return () => document.removeEventListener('mousedown', clickedOutside)
-	}, [])
+	// 	return () => document.removeEventListener('mousedown', clickedOutside)
+	// }, [])
 
 	return (
 		<div
 			className={s.card}
 			id={id}>
-			<Link href={`/m/${id}`}>
-				<div className={s.img}>
-					<Image
-						alt=''
-						src={doc_img}
-					/>
-				</div>
-			</Link>
-			<div className={s.info}>
-				<Link href={`/m/${id}`}>
-					<p>{displayName}</p>
-				</Link>
-				<button
-					onClick={(e) => {
-						setOpen(!open)
-						setLocation([e.pageY + window.scrollY, e.pageX])
-					}}>
-					<Image
-						alt=''
-						src={options}
-					/>
-				</button>
-				<dialog
-					style={{ top: location[0], left: location[1] }}
-					ref={dialogRef}>
+			<Image
+				src={folder}
+				alt=''
+			/>
+			<div>
+				<p>{displayName}</p>
+				<p>{dateModified}</p>
+				<p>{numberOfPages}</p>
+				<div>
 					{buttons.map((b, i) => (
 						<button
 							onClick={b.func}
@@ -115,7 +97,7 @@ export default function MDocCard({
 							{b.display}
 						</button>
 					))}
-				</dialog>
+				</div>
 			</div>
 		</div>
 	)
