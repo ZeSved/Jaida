@@ -36,6 +36,7 @@ export default function ItemList({
 					<p>Date Modified</p>
 					<p>{forDocuments ? 'Pages' : 'Documents'}</p>
 					<p>Actions</p>
+					<span></span>
 				</div>
 			</div>
 			{items.docs.length >= 1 ? (

@@ -71,17 +71,17 @@
 						position: relative;
 						padding: 0.4rem 0.5rem;
 
-						&:not(&:last-child) {
-							flex-grow: 1;
-						}
+						// &:not(&:last-child) {
+						// 	flex-grow: 1;
+						// }
 
-						&:nth-child(2) {
-							margin-inline: 3rem;
-						}
+						// &:nth-child(2) {
+						// 	margin-inline: 3rem;
+						// }
 
-						&:last-child {
-							padding-right: 6rem;
-						}
+						// &:last-child {
+						// 	padding-right: 6rem;
+						// }
 						// width: 10rem;
 						// --margin: 12%;
 
@@ -122,7 +122,7 @@
 
 					background-color: var(--secondary);
 
-					padding: 1rem;
+					padding: 0.5rem 1rem;
 					border-radius: 0.5rem;
 					text-decoration: none;
 
