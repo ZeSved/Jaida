@@ -71,6 +71,7 @@
 						color: var(--text);
 						position: relative;
 						padding: 0.4rem 0.5rem;
+						width: 10rem;
 
 						// &:not(&:last-child) {
 						// 	flex-grow: 1;
@@ -130,11 +131,16 @@
 					> img {
 						height: 3rem;
 						aspect-ratio: 1.1 / 1;
+
+						&[used-for-docs] {
+							margin-inline: 0.4rem;
+						}
 					}
 
 					> div {
 						display: flex;
 						justify-content: space-between;
+						align-items: center;
 						width: 100%;
 
 						> p {

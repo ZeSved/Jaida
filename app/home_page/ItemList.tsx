@@ -33,7 +33,7 @@ export default function ItemList({
 				</button>
 				<div className={s.text}>
 					<p>Name</p>
-					<p>Date Modified</p>
+					<p>Last Modified</p>
 					<p>{forDocuments ? 'Pages' : 'Documents'}</p>
 					<p>Actions</p>
 				</div>
