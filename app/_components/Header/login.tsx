@@ -15,6 +15,7 @@ import Image from 'next/image'
 import acc from '@/public/account.svg'
 import { useEffect, useState } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
+import ShortUniqueId from 'short-unique-id'
 
 export default function Login() {
 	const router = useRouter()
@@ -38,12 +39,20 @@ export default function Login() {
 		async function updateDB() {
 			try {
 				const userDocument = doc(db, 'users', user!.uid)
+				const subFolders = doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_')
+
+				const subFolderId = new ShortUniqueId({ length: 9 })
 
 				await setDoc(userDocument, {
 					email: user?.email,
 					displayName: user?.displayName,
 					numberOfDocuments: 0,
 					uid: user?.uid,
+				})
+
+				await setDoc(subFolders, {
+					name: 'New folder',
+					id: subFolderId,
 				})
 			} catch (e) {
 				console.log('an error has occured', e)

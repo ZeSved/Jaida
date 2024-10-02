@@ -3,13 +3,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import s from '@/app/@children/page.module.scss'
-import options from '@/public/Options.svg'
-import doc_img from '@/public/Doc 4.svg'
+import doc_img from '@/public/Vector 6.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/firebase/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
-import classNames from 'classnames'
 import folder from '@/public/Rectangle 54.svg'
 
 export default function MDocCard({
@@ -18,12 +16,14 @@ export default function MDocCard({
 	displayName,
 	numberOfPages,
 	dateModified,
+	forDocuments = false,
 }: {
 	id: string
 	currentUser: User
 	displayName: string
 	numberOfPages: number
 	dateModified: string
+	forDocuments?: boolean
 }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const [location, setLocation] = useState<number[]>([])
@@ -82,8 +82,9 @@ export default function MDocCard({
 			className={s.card}
 			id={id}>
 			<Image
-				src={folder}
+				src={forDocuments ? doc_img : folder}
 				alt=''
+				used-for-docs={forDocuments ? 'true' : undefined}
 			/>
 			<div>
 				<p>{displayName}</p>
