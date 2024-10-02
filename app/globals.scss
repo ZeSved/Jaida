@@ -14,10 +14,13 @@
 }
 
 :root {
-	--primary: #0e1218;
-	--secondary: #0e1f39;
+	--primary: #212121;
+	// --primary: #0e1218;
+	--secondary: #262626;
+	// --secondary: #0e1f39;
 	--text: #d3d3d3;
-	--secondary-text: #62a0ff;
+	--secondary-text: white;
+	// --secondary-text: #62a0ff;
 
 	--inline-margin: 2rem;
 	--border: 1px solid var(--accent);
@@ -28,8 +31,10 @@
 
 	--accent: #585858;
 
-	--cta-1: #6c00d0;
-	--cta-2: #d000eb;
+	--cta-1: #00ff85;
+	// --cta-1: #6c00d0;
+	--cta-2: #00b3ff;
+	// --cta-2: #d000eb;
 }
 
 body {
