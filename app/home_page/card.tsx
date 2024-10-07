@@ -9,6 +9,7 @@ import { db } from '@/firebase/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
 import folder from '@/public/Rectangle 54.svg'
+import option from '@/public/options.svg'
 
 export default function MDocCard({
 	id,
@@ -27,6 +28,8 @@ export default function MDocCard({
 }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const [location, setLocation] = useState<number[]>([])
+	const [winWidth, setWinWidth] = useState<boolean>(false)
+	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	const buttons = [
 		{
@@ -65,17 +68,30 @@ export default function MDocCard({
 		},
 	]
 
-	// useEffect(() => {
-	// 	function clickedOutside(e: MouseEvent) {
-	// 		if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
-	// 			setOpen(false)
-	// 		}
-	// 	}
+	useEffect(() => {
+		const windowWidth = window.innerWidth < 990
+		setWinWidth(windowWidth)
 
-	// 	document.addEventListener('mousedown', clickedOutside)
+		function clickedOutside(e: MouseEvent) {
+			if (buttonRef.current && !buttonRef.current.contains(e.target as Node)) {
+				setOpen(false)
+			}
+		}
 
-	// 	return () => document.removeEventListener('mousedown', clickedOutside)
-	// }, [])
+		function windowToSmall() {
+			const winWidth = window.innerWidth < 990
+
+			setWinWidth(winWidth)
+		}
+
+		document.addEventListener('mousedown', clickedOutside)
+		document.addEventListener('resize', windowToSmall)
+
+		return () => {
+			document.removeEventListener('mousedown', clickedOutside)
+			document.removeEventListener('resize', windowToSmall)
+		}
+	}, [])
 
 	return (
 		<div
@@ -90,7 +106,15 @@ export default function MDocCard({
 				<p>{displayName}</p>
 				<p>{dateModified}</p>
 				<p>{numberOfPages}</p>
-				<div>
+				<button
+					ref={buttonRef}
+					onClick={() => setOpen(!open)}>
+					<Image
+						src={option}
+						alt=''
+					/>
+				</button>
+				<div style={{ display: winWidth ? (open ? 'flex' : 'none') : 'flex' }}>
 					{buttons.map((b, i) => (
 						<button
 							onClick={b.func}
