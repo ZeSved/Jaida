@@ -1,5 +1,5 @@
 'use client'
-import { auth, db } from '@/firebase/firebase'
+import { auth, db } from '@/db/firebase'
 import {
 	GoogleAuthProvider,
 	signOut,

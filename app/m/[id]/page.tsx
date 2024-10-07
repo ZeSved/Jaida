@@ -3,11 +3,12 @@ import { CSSProperties, useEffect, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import Settings from './settings/Settings'
 import { User, onAuthStateChanged } from 'firebase/auth'
-import { auth, db } from '@/firebase/firebase'
+import { auth, db } from '@/db/firebase'
 import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import Editor from './Editor'
 import Results from './Results'
+import { database } from '@/db/api'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {

@@ -4,8 +4,8 @@ import styles from '@/app/@children/page.module.scss'
 import MDocCard from './card'
 import Header from '../_components/Header/page'
 import NewDoc from './NewDoc'
-import { auth, db } from '@/firebase/firebase'
-import { DocumentData, QuerySnapshot, collection, onSnapshot } from 'firebase/firestore'
+import { auth, db } from '@/db/firebase'
+import { DocumentData, QuerySnapshot, collection, doc, onSnapshot } from 'firebase/firestore'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import Login from '../_components/Header/login'
@@ -14,6 +14,7 @@ import { LoadingSq } from '@/components/loading/loadingSquare'
 import Sidebar from '../_components/Sidebar/Sidebar'
 import { useAuthState } from '../hooks/useAuthState'
 import ItemList from './ItemList'
+import { database } from '@/db/api'
 
 export default function HomePage() {
 	const user = useAuthState()
@@ -30,6 +31,20 @@ export default function HomePage() {
 				}
 			)
 
+			console.log(
+				database
+					.getDocument(
+						doc(
+							db,
+							'users',
+							user.uid,
+							'user-documents',
+							'DOC-fb623c64-ee08-4fd9-a7a6-70a1805fd889 '
+						)
+					)
+					.getValue()
+					.data()
+			)
 			return () => unsub()
 		} else {
 			setUserDocs(undefined)
@@ -57,6 +72,10 @@ export default function HomePage() {
 				{userDocs && (
 					<div className={styles.main}>
 						<ItemList items={userDocs} />
+						<ItemList
+							items={userDocs}
+							forDocuments
+						/>
 						{/* <NewDoc currentUser={user!} /> */}
 					</div>
 				)}

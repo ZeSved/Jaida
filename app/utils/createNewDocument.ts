@@ -1,4 +1,4 @@
-import { db } from "@/firebase/firebase"
+import { db } from "@/db/firebase"
 import { User } from "firebase/auth"
 import { doc, DocumentReference, DocumentData, setDoc, updateDoc, getDoc } from "firebase/firestore"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"

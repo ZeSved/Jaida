@@ -1,4 +1,4 @@
-import { auth } from "@/firebase/firebase"
+import { auth } from "@/db/firebase"
 import { onAuthStateChanged, User } from "firebase/auth"
 import { useEffect, useState } from "react"
 

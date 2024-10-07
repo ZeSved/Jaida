@@ -48,6 +48,7 @@ export default function ItemList({
 							currentUser={user!}
 							numberOfPages={d.data().numberOfPages}
 							dateModified={d.data().dateModified}
+							forDocuments={forDocuments}
 						/>
 					))}
 					<MDocCard
@@ -56,6 +57,7 @@ export default function ItemList({
 						currentUser={user!}
 						dateModified='06/10/2024 23:10'
 						numberOfPages={6}
+						forDocuments={forDocuments}
 					/>
 					<MDocCard
 						id={'test_card'}
@@ -63,6 +65,7 @@ export default function ItemList({
 						currentUser={user!}
 						dateModified='10/10/2014 21:50'
 						numberOfPages={6}
+						forDocuments={forDocuments}
 					/>
 					<MDocCard
 						id={'test_card'}
@@ -70,6 +73,7 @@ export default function ItemList({
 						currentUser={user!}
 						dateModified='10/10/2014 21:50'
 						numberOfPages={6}
+						forDocuments={forDocuments}
 					/>
 					<MDocCard
 						id={'test_card'}
@@ -77,6 +81,7 @@ export default function ItemList({
 						currentUser={user!}
 						dateModified='10/10/2014 21:50'
 						numberOfPages={6}
+						forDocuments={forDocuments}
 					/>
 				</div>
 			) : (
