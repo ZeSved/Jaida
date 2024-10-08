@@ -8,7 +8,6 @@ import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from '
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import Editor from './Editor'
 import Results from './Results'
-import { database } from '@/db/api'
 
 // function reducer(rep: typeof replacements, action: Action) {
 // 	return {

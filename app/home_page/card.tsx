@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import s from '@/app/@children/page.module.scss'
-import doc_img from '@/public/Vector 6.svg'
+import doc_img from '@/public/document.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/db/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
-import folder from '@/public/Rectangle 54.svg'
+import folder from '@/public/folder.svg'
 import option from '@/public/options.svg'
 
 export default function MDocCard({
@@ -27,7 +27,6 @@ export default function MDocCard({
 	forDocuments?: boolean
 }) {
 	const [open, setOpen] = useState<boolean>(false)
-	const [location, setLocation] = useState<number[]>([])
 	const [winWidth, setWinWidth] = useState<boolean>(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -85,11 +84,11 @@ export default function MDocCard({
 		}
 
 		document.addEventListener('mousedown', clickedOutside)
-		document.addEventListener('resize', windowToSmall)
+		window.addEventListener('resize', windowToSmall)
 
 		return () => {
 			document.removeEventListener('mousedown', clickedOutside)
-			document.removeEventListener('resize', windowToSmall)
+			window.removeEventListener('resize', windowToSmall)
 		}
 	}, [])
 

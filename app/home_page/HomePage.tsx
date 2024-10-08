@@ -1,26 +1,29 @@
 'use client'
 
 import styles from '@/app/@children/page.module.scss'
-import MDocCard from './card'
 import Header from '../_components/Header/page'
-import NewDoc from './NewDoc'
-import { auth, db } from '@/db/firebase'
-import { DocumentData, QuerySnapshot, collection, doc, onSnapshot } from 'firebase/firestore'
-import { User, onAuthStateChanged } from 'firebase/auth'
+import { db } from '@/db/firebase'
+import {
+	DocumentData,
+	QuerySnapshot,
+	collection,
+	doc,
+	getDoc,
+	onSnapshot,
+} from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import Login from '../_components/Header/login'
 import classNames from 'classnames'
 import { LoadingSq } from '@/components/loading/loadingSquare'
-import Sidebar from '../_components/Sidebar/Sidebar'
 import { useAuthState } from '../hooks/useAuthState'
 import ItemList from './ItemList'
-import { database } from '@/db/api'
 
 export default function HomePage() {
 	const user = useAuthState()
 	const [userDocs, setUserDocs] = useState<QuerySnapshot<DocumentData, DocumentData> | undefined>(
 		undefined
 	)
+	const [folders, setFolders] = useState<string[]>(['Home'])
 
 	useEffect(() => {
 		if (user) {
@@ -31,23 +34,22 @@ export default function HomePage() {
 				}
 			)
 
-			console.log(
-				database
-					.getDocument(
-						doc(
-							db,
-							'users',
-							user.uid,
-							'user-documents',
-							'DOC-fb623c64-ee08-4fd9-a7a6-70a1805fd889 '
-						)
-					)
-					.getValue()
-					.data()
-			)
+			getFolders()
+
 			return () => unsub()
 		} else {
 			setUserDocs(undefined)
+		}
+
+		async function getFolders() {
+			await getDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_')).then(
+				(result) => {
+					for (const f in result.data()) {
+						console.log(f[1])
+						// setFolders([...folders, f])
+					}
+				}
+			)
 		}
 	}, [user])
 
@@ -62,22 +64,17 @@ export default function HomePage() {
 					</div>
 				)}
 
-				{/* {userDocs && userDocs.size < 1 && (
-					<div className={classNames(styles.main, styles.noDocs)}>
-						<h4 className={styles.h4}>Oops, looks like you don&apos;t have any documents...</h4>
-						<NewDoc currentUser={currentUser!} />
-					</div>
-				)} */}
-
-				{userDocs && (
-					<div className={styles.main}>
-						<ItemList items={userDocs} />
-						<ItemList
-							items={userDocs}
-							forDocuments
-						/>
-						{/* <NewDoc currentUser={user!} /> */}
-					</div>
+				{user && (
+					<>
+						<div className={styles.directory}></div>
+						<div className={styles.main}>
+							<ItemList items={userDocs} />
+							<ItemList
+								items={userDocs}
+								forDocuments
+							/>
+						</div>
+					</>
 				)}
 			</main>
 		</>

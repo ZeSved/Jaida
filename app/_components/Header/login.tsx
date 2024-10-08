@@ -21,17 +21,6 @@ export default function Login() {
 	const router = useRouter()
 	const user = useAuthState()
 	const [showPopup, setShowPopup] = useState<boolean>(false)
-	// const [user, setCurrentUser] = useState<User | undefined>()
-
-	// useEffect(() => {
-	// 	onAuthStateChanged(auth, (user) => {
-	// 		if (user) {
-	// 			setCurrentUser(user)
-	// 		} else {
-	// 			setCurrentUser(undefined)
-	// 		}
-	// 	})
-	// }, [])
 
 	useEffect(() => {
 		if (user) updateDB()
@@ -44,15 +33,15 @@ export default function Login() {
 				const subFolderId = new ShortUniqueId({ length: 9 })
 
 				await setDoc(userDocument, {
-					email: user?.email,
-					displayName: user?.displayName,
+					email: user!.email,
+					displayName: user!.displayName,
 					numberOfDocuments: 0,
-					uid: user?.uid,
+					uid: user!.uid,
 				})
 
 				await setDoc(subFolders, {
 					name: 'New folder',
-					id: subFolderId,
+					id: JSON.stringify(subFolderId),
 				})
 			} catch (e) {
 				console.log('an error has occured', e)

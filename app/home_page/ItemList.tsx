@@ -1,20 +1,23 @@
 'use client'
 
-import { DocumentData, QuerySnapshot } from 'firebase/firestore'
+import { doc, DocumentData, QuerySnapshot, setDoc, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import MDocCard from './card'
 import { useAuthState } from '../hooks/useAuthState'
 import s from '@/app/@children/page.module.scss'
 import Image from 'next/image'
-import plus from '@/public/Vector 15.svg'
+import plus from '@/public/plus.svg'
 import { createNewDocument } from '../utils/createNewDocument'
 import { useRouter } from 'next/navigation'
+import { LoadingSq } from '@/components/loading/loadingSquare'
+import { db } from '@/db/firebase'
+import ShortUniqueId from 'short-unique-id'
 
 export default function ItemList({
 	items,
 	forDocuments = false,
 }: {
-	items: QuerySnapshot<DocumentData, DocumentData>
+	items: QuerySnapshot<DocumentData, DocumentData> | undefined
 	forDocuments?: boolean
 }) {
 	const user = useAuthState()
@@ -24,8 +27,17 @@ export default function ItemList({
 		<div className={s.list}>
 			<div className={s.info}>
 				<button
-					title='New folder'
-					onClick={() => createNewDocument(user!, router)}>
+					title={forDocuments ? 'New Document' : 'New Folder'}
+					onClick={
+						forDocuments
+							? () => createNewDocument(user!, router)
+							: async () => {
+									const subFolderId = new ShortUniqueId({ length: 9 })
+									await setDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_'), {
+										data: [subFolderId.rnd(), 'New folder'],
+									})
+							  }
+					}>
 					<Image
 						src={plus}
 						alt=''
@@ -38,19 +50,27 @@ export default function ItemList({
 					<p>Actions</p>
 				</div>
 			</div>
-			{items.docs.length >= 1 ? (
+
+			{!items && <LoadingSq />}
+
+			{items && items.docs.length === 0 && <h2>Nothing to see here ¯\_(ツ)_/¯</h2>}
+
+			{items && items.docs.length >= 1 && (
 				<div className={s.cardContainer}>
-					{items.docs.map((d, i) => (
-						<MDocCard
-							id={d.data().name}
-							key={i}
-							displayName={d.data().displayName}
-							currentUser={user!}
-							numberOfPages={d.data().numberOfPages}
-							dateModified={d.data().dateModified}
-							forDocuments={forDocuments}
-						/>
-					))}
+					{items.docs.map((d, i) => {
+						if (d.id !== '_sub_folders_')
+							return (
+								<MDocCard
+									id={d.data().name}
+									key={i}
+									displayName={d.data().displayName}
+									currentUser={user!}
+									numberOfPages={d.data().numberOfPages}
+									dateModified={d.data().dateModified}
+									forDocuments={forDocuments}
+								/>
+							)
+					})}
 					<MDocCard
 						id={'test_card'}
 						displayName={'Test'}
@@ -84,8 +104,6 @@ export default function ItemList({
 						forDocuments={forDocuments}
 					/>
 				</div>
-			) : (
-				<h2>Nothing to see here ¯\_(ツ)_/¯</h2>
 			)}
 		</div>
 	)
