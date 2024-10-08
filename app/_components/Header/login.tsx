@@ -8,7 +8,7 @@ import {
 	signInWithPopup,
 } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 import s from './header.module.scss'
 import Image from 'next/image'
@@ -32,17 +32,20 @@ export default function Login() {
 
 				const subFolderId = new ShortUniqueId({ length: 9 })
 
-				await setDoc(userDocument, {
-					email: user!.email,
-					displayName: user!.displayName,
-					numberOfDocuments: 0,
-					uid: user!.uid,
-				})
+				const userIsNew = (await getDoc(userDocument)).data()?.email === undefined
 
-				await setDoc(subFolders, {
-					name: 'New folder',
-					id: JSON.stringify(subFolderId),
-				})
+				if (userIsNew) {
+					await setDoc(userDocument, {
+						email: user!.email,
+						displayName: user!.displayName,
+						numberOfDocuments: 0,
+						uid: user!.uid,
+					})
+
+					await setDoc(subFolders, {
+						data: [subFolderId.rnd(), 'New folder'],
+					})
+				}
 			} catch (e) {
 				console.log('an error has occured', e)
 			}

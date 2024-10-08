@@ -1,6 +1,6 @@
 'use client'
 
-import { doc, DocumentData, QuerySnapshot, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, DocumentData, getDoc, QuerySnapshot, setDoc, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import MDocCard from './card'
 import { useAuthState } from '../hooks/useAuthState'
@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import { db } from '@/db/firebase'
 import ShortUniqueId from 'short-unique-id'
+import { database } from '@/db/api'
 
 export default function ItemList({
 	items,
@@ -32,9 +33,10 @@ export default function ItemList({
 						forDocuments
 							? () => createNewDocument(user!, router)
 							: async () => {
-									const subFolderId = new ShortUniqueId({ length: 9 })
+									const subFolderId = new ShortUniqueId({ length: 9 }).rnd()
+
 									await setDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_'), {
-										data: [subFolderId.rnd(), 'New folder'],
+										[subFolderId]: [subFolderId, 'New folder'],
 									})
 							  }
 					}>
