@@ -4,7 +4,7 @@ import s from '../m-d-editor.module.scss'
 import { CSSProperties, Dispatch, SetStateAction } from 'react'
 import Options from './option'
 import Link from 'next/link'
-import Image from 'next/Image'
+import Image from 'next/image'
 
 export default function Settings({
 	setBg,
