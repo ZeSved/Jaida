@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import s from '@/app/@children/page.module.scss'
+import s from '@/app/page.module.scss'
 import doc_img from '@/public/document.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/db/firebase'

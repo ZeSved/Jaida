@@ -7,8 +7,8 @@ import folder_create from '@/public/Folder create 2.svg'
 import persp from '@/public/Perspectives.svg'
 import time_sort from '@/public/Sort by time.svg'
 import title_sort from '@/public/Sort by title.svg'
-import NewDoc from '@/app/@children/NewDoc'
-import { createNewDocument } from '@/app/utils/createNewDocument'
+// import NewDoc from '@/app/home_page/NewDoc'
+import { createDocument } from '@/app/utils/createDocument'
 import { User } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
@@ -18,7 +18,7 @@ export default function Sidebar({ currentUser }: { currentUser: User }) {
 	const buttons = [
 		{
 			display: doc_create,
-			func: () => createNewDocument(currentUser, router),
+			func: () => createDocument(currentUser, router),
 			text: 'Create new document',
 		},
 		{

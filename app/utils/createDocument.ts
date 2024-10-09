@@ -1,10 +1,10 @@
 import { db } from "@/db/firebase"
-import { User } from "firebase/auth"
+import { User, UserInfo } from "firebase/auth"
 import { doc, DocumentReference, DocumentData, setDoc, updateDoc, getDoc } from "firebase/firestore"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { NextRouter } from "next/router"
 
-export function createNewDocument(currentUser: User, router: AppRouterInstance) {
+export function createDocument(currentUser: UserInfo, router: AppRouterInstance) {
   const id = crypto.randomUUID()
   const date = new Date()
 

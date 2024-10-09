@@ -4,10 +4,10 @@ import { doc, DocumentData, getDoc, QuerySnapshot, setDoc, updateDoc } from 'fir
 import Link from 'next/link'
 import MDocCard from './card'
 import { useAuthState } from '../hooks/useAuthState'
-import s from '@/app/@children/page.module.scss'
+import s from '@/app/page.module.scss'
 import Image from 'next/image'
 import plus from '@/public/plus.svg'
-import { createNewDocument } from '../utils/createNewDocument'
+import { createDocument } from '../utils/createDocument'
 import { useRouter } from 'next/navigation'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import { db } from '@/db/firebase'
@@ -31,12 +31,19 @@ export default function ItemList({
 					title={forDocuments ? 'New Document' : 'New Folder'}
 					onClick={
 						forDocuments
-							? () => createNewDocument(user!, router)
+							? () => createDocument(user!, router)
 							: async () => {
 									const subFolderId = new ShortUniqueId({ length: 9 }).rnd()
 
+									const newSubFolder = {
+										id: subFolderId,
+										numberOfDocs: 9,
+										numberOfFolders: 3,
+										name: 'test',
+									}
+
 									await setDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_'), {
-										[subFolderId]: [subFolderId, 'New folder'],
+										[subFolderId]: newSubFolder,
 									})
 							  }
 					}>
