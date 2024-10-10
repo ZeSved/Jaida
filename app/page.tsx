@@ -27,7 +27,7 @@ export default function HomePage() {
 	useEffect(() => {
 		if (user) {
 			const unsub = onSnapshot(
-				collection(db, 'users', user.uid, 'user-documents'),
+				collection(db, `users/${user.uid}/user-documents`),
 				(queryResult) => {
 					setUserDocs(queryResult)
 				}
@@ -44,8 +44,11 @@ export default function HomePage() {
 			await getDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_')).then(
 				(result) => {
 					for (const f in result.data()) {
-						console.log(result.data()![f][1])
-						setFolders([...folders, result.data()![f][1]])
+						const name = result.data()![f][1]
+						console.log(name)
+						if (name !== undefined) {
+							setFolders([...folders, result.data()![f][1]])
+						}
 					}
 				}
 			)
@@ -65,7 +68,14 @@ export default function HomePage() {
 
 				{user && (
 					<>
-						<div className={styles.directory}></div>
+						<div className={styles.directory}>
+							{folders.map((folder) => (
+								<>
+									<p>{folder}</p>
+									<div />
+								</>
+							))}
+						</div>
 
 						<div className={styles.main}>
 							<ItemList items={userDocs} />
