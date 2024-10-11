@@ -5,7 +5,7 @@ import Settings from './_settings/Settings'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '@/db/firebase'
 import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
-import { LoadingSq } from '@/components/loading/loadingSquare'
+import { LoadingSq } from '@/components/loading/Loading'
 import Editor from './Editor'
 import Results from './Results'
 

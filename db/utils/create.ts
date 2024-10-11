@@ -1,3 +1,4 @@
+import { folderIds } from "@/constants/folderIds"
 import { db } from "@/db/firebase"
 import { UserInfo } from "firebase/auth"
 import { doc, DocumentReference, DocumentData, setDoc, updateDoc, getDoc } from "firebase/firestore"
@@ -6,9 +7,8 @@ import ShortUniqueId from "short-unique-id"
 
 export function createDocument(currentUser: UserInfo, router: AppRouterInstance) {
   const id = crypto.randomUUID()
-  const date = new Date()
 
-  const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `DOC-${id}`)
+  const userDocument = doc(db, folderIds.users, currentUser!.uid, folderIds.userDocuments, `DOC-${id}`)
   const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
   router.push(`/m/DOC-${id}`)
@@ -31,7 +31,7 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
       name: `DOC-${id}`,
       displayName: 'New document',
       numberOfPages: 1,
-      dateModified: `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`,
+      dateModified: time(),
     })
 
     await setDoc(docContent, {
@@ -39,9 +39,9 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
       content: [''],
     })
 
-    await updateDoc(doc(db, 'users', currentUser.uid), {
+    await updateDoc(doc(db, folderIds.users, currentUser.uid), {
       numberOfDocuments: ((
-        await getDoc(doc(db, 'users', currentUser.uid))
+        await getDoc(doc(db, folderIds.users, currentUser.uid))
       ).data()!.numberOfDocuments += 1),
     })
   }
@@ -49,9 +49,7 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
 
 
 export function createFolder(currentUser: UserInfo) {
-  const { getDay, getMonth, getFullYear, getHours, getMinutes } = new Date()
-
-  const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `_sub_folders_`)
+  const userDocument = doc(db, folderIds.users, currentUser!.uid, folderIds.userDocuments, folderIds.subFolders)
 
   createNewDoc(userDocument)
 
@@ -66,9 +64,14 @@ export function createFolder(currentUser: UserInfo) {
       numberOfDocs: 9,
       numberOfFolders: 3,
       name: 'test',
-      lastModified: `${getDay()}/${getMonth()}/${getFullYear()} ${getHours()}:${getMinutes()}`
+      lastModified: time()
     }
 
     await updateDoc(userDocument, { [subFolderId]: newSubFolder })
   }
+}
+
+function time() {
+  const date = new Date()
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
 }

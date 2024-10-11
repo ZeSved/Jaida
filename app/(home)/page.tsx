@@ -17,6 +17,7 @@ import ItemList from './_components/ItemList'
 import { useAuthState } from '@/hooks/useAuthState'
 import styles from './page.module.scss'
 import { useDirectory } from '@/hooks/useDirectory'
+import Loading from '@/components/loading/Loading'
 
 export default function HomePage() {
 	const user = useAuthState()
@@ -24,7 +25,6 @@ export default function HomePage() {
 		undefined
 	)
 	const [folders, setFolders] = useState<string[]>(['Home'])
-	const [to, back, path] = useDirectory(user?.uid ?? '')
 
 	useEffect(() => {
 		if (user) {
@@ -35,8 +35,6 @@ export default function HomePage() {
 				}
 			)
 
-			console.log(to('_sub_folders_'))
-			console.log(back('user-documents'))
 			getFolders()
 
 			return () => unsub()
@@ -48,11 +46,11 @@ export default function HomePage() {
 			await getDoc(doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_')).then(
 				(result) => {
 					for (const f in result.data()) {
-						const name = result.data()![f][1]
-						console.log(name)
-						if (name !== undefined) {
-							setFolders([...folders, result.data()![f][1]])
-						}
+						const folder = result.data()![f]
+						// console.log(name)
+						setFolders([...folders, folder.name])
+						// if (name !== undefined) {
+						// }
 					}
 				}
 			)
@@ -63,6 +61,9 @@ export default function HomePage() {
 		<>
 			<Header />
 			<main className={styles.container}>
+				<Loading condition={user === null}></Loading>
+				{/* {user === null && <LoadingSq />} */}
+
 				{user === undefined && (
 					<div className={classNames(styles.main, styles.noUser)}>
 						<h2 className={styles.h2}>Sign in to continue</h2>

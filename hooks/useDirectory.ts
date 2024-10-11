@@ -1,17 +1,22 @@
 import { useState } from "react";
+import { useAuthState } from "./useAuthState";
 
-export function useDirectory(userUID: string):
-  [(newPath: string | string[]) => string, (newPath: string) => string, string] {
-  const [path, setPath] = useState<string[]>(['users', userUID, 'user-documents'])
+export function useDirectory(): UseDirectory {
+  const user = useAuthState()
+  const [path, setPath] = useState<string[]>(['users', user!.uid, 'user-documents'])
 
   function goForwardTo(newPath: string | string[]) {
     if (typeof newPath === 'string') {
-      setPath([...path, newPath])
-    } else {
-      setPath([...path, ...newPath])
-    }
+      const combinedPath = [...path, newPath]
+      setPath(combinedPath)
 
-    return path.join('/')
+      return combinedPath.join('/')
+    } else {
+      const combinedPath = [...path, ...newPath]
+      setPath(combinedPath)
+
+      return combinedPath.join('/')
+    }
   }
 
   function goBackTo(newPath: string) {
@@ -27,8 +32,10 @@ export function useDirectory(userUID: string):
       }
     }
 
-    return path.join('/')
+    return editedArray.join('/')
   }
 
   return [goForwardTo, goBackTo, path.join('/')]
 }
+
+type UseDirectory = [(newPath: string | string[]) => string, (newPath: string) => string, string]
