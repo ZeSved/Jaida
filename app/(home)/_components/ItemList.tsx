@@ -4,7 +4,7 @@ import { doc, DocumentData, getDoc, QuerySnapshot, setDoc, updateDoc } from 'fir
 import Link from 'next/link'
 import MDocCard from './card'
 import { useAuthState } from '@/hooks/useAuthState'
-import s from '@/app/page.module.scss'
+import s from '../page.module.scss'
 import Image from 'next/image'
 import plus from '@/public/plus.svg'
 import { createDocument } from '@/db/utils/create'
