@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-export function useDirectory(userUID: string) {
+export function useDirectory(userUID: string):
+  [(newPath: string | string[]) => string, (newPath: string) => string, string] {
   const [path, setPath] = useState<string[]>(['users', userUID, 'user-documents'])
 
   function goForwardTo(newPath: string | string[]) {
@@ -14,7 +15,7 @@ export function useDirectory(userUID: string) {
   }
 
   function goBackTo(newPath: string) {
-    if (path.length === 3) return undefined
+    if (path.length === 3) return path.join('/')
     const editedArray = [...path]
 
     for (let i = path.length - 1; i > 3; i--) {
@@ -22,10 +23,12 @@ export function useDirectory(userUID: string) {
         editedArray.filter(item => item !== path[i])
       } else {
         setPath([...editedArray])
-        return path.join('/')
+        break
       }
     }
+
+    return path.join('/')
   }
 
-  return [goForwardTo, goBackTo, path]
+  return [goForwardTo, goBackTo, path.join('/')]
 }

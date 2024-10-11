@@ -16,6 +16,7 @@ import Header from './_components/Header/page'
 import ItemList from './home_page/ItemList'
 import { useAuthState } from './hooks/useAuthState'
 import styles from './page.module.scss'
+import { useDirectory } from './hooks/useDirectory'
 
 export default function HomePage() {
 	const user = useAuthState()
@@ -23,6 +24,7 @@ export default function HomePage() {
 		undefined
 	)
 	const [folders, setFolders] = useState<string[]>(['Home'])
+	const [to, back, path] = useDirectory(user?.uid ?? '')
 
 	useEffect(() => {
 		if (user) {
@@ -33,6 +35,8 @@ export default function HomePage() {
 				}
 			)
 
+			console.log(to('_sub_folders_'))
+			console.log(back('user-documents'))
 			getFolders()
 
 			return () => unsub()
