@@ -1,8 +1,8 @@
 import { db } from "@/db/firebase"
-import { User, UserInfo } from "firebase/auth"
+import { UserInfo } from "firebase/auth"
 import { doc, DocumentReference, DocumentData, setDoc, updateDoc, getDoc } from "firebase/firestore"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
-import { NextRouter } from "next/router"
+import ShortUniqueId from "short-unique-id"
 
 export function createDocument(currentUser: UserInfo, router: AppRouterInstance) {
   const id = crypto.randomUUID()
@@ -44,5 +44,31 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
         await getDoc(doc(db, 'users', currentUser.uid))
       ).data()!.numberOfDocuments += 1),
     })
+  }
+}
+
+
+export function createFolder(currentUser: UserInfo) {
+  const { getDay, getMonth, getFullYear, getHours, getMinutes } = new Date()
+
+  const userDocument = doc(db, 'users', currentUser!.uid, 'user-documents', `_sub_folders_`)
+
+  createNewDoc(userDocument)
+
+  async function createNewDoc(
+    userDocument: DocumentReference<DocumentData, DocumentData>
+  ) {
+
+    const subFolderId = new ShortUniqueId({ length: 9 }).rnd()
+
+    const newSubFolder = {
+      id: subFolderId,
+      numberOfDocs: 9,
+      numberOfFolders: 3,
+      name: 'test',
+      lastModified: `${getDay()}/${getMonth()}/${getFullYear()} ${getHours()}:${getMinutes()}`
+    }
+
+    await updateDoc(userDocument, { [subFolderId]: newSubFolder })
   }
 }

@@ -3,16 +3,15 @@
 import { doc, DocumentData, getDoc, QuerySnapshot, setDoc, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import MDocCard from './card'
-import { useAuthState } from '../hooks/useAuthState'
+import { useAuthState } from '@/hooks/useAuthState'
 import s from '@/app/page.module.scss'
 import Image from 'next/image'
 import plus from '@/public/plus.svg'
-import { createDocument } from '../utils/createDocument'
+import { createDocument } from '@/db/utils/create'
 import { useRouter } from 'next/navigation'
 import { LoadingSq } from '@/components/loading/loadingSquare'
 import { db } from '@/db/firebase'
 import ShortUniqueId from 'short-unique-id'
-import { database } from '@/db/api'
 
 export default function ItemList({
 	items,

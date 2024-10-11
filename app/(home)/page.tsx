@@ -11,12 +11,12 @@ import {
 import { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { db } from '@/db/firebase'
-import Login from './_components/Header/login'
-import Header from './_components/Header/page'
-import ItemList from './home_page/ItemList'
-import { useAuthState } from './hooks/useAuthState'
+import Login from '@/app/_components/Header/_components/login'
+import Header from '@/app/_components/Header/page'
+import ItemList from './_components/ItemList'
+import { useAuthState } from '@/hooks/useAuthState'
 import styles from './page.module.scss'
-import { useDirectory } from './hooks/useDirectory'
+import { useDirectory } from '@/hooks/useDirectory'
 
 export default function HomePage() {
 	const user = useAuthState()

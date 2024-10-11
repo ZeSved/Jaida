@@ -14,7 +14,7 @@ import s from './header.module.scss'
 import Image from 'next/image'
 import acc from '@/public/account.svg'
 import { useEffect, useState } from 'react'
-import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthState } from '@/hooks/useAuthState'
 import ShortUniqueId from 'short-unique-id'
 
 export default function Login() {
