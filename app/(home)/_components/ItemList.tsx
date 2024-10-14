@@ -1,8 +1,17 @@
 'use client'
 
-import { doc, DocumentData, getDoc, QuerySnapshot, setDoc, updateDoc } from 'firebase/firestore'
+import {
+	doc,
+	DocumentData,
+	DocumentSnapshot,
+	getDoc,
+	QueryDocumentSnapshot,
+	QuerySnapshot,
+	setDoc,
+	updateDoc,
+} from 'firebase/firestore'
 import Link from 'next/link'
-import MDocCard from './card'
+import Card from './card'
 import { useAuthState } from '@/hooks/useAuthState'
 import s from '../page.module.scss'
 import Image from 'next/image'
@@ -16,8 +25,13 @@ import ShortUniqueId from 'short-unique-id'
 export default function ItemList({
 	items,
 	forDocuments = false,
+	children,
 }: {
-	items: QuerySnapshot<DocumentData, DocumentData> | undefined
+	items:
+		| QueryDocumentSnapshot<DocumentData, DocumentData>[]
+		| DocumentSnapshot<DocumentData, DocumentData>[]
+		| undefined
+	children: React.ReactNode
 	forDocuments?: boolean
 }) {
 	const user = useAuthState()
@@ -41,60 +55,18 @@ export default function ItemList({
 					<p>Actions</p>
 				</div>
 			</div>
+			<div className={s.cardContainer}>
+				<Loading condition={!items}>
+					{items && (
+						<>
+							{items.length === 0 && <h2>Nothing to see here ¯\_(ツ)_/¯</h2>}
 
-			<Loading condition={!items}>
-				{items && items.docs.length === 0 && <h2>Nothing to see here ¯\_(ツ)_/¯</h2>}
-				{items && items.docs.length >= 1 && (
-					<div className={s.cardContainer}>
-						{items.docs.map((d, i) => {
-							if (d.id !== '_sub_folders_')
-								return (
-									<MDocCard
-										id={d.data().name}
-										key={i}
-										displayName={d.data().displayName}
-										currentUser={user!}
-										numberOfPages={d.data().numberOfPages}
-										dateModified={d.data().dateModified}
-										forDocuments={forDocuments}
-									/>
-								)
-						})}
-						<MDocCard
-							id={'test_card'}
-							displayName={'Test'}
-							currentUser={user!}
-							dateModified='06/10/2024 23:10'
-							numberOfPages={6}
-							forDocuments={forDocuments}
-						/>
-						<MDocCard
-							id={'test_card'}
-							displayName={'Test'}
-							currentUser={user!}
-							dateModified='10/10/2014 21:50'
-							numberOfPages={6}
-							forDocuments={forDocuments}
-						/>
-						<MDocCard
-							id={'test_card'}
-							displayName={'Test'}
-							currentUser={user!}
-							dateModified='10/10/2014 21:50'
-							numberOfPages={6}
-							forDocuments={forDocuments}
-						/>
-						<MDocCard
-							id={'test_card'}
-							displayName={'Test'}
-							currentUser={user!}
-							dateModified='10/10/2014 21:50'
-							numberOfPages={6}
-							forDocuments={forDocuments}
-						/>
-					</div>
-				)}
-			</Loading>
+							{items.length >= 1 && children}
+							{/* {children} */}
+						</>
+					)}
+				</Loading>
+			</div>
 		</div>
 	)
 }

@@ -5,7 +5,7 @@ import Settings from './_settings/Settings'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '@/db/firebase'
 import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
-import { LoadingSq } from '@/components/loading/Loading'
+import Loading from '@/components/loading/Loading'
 import Editor from './Editor'
 import Results from './Results'
 
@@ -83,7 +83,21 @@ export default function MarkdownEditor() {
 				/>
 				<div className={s.container}>
 					<div className={s.editor}>
-						{currentDoc ? (
+						<Loading condition={!currentDoc}>
+							<div>
+								<Editor
+									currentDocPages={currentDocPages}
+									currentDocumentReference={currentDocumentReference}
+									user={currentUser}
+									currentDoc={currentDoc}
+									currentText={currentText}
+									setCurrentText={setCurrentText}
+								/>
+								<div className={s.div} />
+								<Results currentText={currentText} />
+							</div>
+						</Loading>
+						{/* {currentDoc ? (
 							<div>
 								<Editor
 									currentDocPages={currentDocPages}
@@ -98,7 +112,7 @@ export default function MarkdownEditor() {
 							</div>
 						) : (
 							<LoadingSq />
-						)}
+						)} */}
 					</div>
 				</div>
 			</main>

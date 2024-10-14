@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "./useAuthState";
+import { UserInfo } from "firebase/auth";
 
-export function useDirectory(): UseDirectory {
-  const user = useAuthState()
-  const [path, setPath] = useState<string[]>(['users', user!.uid, 'user-documents'])
+export function useDirectory(user?: UserInfo | null): UseDirectory {
+  const [path, setPath] = useState<string[]>([])
+
+  useEffect(() => {
+    if (user) {
+      setPath(['users', user.uid, 'user-documents'])
+    }
+  }, [user])
 
   function goForwardTo(newPath: string | string[]) {
     if (typeof newPath === 'string') {
@@ -35,7 +41,7 @@ export function useDirectory(): UseDirectory {
     return editedArray.join('/')
   }
 
-  return [goForwardTo, goBackTo, path.join('/')]
+  return { goForwardTo, goBackTo, path }
 }
 
-type UseDirectory = [(newPath: string | string[]) => string, (newPath: string) => string, string]
+type UseDirectory = { goForwardTo: (newPath: string | string[]) => string, goBackTo: (newPath: string) => string, path: string[] }

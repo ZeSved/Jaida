@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react'
 import folder from '@/public/folder.svg'
 import option from '@/public/options.svg'
 
-export default function MDocCard({
+export default function Card({
 	id,
 	currentUser,
 	displayName,
