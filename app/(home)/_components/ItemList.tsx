@@ -21,17 +21,18 @@ import { useRouter } from 'next/navigation'
 import Loading from '@/components/loading/Loading'
 import { db } from '@/db/firebase'
 import ShortUniqueId from 'short-unique-id'
+import { Folder } from '@/db/types'
+import { useDirectory } from '@/hooks/useDirectory'
 
 export default function ItemList({
 	items,
 	forDocuments = false,
+	path,
 	children,
 }: {
-	items:
-		| QueryDocumentSnapshot<DocumentData, DocumentData>[]
-		| DocumentSnapshot<DocumentData, DocumentData>[]
-		| undefined
+	items: Folder[] | DocumentSnapshot<DocumentData, DocumentData>[] | undefined
 	children: React.ReactNode
+	path: string[]
 	forDocuments?: boolean
 }) {
 	const user = useAuthState()
@@ -42,7 +43,7 @@ export default function ItemList({
 			<div className={s.info}>
 				<button
 					title={forDocuments ? 'New Document' : 'New Folder'}
-					onClick={forDocuments ? () => createDocument(user!, router) : () => createFolder(user!)}>
+					onClick={forDocuments ? () => createDocument(user!, router) : () => createFolder(path)}>
 					<Image
 						src={plus}
 						alt=''

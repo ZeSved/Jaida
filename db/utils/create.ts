@@ -48,8 +48,9 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
 }
 
 
-export function createFolder(currentUser: UserInfo) {
-  const userDocument = doc(db, folderIds.users, currentUser!.uid, folderIds.userDocuments, folderIds.subFolders)
+export function createFolder(path: string[]) {
+  const userDocument = doc(db, path.join('/'), '_sub_folders_')
+  console.log(path)
 
   createNewDoc(userDocument)
 
@@ -60,7 +61,7 @@ export function createFolder(currentUser: UserInfo) {
     const subFolderId = new ShortUniqueId({ length: 9 }).rnd()
 
     const newSubFolder = {
-      id: subFolderId,
+      id: `F-${subFolderId}`,
       numberOfDocs: 9,
       numberOfFolders: 3,
       name: 'test',
@@ -68,6 +69,8 @@ export function createFolder(currentUser: UserInfo) {
     }
 
     await updateDoc(userDocument, { [subFolderId]: newSubFolder })
+
+    await setDoc(doc(userDocument, `F-${subFolderId}`, folderIds.subFolders), {})
   }
 }
 

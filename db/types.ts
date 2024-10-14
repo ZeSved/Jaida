@@ -1,10 +1,10 @@
 import { DocumentData, DocumentSnapshot, QuerySnapshot } from "firebase/firestore";
 
-type DocSnapshot = DocumentSnapshot<DocumentData, DocumentData>
+export type Snapshot = QuerySnapshot<DocumentData, DocumentData>
 
-export type QSnapshot = QuerySnapshot<DocumentData, DocumentData>
+// export type QSnapshot = QuerySnapshot<DocumentData, DocumentData>
 
-export interface Folder extends DocSnapshot {
+export interface Folder extends Snapshot {
   id: string
   numberOfDocs: number
   name: string

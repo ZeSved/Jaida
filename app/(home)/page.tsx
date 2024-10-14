@@ -20,37 +20,44 @@ import styles from './page.module.scss'
 import { useDirectory } from '@/hooks/useDirectory'
 import Loading from '@/components/loading/Loading'
 import Card from './_components/card'
-import { Folder, QSnapshot } from '@/db/types'
+import { Folder, Snapshot } from '@/db/types'
 
 export default function HomePage() {
 	const user = useAuthState()
-	const [userDocs, setUserDocs] = useState<QSnapshot | undefined>(undefined)
+	const [userDocs, setUserDocs] = useState<Snapshot | undefined>(undefined)
 	const [userFolders, setUserFolders] = useState<Folder[]>([])
 	const [folders, setFolders] = useState<{ id: string; name: string }[]>([{ name: 'Home', id: '' }])
-	// const { path } = useDirectory(user)
-	const [directory, setDirectory] = useState<string[]>([])
+	const { path, goForwardTo } = useDirectory(user)
+	// const [directory, setDirectory] = useState<string[]>([])
 
 	useEffect(() => {
 		if (user) {
 			const dir = `users/${user!.uid}/user-documents`
-			setDirectory(dir.split('/'))
+			// setDirectory(dir.split('/'))
 
+			// console.log(path)
 			const removeDocumentSnapshot = onSnapshot(
-				collection(db, directory.length > 1 ? directory.join('/') : dir),
+				collection(db, path.length > 1 ? path.join('/') : dir),
 				(queryResult) => {
 					setUserDocs(queryResult)
 				}
 			)
 
+			// console.log(path)
+			// console.log(path, '_sub_folders_')
+			console.log(doc(db, path.length > 1 ? path.join('/') : dir, '_sub_folders_'))
+
 			const removeFolderSnapshot = onSnapshot(
-				doc(db, 'users', user!.uid, 'user-documents', '_sub_folders_'),
+				doc(db, path.length > 1 ? path.join('/') : dir, '_sub_folders_'),
 				(queryResult) => {
+					const fold = []
 					for (const f in queryResult.data()) {
 						const folder = queryResult.data()![f]
 						console.log(folder)
 						setFolders([...folders, { name: folder.name, id: folder.id }])
-						setUserFolders([...userFolders, folder])
+						fold.push(folder)
 					}
+					setUserFolders(fold)
 				}
 			)
 
@@ -61,7 +68,7 @@ export default function HomePage() {
 		} else {
 			setUserDocs(undefined)
 		}
-	}, [user])
+	}, [user, path])
 
 	return (
 		<>
@@ -87,7 +94,9 @@ export default function HomePage() {
 							</div>
 
 							<div className={styles.main}>
-								<ItemList items={userFolders}>
+								<ItemList
+									items={userFolders}
+									path={path}>
 									{userFolders.map(({ id, numberOfDocs, name, lastModified }, i) => (
 										<Card
 											key={i}
@@ -96,16 +105,19 @@ export default function HomePage() {
 											dateModified={lastModified}
 											displayName={name}
 											numberOfPages={numberOfDocs}
+											goForwardTo={goForwardTo}
 										/>
 									))}
 								</ItemList>
 								<ItemList
-									items={userDocs?.docs}
+									path={path}
+									items={userDocs?.docs.filter((d) => d.id !== '_sub_folders_')}
 									forDocuments>
 									{userDocs?.docs.map((d, i) => {
 										if (d.id !== '_sub_folders_')
 											return (
 												<Card
+													goForwardTo={goForwardTo}
 													id={d.data().name}
 													key={i}
 													displayName={d.data().displayName}

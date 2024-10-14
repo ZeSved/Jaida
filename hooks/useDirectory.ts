@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAuthState } from "./useAuthState";
 import { UserInfo } from "firebase/auth";
 
 export function useDirectory(user?: UserInfo | null): UseDirectory {
@@ -11,18 +10,12 @@ export function useDirectory(user?: UserInfo | null): UseDirectory {
     }
   }, [user])
 
-  function goForwardTo(newPath: string | string[]) {
-    if (typeof newPath === 'string') {
-      const combinedPath = [...path, newPath]
-      setPath(combinedPath)
+  function goForwardTo(newPath: string) {
+    const combinedPath = [...path, '_sub_folders_', newPath]
+    // console.log(combinedPath)
+    setPath(combinedPath)
 
-      return combinedPath.join('/')
-    } else {
-      const combinedPath = [...path, ...newPath]
-      setPath(combinedPath)
-
-      return combinedPath.join('/')
-    }
+    return combinedPath.join('/')
   }
 
   function goBackTo(newPath: string) {
@@ -44,4 +37,4 @@ export function useDirectory(user?: UserInfo | null): UseDirectory {
   return { goForwardTo, goBackTo, path }
 }
 
-type UseDirectory = { goForwardTo: (newPath: string | string[]) => string, goBackTo: (newPath: string) => string, path: string[] }
+type UseDirectory = { goForwardTo: (newPath: string) => string, goBackTo: (newPath: string) => string, path: string[] }

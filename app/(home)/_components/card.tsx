@@ -10,6 +10,7 @@ import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase
 import { useEffect, useRef, useState } from 'react'
 import folder from '@/public/folder.svg'
 import option from '@/public/options.svg'
+import { useDirectory } from '@/hooks/useDirectory'
 
 export default function Card({
 	id,
@@ -18,14 +19,8 @@ export default function Card({
 	numberOfPages,
 	dateModified,
 	forDocuments = false,
-}: {
-	id: string
-	currentUser: User
-	displayName: string
-	numberOfPages: number
-	dateModified: string
-	forDocuments?: boolean
-}) {
+	goForwardTo,
+}: CardProps) {
 	const [open, setOpen] = useState<boolean>(false)
 	const [winWidth, setWinWidth] = useState<boolean>(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
@@ -33,7 +28,9 @@ export default function Card({
 	const buttons = [
 		{
 			display: 'Rename',
-			func: async () => {
+			func: async (e: any) => {
+				e.preventDefault()
+
 				await updateDoc(doc(db, 'users', currentUser.uid, 'user-documents', id), {
 					displayName: prompt('new name:')!,
 				})
@@ -43,7 +40,9 @@ export default function Card({
 		},
 		{
 			display: 'Delete',
-			func: async () => {
+			func: async (e: any) => {
+				e.preventDefault()
+
 				const docs = await getDocs(
 					collection(db, 'users', currentUser.uid, 'user-documents', id, 'pages')
 				)
@@ -94,6 +93,10 @@ export default function Card({
 
 	return (
 		<div
+			// href={`../../editor/DOC-${id}`}
+			onClick={() => {
+				goForwardTo(id)
+			}}
 			className={s.card}
 			id={id}>
 			<Image
@@ -116,7 +119,7 @@ export default function Card({
 				<div style={{ display: winWidth ? (open ? 'flex' : 'none') : 'flex' }}>
 					{buttons.map((b, i) => (
 						<button
-							onClick={b.func}
+							onClick={(e) => b.func(e)}
 							key={i}>
 							{b.display}
 						</button>
@@ -125,4 +128,14 @@ export default function Card({
 			</div>
 		</div>
 	)
+}
+
+type CardProps = {
+	id: string
+	currentUser: User
+	displayName: string
+	numberOfPages: number
+	dateModified: string
+	forDocuments?: boolean
+	goForwardTo: (newPath: string) => string
 }
