@@ -107,29 +107,29 @@
 					justify-content: space-between;
 					width: 100%;
 
-					> p {
+					> h2 {
 						color: var(--text);
 						position: relative;
 						padding: 0.4rem 0.5rem;
 
-						&:not(&:last-child) {
-							width: 130%;
-						}
+						// &:not(&:last-child) {
+						// 	width: 130%;
+						// }
 
-						&:last-child {
-							margin-right: 7rem;
-						}
+						// &:last-child {
+						// 	margin-right: 7rem;
+						// }
 
 						&::before {
 							content: '';
-							height: 100%;
+							height: 3px;
 							position: absolute;
-							width: 3px;
-							top: 0;
-							left: 0;
-							right: 100%;
-							bottom: 0;
-							background: linear-gradient(0deg, var(--cta-1), var(--cta-2));
+							width: calc(var(--max-width) - 5vw);
+							top: 90%;
+							// left: 0;
+							// right: 100%;
+							// bottom: 0;
+							background: linear-gradient(90deg, var(--cta-1), var(--cta-2));
 						}
 					}
 				}
@@ -137,14 +137,15 @@
 
 			.cardContainer {
 				display: flex;
-				flex-direction: column;
+				flex-wrap: wrap;
 				gap: 1rem;
 
 				.card {
 					display: flex;
-					justify-content: space-around;
+					justify-content: space-between;
 					align-items: center;
-					width: 100%;
+					width: 20rem;
+					gap: 1rem;
 
 					background-color: var(--secondary);
 
@@ -164,42 +165,46 @@
 						}
 					}
 
-					> div {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-						width: 100%;
-						margin-right: 27%;
+					> button {
+						box-shadow: 6px 5px 10px rgba(0, 0, 0, 0.4);
+						border-radius: 3px;
+						background-color: #303030;
+						width: 2rem;
+						aspect-ratio: 1;
 
-						> p {
-							color: var(--secondary-text);
-
-							&:nth-child(1) {
-								padding-left: 1rem;
-								width: 9rem;
-							}
-
-							&:nth-child(2) {
-								width: 9rem;
-							}
-
-							&:nth-child(3) {
-								width: 2rem;
-								margin-right: 6rem;
-							}
+						> img {
+							margin: auto;
 						}
+					}
 
-						> button {
-							display: none;
-						}
+					> p {
+						margin-right: auto;
+						color: var(--secondary-text);
+					}
 
-						> div {
-							display: flex;
-							gap: 0.5rem;
+					div {
+						&.popup {
 							position: absolute;
-							top: 50%;
-							left: calc(100% - 11.5rem);
-							translate: 0 -50%;
+							height: fit-content;
+							width: fit-content;
+							z-index: 10;
+							background-color: var(--secondary);
+							display: flex;
+							flex-direction: column;
+							gap: 0.5rem;
+							left: 90%;
+							top: 90%;
+							padding: 0.5rem;
+							box-shadow: 11px 9px 15px rgba(0, 0, 0, 0.4);
+
+							> p {
+								color: var(--secondary-text);
+								white-space: nowrap;
+								width: 100%;
+								display: flex;
+								justify-content: space-between;
+								gap: 2rem;
+							}
 
 							> button {
 								padding: 0.4rem 0.8rem;
@@ -214,7 +219,62 @@
 								height: fit-content;
 							}
 						}
+
+						&.display {
+							display: none;
+						}
 					}
+					// > div {
+					// 	display: flex;
+					// 	justify-content: space-between;
+					// 	align-items: center;
+					// 	width: 100%;
+					// 	margin-right: 27%;
+
+					// 	> p {
+					// 		color: var(--secondary-text);
+
+					// 		&:nth-child(1) {
+					// 			padding-left: 1rem;
+					// 			width: 9rem;
+					// 		}
+
+					// 		&:nth-child(2) {
+					// 			width: 9rem;
+					// 		}
+
+					// 		&:nth-child(3) {
+					// 			width: 2rem;
+					// 			margin-right: 6rem;
+					// 		}
+					// 	}
+
+					// 	> button {
+					// 		display: none;
+					// 	}
+
+					// 	> div {
+					// 		display: flex;
+					// 		gap: 0.5rem;
+					// 		position: absolute;
+					// 		top: 50%;
+					// 		left: calc(100% - 11.5rem);
+					// 		translate: 0 -50%;
+
+					// 		> button {
+					// 			padding: 0.4rem 0.8rem;
+					// 			border-radius: 6px;
+					// 			background-color: #303030;
+					// 			box-shadow: 6px 5px 10px rgba(0, 0, 0, 0.4);
+					// 			border: none;
+					// 			color: var(--text);
+
+					// 			font-size: 1rem;
+
+					// 			height: fit-content;
+					// 		}
+					// 	}
+					// }
 
 					> dialog[open] {
 						background-color: var(--secondary);

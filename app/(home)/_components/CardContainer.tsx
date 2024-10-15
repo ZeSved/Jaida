@@ -54,10 +54,7 @@ export default function CardContainer({
 					/>
 				</button>
 				<div className={s.text}>
-					<p>Name</p>
-					<p>Last Modified</p>
-					<p>{forDocuments ? 'Pages' : 'Documents'}</p>
-					<p>Actions</p>
+					<h2>{forDocuments ? 'Documents' : 'Folders'}</h2>
 				</div>
 			</div>
 			<div className={s.cardContainer}>

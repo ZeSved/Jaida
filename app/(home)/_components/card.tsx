@@ -19,6 +19,7 @@ export default function Card({
 	numberOfPages,
 	dateModified,
 	forDocuments = false,
+	numberOfFolders,
 	goForwardTo,
 }: CardProps) {
 	const [open, setOpen] = useState<boolean>(false)
@@ -26,6 +27,12 @@ export default function Card({
 	const buttonRef = useRef<HTMLButtonElement>(null)
 	const user = useContext(UserContext)
 	const path = useContext(PathContext)
+
+	const info = [
+		{ text: ['Last modified', dateModified] },
+		{ text: [forDocuments ? 'Pages' : 'Documents', numberOfPages] },
+		{ cond: !forDocuments, text: ['Folders', numberOfFolders] },
+	]
 
 	const buttons = [
 		{
@@ -83,101 +90,90 @@ export default function Card({
 	]
 
 	useEffect(() => {
-		const windowWidth = window.innerWidth < 990
-		setWinWidth(windowWidth)
-
 		function clickedOutside(e: MouseEvent) {
 			if (buttonRef.current && !buttonRef.current.contains(e.target as Node)) {
 				setOpen(false)
 			}
 		}
 
-		function windowToSmall() {
-			const winWidth = window.innerWidth < 990
-
-			setWinWidth(winWidth)
-		}
-
 		document.addEventListener('mousedown', clickedOutside)
-		window.addEventListener('resize', windowToSmall)
 
 		return () => {
 			document.removeEventListener('mousedown', clickedOutside)
-			window.removeEventListener('resize', windowToSmall)
 		}
 	}, [])
 
-	return forDocuments ? (
-		<Link
-			href={`../../editor/${id}`}
-			// onClick={() => {
-			// 	goForwardTo(id)
-			// }}
-			className={s.card}
-			id={id}>
+	return (
+		<Wrapper
+			id={id}
+			type={forDocuments ? 'link' : 'folder'}
+			goForwardTo={goForwardTo}>
 			<Image
 				src={forDocuments ? doc_img : folder}
 				alt=''
 				used-for-docs={forDocuments ? 'true' : undefined}
 			/>
-			<div>
-				<p>{displayName}</p>
-				<p>{dateModified}</p>
-				<p>{numberOfPages}</p>
-				<button
-					ref={buttonRef}
-					onClick={() => setOpen(!open)}>
-					<Image
-						src={option}
-						alt=''
-					/>
-				</button>
-				<div style={{ display: winWidth ? (open ? 'flex' : 'none') : 'flex' }}>
-					{buttons.map((b, i) => (
-						<button
-							onClick={(e) => b.func(e)}
-							key={i}>
-							{b.display}
-						</button>
-					))}
-				</div>
+			<p>{displayName}</p>
+			<button
+				ref={buttonRef}
+				onClick={(e) => {
+					e.preventDefault()
+					e.stopPropagation()
+					setOpen(!open)
+				}}>
+				<Image
+					src={option}
+					alt=''
+				/>
+			</button>
+			<div className={open ? s.popup : s.display}>
+				{buttons.map((b, i) => (
+					<button
+						onClick={(e) => b.func(e)}
+						key={i}>
+						{b.display}
+					</button>
+				))}
+				{info.map((inf, i) => (
+					<>
+						{(inf.cond || inf.cond === undefined) && (
+							<p key={i}>
+								<span>{inf.text[0]}:</span> <span>{inf.text[1]}</span>
+							</p>
+						)}
+					</>
+				))}
 			</div>
+		</Wrapper>
+	)
+}
+
+function Wrapper({
+	type,
+	id,
+	children,
+	goForwardTo,
+}: {
+	type: string
+	id: string
+	children: React.ReactNode
+	goForwardTo?: (newPath: string) => string
+}) {
+	return type === 'link' ? (
+		<Link
+			href={`../../editor/${id}`}
+			className={s.card}
+			id={id}>
+			{children}
 		</Link>
 	) : (
 		<div
 			onClick={() => {
-				goForwardTo(id)
-				// console.log(path)
+				goForwardTo!(id)
 			}}
 			className={s.card}
 			id={id}>
-			<Image
-				src={forDocuments ? doc_img : folder}
-				alt=''
-				used-for-docs={forDocuments ? 'true' : undefined}
-			/>
-			<div>
-				<p>{displayName}</p>
-				<p>{dateModified}</p>
-				<p>{numberOfPages}</p>
-				<button
-					ref={buttonRef}
-					onClick={() => setOpen(!open)}>
-					<Image
-						src={option}
-						alt=''
-					/>
-				</button>
-				<div style={{ display: winWidth ? (open ? 'flex' : 'none') : 'flex' }}>
-					{buttons.map((b, i) => (
-						<button
-							onClick={(e) => b.func(e)}
-							key={i}>
-							{b.display}
-						</button>
-					))}
-				</div>
-			</div>
+			{children}
 		</div>
 	)
 }
@@ -188,5 +184,6 @@ type CardProps = {
 	numberOfPages: number
 	dateModified: string
 	forDocuments?: boolean
+	numberOfFolders?: number
 	goForwardTo: (newPath: string) => string
 }

@@ -117,16 +117,19 @@ export default function HomePage() {
 							<div className={styles.main}>
 								<UserContext.Provider value={user}>
 									<CardContainer items={userFolders}>
-										{userFolders?.map(({ id, numberOfDocs, name, lastModified }, i) => (
-											<Card
-												key={i}
-												id={id}
-												dateModified={lastModified}
-												displayName={name}
-												numberOfPages={numberOfDocs}
-												goForwardTo={goForwardTo}
-											/>
-										))}
+										{userFolders?.map(
+											({ id, numberOfDocs, name, lastModified, numberOfFolders }, i) => (
+												<Card
+													key={i}
+													id={id}
+													dateModified={lastModified}
+													displayName={name}
+													numberOfPages={numberOfDocs}
+													numberOfFolders={numberOfFolders}
+													goForwardTo={goForwardTo}
+												/>
+											)
+										)}
 									</CardContainer>
 									<CardContainer
 										items={userDocs?.docs.filter((d) => d.id !== '_sub_folders_')}

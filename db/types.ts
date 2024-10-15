@@ -9,5 +9,6 @@ export interface Folder extends Snapshot {
   numberOfDocs: number
   name: string
   lastModified: string
+  numberOfFolders: number
 }
 
