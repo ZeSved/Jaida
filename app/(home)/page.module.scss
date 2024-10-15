@@ -17,13 +17,14 @@
 		display: flex;
 		gap: 1rem;
 
-		div {
+		button {
 			display: flex;
 			width: fit-content;
 
 			p {
 				color: var(--text);
 				font-weight: bold;
+				font-size: 120%;
 				height: fit-content;
 				width: fit-content;
 				margin-block: auto;

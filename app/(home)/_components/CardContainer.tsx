@@ -25,6 +25,7 @@ import { Folder } from '@/db/types'
 import { useDirectory } from '@/hooks/useDirectory'
 import { useContext } from 'react'
 import { PathContext, UserContext } from '../page'
+import NotFound from './_NotFound/NotFound'
 
 export default function CardContainer({
 	items,
@@ -60,13 +61,17 @@ export default function CardContainer({
 				</div>
 			</div>
 			<div className={s.cardContainer}>
-				<Loading condition={!items}>
+				<Loading condition={items === undefined}>
 					{items && (
 						<>
-							{items.length === 0 && <h2>Nothing to see here ¯\_(ツ)_/¯</h2>}
+							<NotFound
+								message={{
+									text: 'Nothing to see here ¯\\_(ツ)_/¯',
+									condition: items.length === 0,
+								}}
+							/>
 
 							{items.length >= 1 && children}
-							{/* {children} */}
 						</>
 					)}
 				</Loading>

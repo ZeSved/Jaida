@@ -25,15 +25,14 @@ import { User } from 'firebase/auth'
 import Directory from './_components/Directory'
 import NotFound from './_components/_NotFound/NotFound'
 
-export const PathContext = createContext<string[]>([])
-export const UserContext = createContext<User | undefined>(undefined)
-
 export default function HomePage() {
 	const user = useAuthState()
 	const [userDocs, setUserDocs] = useState<Snapshot | undefined>(undefined)
-	const [userFolders, setUserFolders] = useState<Folder[]>([])
-	const [folders, setFolders] = useState<{ id: string; name: string }[]>([{ name: 'Home', id: '' }])
-	const { path, goForwardTo } = useDirectory(user)
+	const [userFolders, setUserFolders] = useState<Folder[] | undefined>(undefined)
+	const [folders, setFolders] = useState<{ id: string; name: string }[]>([
+		{ name: 'Home', id: 'user-documents' },
+	])
+	const { path, goForwardTo, goBackTo } = useDirectory(user)
 	// const [directory, setDirectory] = useState<string[]>([])
 
 	useEffect(() => {
@@ -52,11 +51,9 @@ export default function HomePage() {
 				(queryResult) => {
 					const fold = []
 
+					// console.log(path)
 					for (const f in queryResult.data()) {
 						const folder = queryResult.data()![f]
-						console.log(folder)
-
-						setFolders([...folders, { name: folder.name, id: folder.id }])
 
 						fold.push(folder)
 					}
@@ -71,8 +68,31 @@ export default function HomePage() {
 			}
 		} else {
 			setUserDocs(undefined)
+			setUserFolders(undefined)
 		}
 	}, [user, path])
+
+	useEffect(() => {
+		if (!userFolders) return
+		const filteredPath = path.filter((p) => p !== '_sub_folders_')
+
+		if (
+			folders.length > filteredPath.length - 2 &&
+			folders.length >= 1 &&
+			filteredPath.length >= 1
+		) {
+			folders.splice(filteredPath.length - 2, folders.length - 1 - (filteredPath.length - 3))
+			setFolders([...folders])
+		} else {
+			userFolders!.forEach((folder) => {
+				const lastItem = filteredPath[filteredPath.length - 1]
+
+				if (lastItem === folder.id) {
+					setFolders([...folders, { name: folder.name, id: folder.id }])
+				}
+			})
+		}
+	}, [userFolders, path])
 
 	return (
 		<>
@@ -82,55 +102,59 @@ export default function HomePage() {
 					<NotFound
 						message={{
 							text: 'Sign in/up to continue',
-							dependentValue: user,
+							condition: user === undefined,
 							action: <Login onlyButton />,
 						}}
 					/>
 
 					{user && (
-						<>
-							<Directory folders={folders} />
+						<PathContext.Provider value={path}>
+							<Directory
+								folders={folders}
+								goBackTo={goBackTo}
+							/>
 
 							<div className={styles.main}>
 								<UserContext.Provider value={user}>
-									<PathContext.Provider value={path}>
-										<CardContainer items={userFolders}>
-											{userFolders.map(({ id, numberOfDocs, name, lastModified }, i) => (
-												<Card
-													key={i}
-													id={id}
-													dateModified={lastModified}
-													displayName={name}
-													numberOfPages={numberOfDocs}
-													goForwardTo={goForwardTo}
-												/>
-											))}
-										</CardContainer>
-										<CardContainer
-											items={userDocs?.docs.filter((d) => d.id !== '_sub_folders_')}
-											forDocuments>
-											{userDocs?.docs.map((d, i) => {
-												if (d.id !== '_sub_folders_')
-													return (
-														<Card
-															goForwardTo={goForwardTo}
-															id={d.data().id}
-															key={i}
-															displayName={d.data().name}
-															numberOfPages={d.data().numberOfPages}
-															dateModified={d.data().dateModified}
-															forDocuments
-														/>
-													)
-											})}
-										</CardContainer>
-									</PathContext.Provider>
+									<CardContainer items={userFolders}>
+										{userFolders?.map(({ id, numberOfDocs, name, lastModified }, i) => (
+											<Card
+												key={i}
+												id={id}
+												dateModified={lastModified}
+												displayName={name}
+												numberOfPages={numberOfDocs}
+												goForwardTo={goForwardTo}
+											/>
+										))}
+									</CardContainer>
+									<CardContainer
+										items={userDocs?.docs.filter((d) => d.id !== '_sub_folders_')}
+										forDocuments>
+										{userDocs?.docs.map((d, i) => {
+											if (d.id !== '_sub_folders_')
+												return (
+													<Card
+														goForwardTo={goForwardTo}
+														id={d.data().id}
+														key={i}
+														displayName={d.data().name}
+														numberOfPages={d.data().numberOfPages}
+														dateModified={d.data().dateModified}
+														forDocuments
+													/>
+												)
+										})}
+									</CardContainer>
 								</UserContext.Provider>
 							</div>
-						</>
+						</PathContext.Provider>
 					)}
 				</Loading>
 			</main>
 		</>
 	)
 }
+
+export const PathContext = createContext<string[]>([])
+export const UserContext = createContext<User | undefined>(undefined)

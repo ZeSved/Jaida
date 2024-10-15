@@ -147,7 +147,7 @@ export default function Card({
 		<div
 			onClick={() => {
 				goForwardTo(id)
-				console.log(path)
+				// console.log(path)
 			}}
 			className={s.card}
 			id={id}>

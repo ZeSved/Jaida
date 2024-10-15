@@ -4,12 +4,12 @@ export default function NotFound({
 	message,
 }: {
 	message: {
-		dependentValue: any
+		condition: any
 		text: string
 		action?: React.ReactNode
 	}
 }) {
-	if (message.dependentValue === undefined) {
+	if (message.condition) {
 		return (
 			<div className={s.notFound}>
 				<h2>{message.text}</h2>

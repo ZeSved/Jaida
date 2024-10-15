@@ -12,26 +12,21 @@ export function useDirectory(user?: UserInfo | null): UseDirectory {
 
   function goForwardTo(newPath: string) {
     const combinedPath = [...path, '_sub_folders_', newPath]
-    // console.log(combinedPath)
     setPath(combinedPath)
 
     return combinedPath.join('/')
   }
 
-  function goBackTo(newPath: string) {
-    if (path.length === 3) return path.join('/')
-    const editedArray = [...path]
+  function goBackTo(oldPath: string) {
+    const newPath = [...path]
 
-    for (let i = path.length - 1; i > 3; i--) {
-      if (path[i] !== newPath) {
-        editedArray.filter(item => item !== path[i])
-      } else {
-        setPath([...editedArray])
-        break
-      }
+    while (newPath[newPath.length - 1] !== oldPath) {
+      newPath.pop()
     }
 
-    return editedArray.join('/')
+    setPath(newPath)
+
+    return newPath.join('/')
   }
 
   return { goForwardTo, goBackTo, path }
