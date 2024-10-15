@@ -7,14 +7,14 @@ import doc_img from '@/public/document.svg'
 import { User } from 'firebase/auth'
 import { db } from '@/db/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import folder from '@/public/folder.svg'
 import option from '@/public/options.svg'
 import { useDirectory } from '@/hooks/useDirectory'
+import { PathContext, UserContext } from '../page'
 
 export default function Card({
 	id,
-	currentUser,
 	displayName,
 	numberOfPages,
 	dateModified,
@@ -24,16 +24,34 @@ export default function Card({
 	const [open, setOpen] = useState<boolean>(false)
 	const [winWidth, setWinWidth] = useState<boolean>(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
+	const user = useContext(UserContext)
+	const path = useContext(PathContext)
 
 	const buttons = [
 		{
 			display: 'Rename',
 			func: async (e: any) => {
 				e.preventDefault()
+				e.stopPropagation()
 
-				await updateDoc(doc(db, 'users', currentUser.uid, 'user-documents', id), {
-					displayName: prompt('new name:')!,
-				})
+				const text = prompt('new name:')!
+
+				console.log(id.substring(2))
+
+				const data = await getDoc(doc(db, path.join('/'), '_sub_folders_'))
+
+				if (forDocuments) {
+					await updateDoc(doc(db, path.join('/'), id), {
+						name: text,
+					})
+				} else {
+					await updateDoc(doc(db, path.join('/'), '_sub_folders_'), {
+						[id.substring(2)]: {
+							...data.data()![id.substring(2)],
+							name: text,
+						},
+					})
+				}
 
 				setOpen(false)
 			},
@@ -44,20 +62,18 @@ export default function Card({
 				e.preventDefault()
 
 				const docs = await getDocs(
-					collection(db, 'users', currentUser.uid, 'user-documents', id, 'pages')
+					collection(db, 'users', user!.uid, 'user-documents', id, 'pages')
 				)
 
 				docs.forEach(async (d) => {
-					await deleteDoc(
-						doc(db, 'users', currentUser.uid, 'user-documents', id, 'pages', d.data().name)
-					)
+					await deleteDoc(doc(db, 'users', user!.uid, 'user-documents', id, 'pages', d.data().name))
 				})
 
-				await deleteDoc(doc(db, 'users', currentUser.uid, 'user-documents', id))
+				await deleteDoc(doc(db, 'users', user!.uid, 'user-documents', id))
 
-				await updateDoc(doc(db, 'users', currentUser.uid), {
+				await updateDoc(doc(db, 'users', user!.uid), {
 					numberOfDocuments: ((
-						await getDoc(doc(db, 'users', currentUser.uid))
+						await getDoc(doc(db, 'users', user!.uid))
 					).data()!.numberOfDocuments -= 1),
 				})
 
@@ -91,11 +107,47 @@ export default function Card({
 		}
 	}, [])
 
-	return (
+	return forDocuments ? (
+		<Link
+			href={`../../editor/${id}`}
+			// onClick={() => {
+			// 	goForwardTo(id)
+			// }}
+			className={s.card}
+			id={id}>
+			<Image
+				src={forDocuments ? doc_img : folder}
+				alt=''
+				used-for-docs={forDocuments ? 'true' : undefined}
+			/>
+			<div>
+				<p>{displayName}</p>
+				<p>{dateModified}</p>
+				<p>{numberOfPages}</p>
+				<button
+					ref={buttonRef}
+					onClick={() => setOpen(!open)}>
+					<Image
+						src={option}
+						alt=''
+					/>
+				</button>
+				<div style={{ display: winWidth ? (open ? 'flex' : 'none') : 'flex' }}>
+					{buttons.map((b, i) => (
+						<button
+							onClick={(e) => b.func(e)}
+							key={i}>
+							{b.display}
+						</button>
+					))}
+				</div>
+			</div>
+		</Link>
+	) : (
 		<div
-			// href={`../../editor/DOC-${id}`}
 			onClick={() => {
 				goForwardTo(id)
+				console.log(path)
 			}}
 			className={s.card}
 			id={id}>
@@ -132,7 +184,6 @@ export default function Card({
 
 type CardProps = {
 	id: string
-	currentUser: User
 	displayName: string
 	numberOfPages: number
 	dateModified: string

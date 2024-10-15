@@ -28,8 +28,8 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
 
 
     await setDoc(userDocument, {
-      name: `DOC-${id}`,
-      displayName: 'New document',
+      id: `DOC-${id}`,
+      name: 'New document',
       numberOfPages: 1,
       dateModified: time(),
     })
@@ -76,5 +76,6 @@ export function createFolder(path: string[]) {
 
 function time() {
   const date = new Date()
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+  const minutes = date.getMinutes()
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${minutes < 10 ? `0${minutes}` : minutes}`
 }

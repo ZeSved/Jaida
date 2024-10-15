@@ -1,0 +1,12 @@
+.notFound {
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	max-width: var(--max-width);
+	width: var(--max-width);
+	margin: 4rem auto;
+
+	h2 {
+		color: var(--text);
+	}
+}

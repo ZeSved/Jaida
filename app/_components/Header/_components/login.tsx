@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { useAuthState } from '@/hooks/useAuthState'
 import ShortUniqueId from 'short-unique-id'
 
-export default function Login() {
+export default function Login({ onlyButton = false }: { onlyButton?: boolean }) {
 	const router = useRouter()
 	const user = useAuthState()
 	const [showPopup, setShowPopup] = useState<boolean>(false)
@@ -56,7 +56,7 @@ export default function Login() {
 		return `${user?.photoURL}?w=60&q=75`
 	}
 
-	return (
+	return !onlyButton ? (
 		<>
 			<Image
 				className={s.login}
@@ -89,5 +89,24 @@ export default function Login() {
 				</button>
 			</div>
 		</>
+	) : (
+		<button
+			onClick={
+				user
+					? async () => {
+							try {
+								await signOut(auth)
+								router.push('/')
+							} catch (err) {
+								alert(`Could not log out due to the following error: ${err}`)
+							}
+					  }
+					: async () => {
+							const provider = new GoogleAuthProvider()
+							await signInWithPopup(auth, provider)
+					  }
+			}>
+			{user ? 'Log Out' : 'Log In'}
+		</button>
 	)
 }

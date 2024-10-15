@@ -23,20 +23,23 @@ import { db } from '@/db/firebase'
 import ShortUniqueId from 'short-unique-id'
 import { Folder } from '@/db/types'
 import { useDirectory } from '@/hooks/useDirectory'
+import { useContext } from 'react'
+import { PathContext, UserContext } from '../page'
 
-export default function ItemList({
+export default function CardContainer({
 	items,
 	forDocuments = false,
-	path,
+	// path,
 	children,
 }: {
 	items: Folder[] | DocumentSnapshot<DocumentData, DocumentData>[] | undefined
 	children: React.ReactNode
-	path: string[]
+	// path: string[]
 	forDocuments?: boolean
 }) {
-	const user = useAuthState()
 	const router = useRouter()
+	const user = useContext(UserContext)
+	const path = useContext(PathContext)
 
 	return (
 		<div className={s.list}>
