@@ -1,4 +1,4 @@
-import Login from '@/app/_components/Header/_components/login'
+import Login from '@/components/Login/login'
 import Doc from '@/public/Doc 4.svg'
 import s from '../m-d-editor.module.scss'
 import { CSSProperties, Dispatch, SetStateAction } from 'react'

@@ -12,7 +12,7 @@ import {
 import { createContext, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { db } from '@/db/firebase'
-import Login from '@/app/_components/Header/_components/login'
+import Login from '@/components/Login/login'
 import Header from '@/app/_components/Header/page'
 import CardContainer from './_components/CardContainer'
 import { useAuthState } from '@/hooks/useAuthState'

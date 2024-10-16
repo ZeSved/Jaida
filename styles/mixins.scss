@@ -1,0 +1,15 @@
+@mixin card($level) {
+	$colors: (
+		'#262626': 1,
+		'#303030': 2,
+		'#484848': 3,
+	);
+
+	box-shadow: 11px 9px 15px rgba(0, 0, 0, 0.4);
+
+	@each $clr, $lvl in $colors {
+		@if $lvl == $level {
+			background-color: $clr;
+		}
+	}
+}

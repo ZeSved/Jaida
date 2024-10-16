@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 
-import s from '../header.module.scss'
+import s from './Login.module.scss'
 import Image from 'next/image'
 import acc from '@/public/account.svg'
 import { useEffect, useState } from 'react'

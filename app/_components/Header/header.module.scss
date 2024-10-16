@@ -21,21 +21,4 @@
 	> h1 {
 		color: var(--text);
 	}
-
-	.login {
-		background-color: transparent;
-		border-radius: 100vh;
-		margin-left: auto;
-
-		aspect-ratio: 1;
-	}
-}
-
-.display {
-	display: none;
-}
-
-.popup {
-	display: flex;
-	flex-direction: column;
 }

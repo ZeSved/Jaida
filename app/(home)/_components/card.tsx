@@ -67,6 +67,7 @@ export default function Card({
 			display: 'Delete',
 			func: async (e: any) => {
 				e.preventDefault()
+				e.stopProbagation()
 
 				const docs = await getDocs(
 					collection(db, 'users', user!.uid, 'user-documents', id, 'pages')
@@ -134,12 +135,16 @@ export default function Card({
 						{b.display}
 					</button>
 				))}
+				<div className={s.divider} />
 				{info.map((inf, i) => (
 					<>
 						{(inf.cond || inf.cond === undefined) && (
-							<p key={i}>
-								<span>{inf.text[0]}:</span> <span>{inf.text[1]}</span>
-							</p>
+							<>
+								<p key={i}>
+									<span>{inf.text[0]}:</span> <span>{inf.text[1]}</span>
+								</p>
+								{i !== info.length - 1 && <div />}
+							</>
 						)}
 					</>
 				))}

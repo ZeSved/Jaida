@@ -1,3 +1,5 @@
+@use '../../styles/mixins.scss';
+
 .container {
 	display: flex;
 	flex-direction: column;
@@ -5,7 +7,7 @@
 	align-items: center;
 
 	padding: 1rem;
-	gap: 3rem;
+	gap: 5rem;
 
 	.directory {
 		width: var(--max-width);
@@ -49,7 +51,7 @@
 	.main {
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
+		gap: 5rem;
 
 		width: var(--max-width);
 
@@ -110,7 +112,7 @@
 					> h2 {
 						color: var(--text);
 						position: relative;
-						padding: 0.4rem 0.5rem;
+						padding: 0 0.5rem 0.8rem;
 
 						// &:not(&:last-child) {
 						// 	width: 130%;
@@ -124,7 +126,7 @@
 							content: '';
 							height: 3px;
 							position: absolute;
-							width: calc(var(--max-width) - 5vw);
+							width: calc(var(--max-width) - 6rem);
 							top: 90%;
 							// left: 0;
 							// right: 100%;
@@ -147,6 +149,8 @@
 					width: 20rem;
 					gap: 1rem;
 
+					cursor: pointer;
+
 					background-color: var(--secondary);
 
 					padding: 0.5rem 1rem;
@@ -166,9 +170,10 @@
 					}
 
 					> button {
-						box-shadow: 6px 5px 10px rgba(0, 0, 0, 0.4);
+						// box-shadow: 6px 5px 10px rgba(0, 0, 0, 0.4);
+						@include mixins.card(2);
 						border-radius: 3px;
-						background-color: #303030;
+						// background-color: #303030;
 						width: 2rem;
 						aspect-ratio: 1;
 
@@ -196,6 +201,19 @@
 							top: 90%;
 							padding: 0.5rem;
 							box-shadow: 11px 9px 15px rgba(0, 0, 0, 0.4);
+							border-radius: 1rem;
+
+							.divider {
+								width: 100%;
+								height: 3px;
+								background: linear-gradient(90deg, var(--cta-1), var(--cta-2));
+							}
+
+							div:not(.divider) {
+								width: 100%;
+								height: 2px;
+								background-color: #484848;
+							}
 
 							> p {
 								color: var(--secondary-text);
@@ -224,57 +242,6 @@
 							display: none;
 						}
 					}
-					// > div {
-					// 	display: flex;
-					// 	justify-content: space-between;
-					// 	align-items: center;
-					// 	width: 100%;
-					// 	margin-right: 27%;
-
-					// 	> p {
-					// 		color: var(--secondary-text);
-
-					// 		&:nth-child(1) {
-					// 			padding-left: 1rem;
-					// 			width: 9rem;
-					// 		}
-
-					// 		&:nth-child(2) {
-					// 			width: 9rem;
-					// 		}
-
-					// 		&:nth-child(3) {
-					// 			width: 2rem;
-					// 			margin-right: 6rem;
-					// 		}
-					// 	}
-
-					// 	> button {
-					// 		display: none;
-					// 	}
-
-					// 	> div {
-					// 		display: flex;
-					// 		gap: 0.5rem;
-					// 		position: absolute;
-					// 		top: 50%;
-					// 		left: calc(100% - 11.5rem);
-					// 		translate: 0 -50%;
-
-					// 		> button {
-					// 			padding: 0.4rem 0.8rem;
-					// 			border-radius: 6px;
-					// 			background-color: #303030;
-					// 			box-shadow: 6px 5px 10px rgba(0, 0, 0, 0.4);
-					// 			border: none;
-					// 			color: var(--text);
-
-					// 			font-size: 1rem;
-
-					// 			height: fit-content;
-					// 		}
-					// 	}
-					// }
 
 					> dialog[open] {
 						background-color: var(--secondary);

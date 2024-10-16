@@ -64,7 +64,7 @@ export function createFolder(path: string[]) {
       id: `F-${subFolderId}`,
       numberOfDocs: 9,
       numberOfFolders: 3,
-      name: 'test',
+      name: 'New Folder',
       lastModified: time()
     }
 
