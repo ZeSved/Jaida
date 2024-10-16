@@ -11,7 +11,7 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
   const userDocument = doc(db, folderIds.users, currentUser!.uid, folderIds.userDocuments, `DOC-${id}`)
   const docContent = doc(userDocument, 'pages', 'PAGE-1')
 
-  router.push(`/m/DOC-${id}`)
+  router.push(`/editor/DOC-${id}`)
 
   createNewDoc(userDocument, id, docContent)
 
@@ -23,7 +23,7 @@ export function createDocument(currentUser: UserInfo, router: AppRouterInstance)
     // const amountOfDocs =
     // 	(await getDocs(collection(db, 'users', currentUser!.uid, 'user-documents'))).size + 1
 
-    if (!window.location.pathname.includes(`m`))
+    if (!window.location.pathname.includes(`editor`))
       setTimeout(() => createNewDoc(userDocument, id, docContent), 100)
 
 

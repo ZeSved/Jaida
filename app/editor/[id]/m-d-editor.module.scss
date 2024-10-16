@@ -67,42 +67,60 @@
 				.docEdit {
 					height: 100%;
 					text-align: left;
+					outline: none;
+					border: none;
 				}
 
 				.results {
 					display: flex;
+					flex-direction: column;
 					justify-content: left;
 					flex-wrap: wrap;
 					height: fit-content;
 
-					> span:not(.space) {
-						font-size: 1rem;
-						display: inline;
-						width: fit-content;
-						height: fit-content;
-						word-break: break-all;
+					> div {
+						display: flex;
+						flex-wrap: wrap;
 						line-break: anywhere;
-					}
 
-					> h1,
-					h2,
-					h3,
-					h4,
-					h5,
-					h6 {
-						width: 100%;
-					}
+						&.emptyRow {
+							width: 0;
+							overflow: hidden;
+							user-select: none;
+							color: transparent;
+							height: fit-content;
+						}
 
-					.space {
-						display: inline;
-						height: 1rem;
-						width: 5px;
+						> span:not(.space) {
+							font-size: 1rem;
+							display: inline;
+							width: fit-content;
+							height: fit-content;
+							// word-break: break-all;
+							// line-break: anywhere;
+							white-space: nowrap;
+						}
+
+						> h1,
+						h2,
+						h3,
+						h4,
+						h5,
+						h6 {
+							width: 100%;
+						}
+
+						.space {
+							display: inline;
+							height: 1rem;
+							width: 5px;
+						}
 					}
 				}
 
 				.docEdit,
 				.results {
-					word-break: break-all;
+					// word-break: break-all;
 
 					border-radius: 1rem;
 

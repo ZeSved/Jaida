@@ -9,7 +9,8 @@ const conversions = [
       span.style.fontWeight = 'bold'
       span.appendChild(document.createTextNode(text.replace(/^\*\*/, '').replace(/\*\*$/, '')))
 
-      return span.outerHTML
+      // return span.outerHTML
+      return span
     }
   },
   {
@@ -19,7 +20,8 @@ const conversions = [
       span.style.fontStyle = 'italic'
       span.appendChild(document.createTextNode(text.replace(/^\*/, '').replace(/\*$/, '')))
 
-      return span.outerHTML
+      // return span.outerHTML
+      return span
     }
   },
   {
@@ -29,7 +31,8 @@ const conversions = [
       span.style.textDecoration = 'line-through'
       span.appendChild(document.createTextNode(text.replace(/^\~\~/, '').replace(/\~\~$/, '')))
 
-      return span.outerHTML
+      // return span.outerHTML
+      return span
     }
   },
   {
@@ -38,7 +41,8 @@ const conversions = [
       const h1 = document.createElement('h1')
       h1.appendChild(document.createTextNode(text.replace('#', '')))
 
-      return h1.outerHTML
+      // return h1.outerHTML
+      return h1
     }
   },
   {
@@ -48,7 +52,8 @@ const conversions = [
       const span = document.createElement('span')
       span.appendChild(document.createTextNode(text))
 
-      return span.outerHTML
+      // return span.outerHTML
+      return span
     }
   },
 ]
@@ -61,26 +66,42 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
   console.log(text)
   const newArray: string[] = []
 
-  textArray?.forEach(t => {
-    if (t.startsWith(' ')) {
-      const tArr = t.split('')
-      tArr.forEach(s => {
-        const span = document.createElement('span')
-        span.className = style.space
-        newArray.push(span.outerHTML)
-      })
+  e.forEach(el => {
+    const div = document.createElement('div')
+    console.log(el)
+
+    if (el === '') {
+      const div = document.createElement('div')
+      div.className = style.emptyRow
+      div.textContent = 'n'
+      newArray.push(div.outerHTML)
     }
 
-    for (const convert of conversions) {
-      if (convert.condition(t)) {
-        newArray.push(convert.function(t))
-
-        break
+    el.match(/\S+|\s+/g)?.forEach(t => {
+      if (t.startsWith(' ')) {
+        const tArr = t.split('')
+        tArr.forEach(s => {
+          const span = document.createElement('span')
+          span.className = style.space
+          div.appendChild(span)
+          // newArray.push(span.outerHTML)
+        })
       }
-    }
+
+      for (const convert of conversions) {
+        if (convert.condition(t)) {
+          // newArray.push(convert.function(t))
+          div.appendChild(convert.function(t))
+
+          break
+        }
+      }
+    })
+
+    newArray.push(div.outerHTML)
   })
 
-  setCurrentText(newArray.map(item => `<div>${item}</div>`).join(''))
+  setCurrentText(newArray.join(''))
 }
 
 // function createNewSpan(uniqueSymbol: string, text: string) {

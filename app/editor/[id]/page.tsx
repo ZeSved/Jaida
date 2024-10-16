@@ -59,7 +59,7 @@ export default function MarkdownEditor() {
 				'users',
 				currentUser!.uid,
 				'user-documents',
-				window.location.href.split('/m/')[1]
+				window.location.href.split('/editor/')[1]
 			)
 			setCurrentDocumentReference(currentDocRef)
 
@@ -75,7 +75,7 @@ export default function MarkdownEditor() {
 
 	return (
 		<>
-			<title>{currentDoc ? `Jaida - ${currentDoc.data()?.displayName}` : 'Jaida'}</title>
+			<title>{currentDoc ? `Jaida - ${currentDoc.data()?.name}` : 'Jaida'}</title>
 			<main className={s.main}>
 				<Settings
 					setBg={setBg}
@@ -94,7 +94,11 @@ export default function MarkdownEditor() {
 									setCurrentText={setCurrentText}
 								/>
 								<div className={s.div} />
-								<Results currentText={currentText} />
+								<Results
+									currentText={currentText}
+									currentDocPages={currentDocPages}
+									setCurrentText={setCurrentText}
+								/>
 							</div>
 						</Loading>
 						{/* {currentDoc ? (
