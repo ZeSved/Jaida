@@ -48,11 +48,13 @@
 			align-items: center;
 			height: fit-content;
 			padding: 1rem;
+			position: relative;
 
 			> div {
 				border: var(--border);
 				border-radius: 1rem;
 				display: flex;
+				position: relative;
 
 				width: 100%;
 				aspect-ratio: 1;
@@ -61,27 +63,45 @@
 					width: 1px;
 					height: 95%;
 					background-color: var(--accent);
-					margin-block: auto;
+					// margin-block: auto;
 				}
 
 				.docEdit {
+					position: absolute;
+					// top: 50%;
+					left: 50%;
+					translate: -50% 0;
 					height: 100%;
+					// height: fit-content;
 					text-align: left;
 					outline: none;
 					border: none;
+					z-index: 4;
+					caret-color: white;
+					color: transparent;
+					word-spacing: 67%;
+					font-size: 1rem;
 				}
 
 				.results {
+					position: absolute;
+					// top: 50%;
+					left: 50%;
+					translate: -50% 0;
 					display: flex;
 					flex-direction: column;
 					justify-content: left;
 					flex-wrap: wrap;
-					height: fit-content;
+					// height: fit-content;
+					height: 100%;
+					z-index: 3;
+					color: white;
+					caret-color: transparent;
 
 					> div {
 						display: flex;
 						flex-wrap: wrap;
-						line-break: anywhere;
+						// line-break: anywhere;
 
 						&.emptyRow {
 							width: 0;
@@ -97,8 +117,12 @@
 							width: fit-content;
 							height: fit-content;
 							// word-break: break-all;
-							// line-break: anywhere;
-							white-space: nowrap;
+							line-break: anywhere;
+							// white-space: nowrap;
+
+							// &.italic {
+
+							// }
 						}
 
 						> h1,
@@ -113,7 +137,7 @@
 						.space {
 							display: inline;
 							height: 1rem;
-							width: 5px;
+							width: 7px;
 						}
 					}
 				}
@@ -125,8 +149,8 @@
 					border-radius: 1rem;
 
 					padding: 4rem;
-					color: var(--text);
-					caret-color: var(--text);
+					// color: var(--text);
+					// caret-color: var(--text);
 					outline: none;
 
 					width: 50%;

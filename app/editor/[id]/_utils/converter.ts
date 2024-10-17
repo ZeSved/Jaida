@@ -19,6 +19,8 @@ const conversions = [
       const span = document.createElement('span')
       span.style.fontStyle = 'italic'
       span.appendChild(document.createTextNode(text.replace(/^\*/, '').replace(/\*$/, '')))
+      span.classList.add(style.italic)
+      span.textContent = `*${span.textContent}*`
 
       // return span.outerHTML
       return span
