@@ -78,8 +78,8 @@
 					border: none;
 					z-index: 4;
 					caret-color: white;
-					color: transparent;
-					word-spacing: 67%;
+					color: green;
+					word-spacing: 51%;
 					font-size: 1rem;
 				}
 
@@ -120,9 +120,21 @@
 							line-break: anywhere;
 							// white-space: nowrap;
 
-							// &.italic {
-
-							// }
+							&.italic {
+								font-style: italic;
+							}
+							&.bold {
+								font-weight: bold;
+							}
+							&.underLine {
+								text-decoration: underline;
+							}
+							&.overLine {
+								text-decoration: overline;
+							}
+							&.lineThrough {
+								text-decoration: line-through;
+							}
 						}
 
 						> h1,
@@ -137,7 +149,7 @@
 						.space {
 							display: inline;
 							height: 1rem;
-							width: 7px;
+							width: 6px;
 						}
 					}
 				}
