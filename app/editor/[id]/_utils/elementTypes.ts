@@ -5,7 +5,8 @@ export type Elements =
   | 'col' | 'colgroup' | 'command' | 'datalist' | 'dd' | 'del'
   | 'details' | 'dfn  ' | 'dialog' | 'dir' | 'div' | 'dl'
   | 'dt' | 'em' | 'embed' | 'fieldset' | 'figcaption' | 'figure'
-  | 'footer' | 'form' | 'h1 - h6' | 'head' | 'header' | 'hgroup'
+  | 'footer' | 'form' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  | 'head' | 'header' | 'hgroup'
   | 'hr' | 'html' | 'i' | 'iframe' | 'img' | 'input' | 'ins'
   | 'kbd' | 'keygen' | 'label' | 'legend' | 'li' | 'link'
   | 'map' | 'mark' | 'menu' | 'meta' | 'meter' | 'nav'
@@ -21,3 +22,13 @@ export type ClassNames =
   | 'italic'
   | 'bold'
   | 'lineThrough'
+  | 'underLine'
+  | 'inlineCode'
+
+export type ContentReplacement = {
+  shouldReplace: 'replace'
+  startRegex: RegExp,
+  endRegex: RegExp
+} | {
+  shouldReplace: 'no-replace'
+}

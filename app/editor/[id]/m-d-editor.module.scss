@@ -78,7 +78,8 @@
 					border: none;
 					z-index: 4;
 					caret-color: white;
-					color: green;
+					color: transparent;
+					// color: green;
 					word-spacing: 51%;
 					font-size: 1rem;
 				}
@@ -129,8 +130,9 @@
 							&.underLine {
 								text-decoration: underline;
 							}
-							&.overLine {
-								text-decoration: overline;
+							&.inlineCode {
+								background-color: #404040;
+								color: #ffffff90;
 							}
 							&.lineThrough {
 								text-decoration: line-through;
