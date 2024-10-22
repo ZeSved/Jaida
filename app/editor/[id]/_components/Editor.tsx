@@ -1,7 +1,7 @@
 'use client'
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import s from './m-d-editor.module.scss'
+import s from '../m-d-editor.module.scss'
 import {
 	updateDoc,
 	doc,
