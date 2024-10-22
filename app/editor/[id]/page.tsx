@@ -6,7 +6,7 @@ import { User, onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '@/db/firebase'
 import { doc, getDoc, DocumentSnapshot, DocumentData, DocumentReference } from 'firebase/firestore'
 import Loading from '@/components/loading/Loading'
-import Editor from './Editor'
+import Editor from './_components/Editor'
 import Results from './Results'
 
 // function reducer(rep: typeof replacements, action: Action) {

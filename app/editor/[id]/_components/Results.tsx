@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import s from './m-d-editor.module.scss'
 import { DocumentSnapshot, DocumentData } from 'firebase/firestore'
-import { converter } from './_utils/converter'
+import { converter } from '../_utils/converter'
 
 export default function Results({ currentText, currentDocPages, setCurrentText }: ResultsProps) {
 	const resultRef = useRef<HTMLDivElement>(null)
