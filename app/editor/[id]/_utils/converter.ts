@@ -141,7 +141,7 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
     // console.log(8, el.match(/(\¨.*?\¨|\_.*?\_|\~\~.*?\~\~|\*.*?\*|\*\*.*?\*\*)*$/g))
     console.log(9, el.match(/((\¨.*?\¨)|(\_.*?\_)|(\~\~.*?\~\~)|(\*.*?\*)|(\*\*.*?\*\*))$/g))
     console.log(9, el.match(/(?<!\s)\*(?:\S+|\s+)\*(?!\s)/g))
-    console.log(9, el.match(/\*\*(?<!\s)(?:\S|\s)+(?!\s)\*\*/g))
+    console.log(9, el.match(/\*\*(?<!\s)[^\*\*](?:\S|\s)+(?!\s)\*\*/g))
     console.log(9, el.match(/\*(?:\S+|\s+)\*/g))
     // console.log(9, el.match(/(?<!\s)((\¨.*?\¨)|(\_.*?\_)|(\~\~.*?\~\~)|(\*.*?\*)|(\*\*.*?\*\*))(?!\s)$/g))
     // console.log(10, el.match(/((\¨(?!\s).*?(?<!\s)\¨)|(\_(?!\s).*?(?<!\s)\_)|(\~\~(?!\s).*?(?<!\s)\~\~)|(\*(?!\s).*?(?<!\s)\*)|(\*\*(?!\s).*?(?<!\s)\*\*))*$/g))
