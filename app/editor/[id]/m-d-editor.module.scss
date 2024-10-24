@@ -90,42 +90,47 @@
 					left: 50%;
 					translate: -50% 0;
 					display: flex;
-					flex-direction: column;
+					// flex-direction: column;
 					justify-content: left;
 					flex-wrap: wrap;
-					// height: fit-content;
-					height: 100%;
+					height: fit-content;
+					// height: 100%;
 					z-index: 3;
 					color: white;
 					caret-color: transparent;
 
-					> div {
-						display: flex;
-						line-break: anywhere;
-						flex-wrap: wrap;
+					* {
+						// display: flex;
+						// line-break: anywhere;
+						// flex-wrap: wrap;
 
-						&:has(.horizontalBar) {
-							width: 100%;
-							height: 1.3rem;
+						&.horizontalBar {
+							min-width: calc(50vw - 8rem);
+							min-height: 1.25rem;
 
 							hr {
-								width: 100%;
+								min-width: calc(50vw - 8rem);
 								height: 2px;
 								margin-block: auto;
 								background-color: var(--secondary);
 							}
 						}
+
+						&.newRow {
+							min-width: calc(50vw - 8rem);
+							height: 0;
+						}
 						// line-break: anywhere;
 
 						&.emptyRow {
-							width: 0;
+							min-width: calc(50vw - 8rem);
 							overflow: hidden;
 							user-select: none;
 							color: transparent;
 							height: fit-content;
 						}
 
-						> span:not(.space) {
+						&:not(&.space) {
 							font-size: 1rem;
 							display: flex;
 							flex-wrap: wrap;
@@ -168,7 +173,7 @@
 							width: 100%;
 						}
 
-						.space {
+						&.space {
 							display: inline;
 							height: 1rem;
 							width: 6px;
@@ -187,7 +192,7 @@
 					// caret-color: var(--text);
 					outline: none;
 
-					width: 50%;
+					width: 50vw;
 
 					background-color: transparent;
 					resize: none;

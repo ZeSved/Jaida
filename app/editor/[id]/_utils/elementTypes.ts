@@ -25,11 +25,11 @@ export type ClassNames =
   | 'underLine'
   | 'inlineCode'
   | 'horizontalBar'
+  | 'space'
 
 export type ContentReplacement = {
-  shouldReplace: 'replace'
-  startRegex: RegExp,
-  endRegex: RegExp
+  shouldReplace: true
+  regex: RegExp
 } | {
-  shouldReplace: 'no-replace'
+  shouldReplace: false
 }
