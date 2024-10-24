@@ -78,8 +78,8 @@
 					border: none;
 					z-index: 4;
 					caret-color: white;
-					color: transparent;
-					// color: green;
+					// color: transparent;
+					color: green;
 					word-spacing: 51%;
 					font-size: 1rem;
 				}
@@ -101,7 +101,20 @@
 
 					> div {
 						display: flex;
+						line-break: anywhere;
 						flex-wrap: wrap;
+
+						&:has(.horizontalBar) {
+							width: 100%;
+							height: 1.3rem;
+
+							hr {
+								width: 100%;
+								height: 2px;
+								margin-block: auto;
+								background-color: var(--secondary);
+							}
+						}
 						// line-break: anywhere;
 
 						&.emptyRow {
@@ -114,11 +127,18 @@
 
 						> span:not(.space) {
 							font-size: 1rem;
-							display: inline;
+							display: flex;
+							flex-wrap: wrap;
+							line-break: anywhere;
+							// display: inline;
 							width: fit-content;
 							height: fit-content;
 							// word-break: break-all;
-							line-break: anywhere;
+							// &,
+							// > * {
+							// 	line-break: anywhere;
+							// 	word-break: break-all;
+							// }
 							// white-space: nowrap;
 
 							&.italic {

@@ -24,6 +24,7 @@ export type ClassNames =
   | 'lineThrough'
   | 'underLine'
   | 'inlineCode'
+  | 'horizontalBar'
 
 export type ContentReplacement = {
   shouldReplace: 'replace'
