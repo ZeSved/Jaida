@@ -9,14 +9,8 @@ import {
 	DocumentData,
 	DocumentReference,
 } from 'firebase/firestore'
-// import { parser } from './utils/parser'
-import { replacements } from '../_utils/replacements'
-import { divId } from '../_utils/divId'
-import { upload } from '../_utils/uploadFile'
 import { User } from 'firebase/auth'
-import { getBlob } from 'firebase/storage'
 import { converter } from '../_utils/converter'
-// import { Caret } from './utils/handleKeyboard'
 
 export default function Editor({
 	currentDocPages,

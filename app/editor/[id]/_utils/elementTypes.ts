@@ -26,6 +26,8 @@ export type ClassNames =
   | 'inlineCode'
   | 'horizontalBar'
   | 'space'
+  | 'subscript'
+  | 'superscript'
 
 export type ContentReplacement = {
   shouldReplace: true

@@ -78,8 +78,9 @@
 					border: none;
 					z-index: 4;
 					caret-color: white;
-					// color: transparent;
-					color: green;
+					color: transparent;
+					// color: green;
+					// word-spacing: 1.8px;
 					word-spacing: 51%;
 					font-size: 1rem;
 				}
@@ -90,7 +91,7 @@
 					left: 50%;
 					translate: -50% 0;
 					display: flex;
-					// flex-direction: column;
+					flex-direction: column;
 					justify-content: left;
 					flex-wrap: wrap;
 					height: fit-content;
@@ -99,27 +100,15 @@
 					color: white;
 					caret-color: transparent;
 
-					* {
-						// display: flex;
-						// line-break: anywhere;
-						// flex-wrap: wrap;
+					div {
+						display: flex;
+						line-break: anywhere;
+						flex-wrap: wrap;
 
-						&.horizontalBar {
-							min-width: calc(50vw - 8rem);
-							min-height: 1.25rem;
-
-							hr {
-								min-width: calc(50vw - 8rem);
-								height: 2px;
-								margin-block: auto;
-								background-color: var(--secondary);
-							}
-						}
-
-						&.newRow {
-							min-width: calc(50vw - 8rem);
-							height: 0;
-						}
+						// &.newRow {
+						// 	min-width: calc(50vw - 8rem);
+						// 	height: 0;
+						// }
 						// line-break: anywhere;
 
 						&.emptyRow {
@@ -130,7 +119,7 @@
 							height: fit-content;
 						}
 
-						&:not(&.space) {
+						> span:not(.space) {
 							font-size: 1rem;
 							display: flex;
 							flex-wrap: wrap;
@@ -151,6 +140,11 @@
 							}
 							&.bold {
 								font-weight: bold;
+								// transform: scaleX(80%);
+
+								// span {
+								// 	transform: scaleX(140%);
+								// }
 							}
 							&.underLine {
 								text-decoration: underline;
@@ -161,6 +155,36 @@
 							}
 							&.lineThrough {
 								text-decoration: line-through;
+							}
+							&.subscript {
+								font-size: 0.7rem;
+								margin-top: auto;
+
+								span {
+									font-size: 1rem;
+									margin-top: 0;
+								}
+							}
+							&.superscript {
+								font-size: 0.7rem;
+								margin-bottom: auto;
+
+								span {
+									font-size: 1rem;
+									margin-bottom: 0;
+								}
+							}
+
+							&.horizontalBar {
+								min-width: calc(50vw - 8rem);
+								min-height: 1.25rem;
+
+								hr {
+									min-width: calc(50vw - 8rem);
+									height: 2px;
+									margin-block: auto;
+									background-color: var(--secondary);
+								}
 							}
 						}
 
@@ -173,7 +197,7 @@
 							width: 100%;
 						}
 
-						&.space {
+						span.space {
 							display: inline;
 							height: 1rem;
 							width: 6px;

@@ -4,14 +4,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import s from '../page.module.scss'
 import doc_img from '@/public/document.svg'
-import { User } from 'firebase/auth'
 import { db } from '@/db/firebase'
 import { getDocs, collection, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { useContext, useEffect, useRef, useState } from 'react'
 import folder from '@/public/folder.svg'
 import option from '@/public/options.svg'
-import { useDirectory } from '@/hooks/useDirectory'
-import { PathContext, UserContext } from '../page'
+import { PathContext, UserContext } from '@/constants/contexts'
 
 export default function Card({
 	id,

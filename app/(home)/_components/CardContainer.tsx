@@ -1,30 +1,15 @@
 'use client'
 
-import {
-	doc,
-	DocumentData,
-	DocumentSnapshot,
-	getDoc,
-	QueryDocumentSnapshot,
-	QuerySnapshot,
-	setDoc,
-	updateDoc,
-} from 'firebase/firestore'
-import Link from 'next/link'
-import Card from './card'
-import { useAuthState } from '@/hooks/useAuthState'
+import { DocumentData, DocumentSnapshot } from 'firebase/firestore'
 import s from '../page.module.scss'
 import Image from 'next/image'
 import plus from '@/public/plus.svg'
 import { createDocument, createFolder } from '@/db/utils/create'
 import { useRouter } from 'next/navigation'
 import Loading from '@/components/loading/Loading'
-import { db } from '@/db/firebase'
-import ShortUniqueId from 'short-unique-id'
 import { Folder } from '@/db/types'
-import { useDirectory } from '@/hooks/useDirectory'
 import { useContext } from 'react'
-import { PathContext, UserContext } from '../page'
+import { PathContext, UserContext } from '@/constants/contexts'
 import NotFound from './_NotFound/NotFound'
 
 export default function CardContainer({

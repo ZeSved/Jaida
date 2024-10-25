@@ -1,12 +1,6 @@
 'use client'
 import { auth, db } from '@/db/firebase'
-import {
-	GoogleAuthProvider,
-	signOut,
-	User,
-	onAuthStateChanged,
-	signInWithPopup,
-} from 'firebase/auth'
+import { GoogleAuthProvider, signOut, signInWithPopup } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 

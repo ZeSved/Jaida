@@ -2,7 +2,7 @@
 
 import { useContext } from 'react'
 import s from '../page.module.scss'
-import { PathContext } from '../page'
+import { PathContext } from '@/constants/contexts'
 
 export default function Directory({
 	folders,

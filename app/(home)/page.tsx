@@ -1,16 +1,7 @@
 'use client'
 
-import {
-	DocumentData,
-	DocumentSnapshot,
-	QuerySnapshot,
-	collection,
-	doc,
-	getDoc,
-	onSnapshot,
-} from 'firebase/firestore'
-import { createContext, useEffect, useState } from 'react'
-import classNames from 'classnames'
+import { collection, doc, onSnapshot } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { db } from '@/db/firebase'
 import Login from '@/components/Login/login'
 import Header from '@/app/_components/Header/page'
@@ -21,9 +12,9 @@ import { useDirectory } from '@/hooks/useDirectory'
 import Loading from '@/components/loading/Loading'
 import Card from './_components/card'
 import { Folder, Snapshot } from '@/db/types'
-import { User } from 'firebase/auth'
 import Directory from './_components/Directory'
 import NotFound from './_components/_NotFound/NotFound'
+import { PathContext, UserContext } from '@/constants/contexts'
 
 export default function HomePage() {
 	const user = useAuthState()
@@ -158,6 +149,3 @@ export default function HomePage() {
 		</>
 	)
 }
-
-export const PathContext = createContext<string[]>([])
-export const UserContext = createContext<User | undefined>(undefined)

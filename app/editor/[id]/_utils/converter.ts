@@ -1,6 +1,6 @@
 import style from '../m-d-editor.module.scss'
 import { Dispatch, SetStateAction } from "react"
-import { ClassNames, ContentReplacement, Elements } from './elementTypes'
+import { ClassNames, Elements } from './elementTypes'
 
 const locatedTokens = {
   bold: 0,
@@ -26,31 +26,17 @@ class Convert {
   }
 
   addText(text: string) {
-    // const textValue = replace.shouldReplace === 'replace' ?
-    //   text.replace(replace.startRegex, '').replace(replace.endRegex, '')
-    //   : text
-    // if (replace.shouldReplace === 'replace') {
-    //   text.replace(replace.startRegex, '').replace(replace.endRegex, '')
-    // }
-    const textNode = document.createTextNode(
-      // replace.shouldReplace ? text.replace(replace.regex, '') : 
-      text
-    )
+    const textNode = document.createTextNode(text)
 
-    // textValue.split(' ').forEach(part => {
-    //   const span = document.createElement('span')
-    //   const textNode = document.createTextNode(part)
-    //   span.appendChild(textNode)
-    // })
     this.element.appendChild(textNode)
 
     return this
   }
 
   remove(regex: RegExp) {
-    console.log(this.element.textContent)
+    // console.log(this.element.textContent)
     this.element.textContent = this.element.textContent!.replace(regex, '')
-    console.log(this.element.textContent)
+    // console.log(this.element.textContent)
 
     return this
   }
@@ -92,6 +78,16 @@ const c: { id: string, class: ClassNames, replace: boolean }[] = [
   {
     id: '\\`',
     class: 'inlineCode',
+    replace: true
+  },
+  {
+    id: '\\~',
+    class: 'subscript',
+    replace: true
+  },
+  {
+    id: '\\^',
+    class: 'superscript',
     replace: true
   },
 ]
@@ -188,125 +184,118 @@ const c: { id: string, class: ClassNames, replace: boolean }[] = [
 export function converter(text: string, setCurrentText: Dispatch<SetStateAction<string>>) {
   // const textArray = text.match(/\w+|\s+/g)
   const textArray = text.match(/\S+|\s+/g)
-  const e = text.split(/\r\n|\r|\n/)
-  console.log(encodeURI(text))
+  const textRows = text.split(/\r\n|\r|\n/)
+  // console.log(encodeURI(text))
   // console.log(e)
   // console.log(text)
-  const newArray: string[] = []
+  const updatedContent: string[] = []
 
-  e.forEach(el => {
+  textRows.forEach(row => {
     const div = document.createElement('div')
+    const convertedRow: string[] = []
     // let te = ''
     // console.log(el)
 
-    if (el === '') {
+    if (row === '') {
       const div = document.createElement('div')
       div.className = style.emptyRow
       div.textContent = 'n'
-      newArray.push(div.outerHTML)
+      convertedRow.push(div.outerHTML)
     }
 
-
-    console.log(8, el.match(/(\_(?:\s|[^_])+\_|\~\~(?:\s|[^~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*)|\S+|\s+|\%\0\A/g))
+    // console.log(8, row.match(/(?:\_(?:\s|[^_])+\_|\~\~(?:\s|[^~~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*|\^(?:\s|[^^])+\^|\~(?:\s|[^~])+\~)|\d+|\S+|\s+|\%\0\A/g))
+    // console.log(1, row.match(/\d+|\^(?:\s|[^^])+\^/))
     // el.split(' ')?.forEach(t => {
-    el.match(/(\_(?:\s|[^_])+\_|\~\~(?:\s|[^~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*)|\S+|\s+|\%\0\A/g)?.forEach(t => {
-      console.log(t)
-      if (t.startsWith(' ')) {
-        const tArr = t.split('')
+    row.match(/(?:\_(?:\s|[^_])+\_|\~\~(?:\s|[^~~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*|\d+|\S+|\^(?:\s|[^^])+\^|\~(?:\s|[^~])+\~)|\s+|\%\0\A/g)?.forEach(rowToken => {
+      // console.log(2, rowToken)
+      if (rowToken.startsWith(' ')) {
+        const tArr = rowToken.split('')
         tArr.forEach(s => {
           const span = document.createElement('span')
           span.className = style.space
-          newArray.push(span.outerHTML)
+          convertedRow.push(span.outerHTML)
           // div.appendChild(span)
           // newArray.push(span.outerHTML)
         })
       }
 
       for (const { class: className, id, replace } of c) {
-        if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(t) && t.includes(' ')) {
-          const textArr = t.split(' ')
-          textArr.forEach(te => {
-            if (replace && new RegExp(`^${id}`).test(te)) {
+        if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(rowToken) && rowToken.includes(' ')) {
+          const rowTokenSegments = rowToken.split(' ')
+          rowTokenSegments.forEach(segment => {
+            if (replace && new RegExp(`^${id}`).test(segment)) {
               const elm = new Convert(className)
                 .addSideDecoration(id.replace(/\\/g, ''))
-                .addText(te.replace(new RegExp(`^${id}`), ''))
+                .addText(segment.replace(new RegExp(`^${id}`), ''))
                 .element.outerHTML
 
-              newArray.push(
-                elm
-              )
-
-              newArray.push(
-                new Convert('space')
-                  .element.outerHTML
-              )
+              convertedRow.push(elm)
+              convertedRow.push(new Convert('space').element.outerHTML)
 
               return
-            } else if (replace && new RegExp(`${id}$`).test(te)) {
+            } else if (replace && new RegExp(`${id}$`).test(segment)) {
               const elm = new Convert(className)
-                .addText(te.replace(new RegExp(`${id}$`), ''))
+                .addText(segment.replace(new RegExp(`${id}$`), ''))
                 .addSideDecoration(id.replace(/\\/g, ''))
                 .element.outerHTML
 
-              newArray.push(
-                elm
-              )
+              convertedRow.push(elm)
 
               return
             } else {
               const elm = new Convert(className)
-                .addText(te)
+                .addText(segment)
                 .element.outerHTML
 
-              console.log(elm)
+              // console.log(elm)
 
-              newArray.push(
-                elm
-              )
+              convertedRow.push(elm)
+              convertedRow.push(new Convert('space').element.outerHTML)
 
-              newArray.push(
-                new Convert('space')
-                  .element.outerHTML
-              )
               return
             }
           })
           return
-        } else if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(t) && !t.includes(' ')) {
+        } else if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(rowToken) && !rowToken.includes(' ')) {
           const elm = new Convert(className)
             .addSideDecoration(id.replace(/\\/g, ''))
-            .addText(t.replaceAll(new RegExp(`${id}`, 'g'), ''))
+            .addText(rowToken.replaceAll(new RegExp(`${id}`, 'g'), ''))
             .addSideDecoration(id.replace(/\\/g, ''))
             .element.outerHTML
 
-          newArray.push(
-            elm
-          )
+          convertedRow.push(elm)
 
           return
         }
       }
 
-      if (t === '---') {
+      if (rowToken === '---') {
         const elm = new Convert('horizontalBar').element
         const hr = document.createElement('hr')
         elm.appendChild(hr)
 
-        newArray.push(elm.outerHTML)
-      } else if (t === '%0A') {
+        convertedRow.push(elm.outerHTML)
+      } else if (rowToken === '%0A') {
         const span = document.createElement('span')
         span.className = style.newRow
-        newArray.push(span.outerHTML)
+        convertedRow.push(span.outerHTML)
       } else {
         const span = document.createElement('span')
-        span.appendChild(document.createTextNode(t))
-        newArray.push(span.outerHTML)
+        span.appendChild(document.createTextNode(rowToken))
+        convertedRow.push(span.outerHTML)
       }
     })
 
     // newArray.push(div.outerHTML)
+    updatedContent.push(`<div>${convertedRow.join('')}</div>`)
+    // console.log(updatedContent)
 
   })
+  // updatedContent.map(content => {
+  //   return `<div>${content}</div>`
+  // }
+  // )
+  // console.log(updatedContent)
 
-  setCurrentText(newArray.join(''))
+  setCurrentText(updatedContent.join(''))
 }
