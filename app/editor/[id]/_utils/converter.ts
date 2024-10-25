@@ -182,6 +182,7 @@ const c: { id: string, class: ClassNames, replace: boolean }[] = [
 // ]
 
 export function converter(text: string, setCurrentText: Dispatch<SetStateAction<string>>) {
+  const tokenRegex = /(?:\_(?:\s|[^_])+\_|\~\~(?:\s|[^~~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*|\^(?:\s|[^^])+\^|\~(?:\s|[^~])+\~)|\d+|\S+|\s+/g
   // const textArray = text.match(/\w+|\s+/g)
   const textArray = text.match(/\S+|\s+/g)
   const textRows = text.split(/\r\n|\r|\n/)
@@ -206,10 +207,12 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
     // console.log(8, row.match(/(?:\_(?:\s|[^_])+\_|\~\~(?:\s|[^~~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*|\^(?:\s|[^^])+\^|\~(?:\s|[^~])+\~)|\d+|\S+|\s+|\%\0\A/g))
     // console.log(1, row.match(/\d+|\^(?:\s|[^^])+\^/))
     // el.split(' ')?.forEach(t => {
-    row.match(/(?:\_(?:\s|[^_])+\_|\~\~(?:\s|[^~~])+\~\~|\*(?:\s|[^*])+\*|\*\*(?:\s|[^**])+\*\*|\d+|\S+|\^(?:\s|[^^])+\^|\~(?:\s|[^~])+\~)|\s+|\%\0\A/g)?.forEach(rowToken => {
+    console.log(row.match(tokenRegex))
+    row.match(new RegExp(tokenRegex, 'g'))?.forEach(token => {
+      console.log(token)
       // console.log(2, rowToken)
-      if (rowToken.startsWith(' ')) {
-        const tArr = rowToken.split('')
+      if (token.startsWith(' ')) {
+        const tArr = token.split('')
         tArr.forEach(s => {
           const span = document.createElement('span')
           span.className = style.space
@@ -220,9 +223,9 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
       }
 
       for (const { class: className, id, replace } of c) {
-        if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(rowToken) && rowToken.includes(' ')) {
-          const rowTokenSegments = rowToken.split(' ')
-          rowTokenSegments.forEach(segment => {
+        if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(token) && token.includes(' ')) {
+          const tokenSegments = token.split(' ')
+          tokenSegments.forEach(segment => {
             if (replace && new RegExp(`^${id}`).test(segment)) {
               const elm = new Convert(className)
                 .addSideDecoration(id.replace(/\\/g, ''))
@@ -256,10 +259,10 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
             }
           })
           return
-        } else if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(rowToken) && !rowToken.includes(' ')) {
+        } else if (new RegExp(`${id}(?:\s|[^${id.replace(/\\/g, '')}])+${id}`).test(token) && !token.includes(' ')) {
           const elm = new Convert(className)
             .addSideDecoration(id.replace(/\\/g, ''))
-            .addText(rowToken.replaceAll(new RegExp(`${id}`, 'g'), ''))
+            .addText(token.replaceAll(new RegExp(`${id}`, 'g'), ''))
             .addSideDecoration(id.replace(/\\/g, ''))
             .element.outerHTML
 
@@ -269,19 +272,19 @@ export function converter(text: string, setCurrentText: Dispatch<SetStateAction<
         }
       }
 
-      if (rowToken === '---') {
+      if (token === '---') {
         const elm = new Convert('horizontalBar').element
         const hr = document.createElement('hr')
         elm.appendChild(hr)
 
         convertedRow.push(elm.outerHTML)
-      } else if (rowToken === '%0A') {
+      } else if (token === '%0A') {
         const span = document.createElement('span')
         span.className = style.newRow
         convertedRow.push(span.outerHTML)
       } else {
         const span = document.createElement('span')
-        span.appendChild(document.createTextNode(rowToken))
+        span.appendChild(document.createTextNode(token))
         convertedRow.push(span.outerHTML)
       }
     })
